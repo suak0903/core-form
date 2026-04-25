@@ -1,0 +1,11 @@
+# Office-Dateien
+*.pptx
+~$*
+
+# Font-Archiv (OTF-Dateien bereits einzeln vorhanden)
+font/*.zip
+
+# System
+.DS_Store
+Thumbs.db
+desktop.ini
