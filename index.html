@@ -1,550 +1,1000 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core:form — Pilates & Reformer Studio Essen</title>
-  <meta name="description" content="core:form Pilates Studio in Essen – Reformer Pilates, Pilates Matte und Barre Workout in Kleingruppen. Zwei Studios in Rüttenscheid und Südviertel." />
-  <link rel="stylesheet" href="css/styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>core:form — Pilates & Reformer Studio Essen</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family:'Stacion'; src:url('font/stacion-regular.otf') format('opentype'); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Stacion'; src:url('font/stacion-italic.otf') format('opentype'); font-weight:400; font-style:italic; font-display:swap; }
+@font-face { font-family:'Stacion'; src:url('font/stacion-light.otf') format('opentype'); font-weight:300; font-style:normal; font-display:swap; }
+@font-face { font-family:'Stacion'; src:url('font/stacion-light-italic.otf') format('opentype'); font-weight:300; font-style:italic; font-display:swap; }
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body { font-family:'DM Sans','Helvetica Neue',Arial,sans-serif; background:#fff; color:#0d0d0d; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+input,select,textarea,button { font-family:inherit; }
+img { display:block; max-width:100%; }
+a { color:inherit; text-decoration:none; }
+
+/* ── FOCUS / A11Y ── */
+:focus { outline:none; }
+:focus-visible {
+  outline:2px solid #b20e3b; outline-offset:3px;
+  border-radius:0;
+}
+.btn:focus-visible { outline-offset:3px; }
+.nav__links a:focus-visible,
+.nav__mobile a:focus-visible,
+.text-link:focus-visible,
+.kontakt__link:focus-visible,
+.kontakt__social a:focus-visible,
+.footer__links a:focus-visible { outline-offset:4px; }
+
+.skip-link {
+  position:absolute; top:0; left:0; z-index:1000;
+  background:#0d0d0d; color:#fff;
+  font-size:12px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; padding:12px 18px;
+  transform:translateY(-110%); transition:transform .2s;
+}
+.skip-link:focus-visible { transform:translateY(0); outline:2px solid #b20e3b; outline-offset:-2px; }
+
+[role="button"], button, .nav__links a, .nav__mobile a, .text-link, .kurs-card a, .kontakt__link { cursor:pointer; }
+
+/* ── SHARED ── */
+.container { max-width:1160px; margin:0 auto; padding:0 40px; }
+.label {
+  display:block; font-size:11px; font-weight:600;
+  letter-spacing:.15em; text-transform:uppercase; color:#b20e3b;
+  margin-bottom:12px;
+}
+.label--light { color:rgba(255,255,255,.5); }
+.section-head { margin-bottom:52px; }
+.section-head h2 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,48px); line-height:1.08;
+  letter-spacing:-.02em; color:#0d0d0d;
+}
+.text-link {
+  display:inline-block; font-size:12px; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; color:#b20e3b;
+  border-bottom:1px solid #b20e3b; padding-bottom:1px;
+  transition:opacity .2s;
+}
+.text-link:hover { opacity:.7; }
+.btn {
+  display:inline-block; font-family:inherit; font-weight:700;
+  font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+  padding:13px 26px; border-radius:0; cursor:pointer;
+  transition:background .2s, color .2s, border-color .2s; border:none;
+}
+.btn--accent { background:#b20e3b; color:#fff; }
+.btn--accent:hover { background:#59071d; }
+.btn--outline { background:transparent; color:#0d0d0d; border:1.5px solid #0d0d0d; }
+.btn--outline:hover { background:#0d0d0d; color:#fff; }
+.btn--ghost { background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.6); }
+.btn--ghost:hover { background:#fff; color:#0d0d0d; }
+.btn--full { width:100%; text-align:center; }
+
+/* ── NAV ── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:transparent;
+  transition:background .3s ease, box-shadow .3s ease;
+}
+.nav.scrolled {
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(8px);
+  box-shadow:0 1px 16px rgba(0,0,0,.07);
+  border-bottom:1px solid rgba(0,0,0,.07);
+}
+.nav__inner {
+  display:flex; align-items:center; height:72px; gap:0;
+}
+.nav__logo img { height:36px; }
+.nav__links {
+  display:flex; gap:28px; flex:1; justify-content:center;
+}
+.nav__links a {
+  font-size:12px; font-weight:500; letter-spacing:.08em;
+  text-transform:uppercase; color:#fff; white-space:nowrap;
+  opacity:.8; transition:opacity .15s;
+  position:relative; padding-bottom:3px;
+}
+.nav__links a::after {
+  content:''; position:absolute; bottom:0; left:0;
+  width:0; height:1.5px; background:#b20e3b;
+  transition:width .2s ease;
+}
+.nav__links a:hover::after, .nav__links a.active::after { width:100%; }
+.nav.scrolled .nav__links a { color:#0d0d0d; }
+.nav__links a:hover, .nav__links a.active { opacity:1; }
+.nav .btn--accent { opacity:1; }
+.nav:not(.scrolled) .btn--accent {
+  background:transparent; border:1.5px solid rgba(255,255,255,.7); color:#fff;
+}
+.nav:not(.scrolled) .btn--accent:hover {
+  background:#fff; color:#0d0d0d;
+}
+
+/* ── HERO ── */
+.hero {
+  position:relative; height:100vh; min-height:600px;
+  display:flex; align-items:flex-end; overflow:hidden;
+  background:#0d0d0d;
+}
+.hero__img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; opacity:.55;
+}
+.hero__overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.78) 0%, rgba(0,0,0,.22) 55%, rgba(0,0,0,.15) 100%);
+}
+.hero__content {
+  position:relative; padding-bottom:140px;
+}
+.hero__headline {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(56px,8.5vw,100px); line-height:1.02;
+  letter-spacing:-.025em; color:#fff; margin-bottom:24px;
+}
+.hero__headline em { font-style:italic; color:#f2dac2; }
+.hero__sub {
+  font-size:12px; font-weight:500; letter-spacing:.14em;
+  text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:36px;
+}
+.hero__actions { display:flex; gap:12px; }
+.hero__stats {
+  position:absolute; bottom:0; left:0; right:0;
+  display:flex; width:100%; max-width:none; padding:0; margin:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(4px);
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.hero__stat {
+  flex:1; padding:24px 32px; text-align:center;
+  border-right:1px solid rgba(255,255,255,.1);
+}
+.hero__stat:last-child { border-right:none; }
+.hero__stat strong {
+  display:block; font-family:'Stacion',Georgia,serif;
+  font-weight:300; font-size:42px; color:#fff; line-height:1;
+}
+.hero__stat span {
+  display:block; font-size:10px; font-weight:600;
+  letter-spacing:.13em; text-transform:uppercase;
+  color:rgba(255,255,255,.45); margin-top:5px;
+}
+
+/* ── MANIFESTO ── */
+.manifesto { background:#f2dac2; padding:80px 0; }
+.manifesto__inner { max-width:760px; }
+.manifesto__quote {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,52px); line-height:1.1;
+  letter-spacing:-.02em; color:#0d0d0d; margin-bottom:24px;
+}
+.manifesto__quote em { font-style:italic; color:#b20e3b; }
+.manifesto__body {
+  font-size:16px; line-height:1.75; color:#3a2020; max-width:560px;
+}
+
+/* ── ANGEBOTE ── */
+.angebote { background:#fff; padding:96px 0; }
+.angebote__grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+}
+.kurs-card {
+  background:#f6f9f7; overflow:hidden; position:relative;
+  transition:box-shadow .3s ease;
+}
+.kurs-card:hover { box-shadow:0 14px 32px rgba(0,0,0,.08); }
+.kurs-card__img-wrap { height:220px; overflow:hidden; }
+.kurs-card__img-wrap img {
+  width:100%; height:100%; object-fit:cover; object-position:center 22%;
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
+}
+.kurs-card:hover .kurs-card__img-wrap img { transform:scale(1.04); }
+.kurs-card__body { padding:22px 22px 26px; }
+.kurs-card__tag {
+  display:inline-block; font-size:9px; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase;
+  color:#b20e3b; margin-bottom:10px;
+}
+.kurs-card__body h3 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:22px; line-height:1.15; color:#0d0d0d; margin-bottom:10px;
+}
+.kurs-card__body p { font-size:13px; line-height:1.65; color:#3a3a3a; margin-bottom:14px; }
+
+/* ── FEATURE BANNER ── */
+.feature-banner {
+  position:relative; padding:100px 0; overflow:hidden; background:#0d0d0d;
+}
+.feature-banner__img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; opacity:.35;
+}
+.feature-banner__content { position:relative; text-align:center; }
+.feature-banner__content blockquote {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(28px,4vw,48px); line-height:1.15;
+  letter-spacing:-.02em; color:#fff; margin-bottom:16px;
+}
+.feature-banner__content blockquote em { font-style:italic; color:#f2dac2; }
+.feature-banner__content p {
+  font-size:11px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:rgba(255,255,255,.45);
+}
+
+/* ── STUDIOS ── */
+.studios { background:#fff; padding:96px 0; }
+.studios__split { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:52px; }
+.studio-panel { position:relative; height:480px; overflow:hidden; }
+.studio-panel img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+.studio-panel:hover img { transform:scale(1.03); }
+.studio-panel__overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.1) 55%, transparent 100%);
+}
+.studio-panel__content {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:28px 28px 32px; display:flex; flex-direction:column; gap:10px;
+}
+.studio-panel__content img { height:44px; width:auto; object-fit:contain; object-position:left; }
+.studio-panel__nr {
+  font-size:9px; font-weight:600; letter-spacing:.15em;
+  text-transform:uppercase; color:rgba(255,255,255,.5);
+}
+.studio-panel__content h3 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:28px; color:#fff; line-height:1.1;
+}
+.studio-panel__content p { font-size:13px; color:rgba(255,255,255,.7); }
+.studio-panel__kurse { display:flex; gap:8px; }
+.studio-panel__kurse span {
+  font-size:10px; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; color:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.25); padding:4px 10px;
+}
+
+/* ── ABOUT ── */
+.about { background:#f2dac2; padding:96px 0; }
+.about__inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.about__media img { width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center 25%; }
+.about__text .section-head { margin-bottom:24px; }
+.about__text .section-head h2 { color:#0d0d0d; }
+.about__text p { font-size:15px; line-height:1.75; color:#3a2020; margin-bottom:16px; }
+.about__values { display:flex; flex-direction:column; gap:0; margin-top:28px; }
+.about__value {
+  display:grid; grid-template-columns:3px 1fr;
+  gap:16px; align-items:start; padding:14px 0;
+  border-bottom:1px solid rgba(0,0,0,.1);
+}
+.about__value-line { background:#b20e3b; height:100%; min-height:40px; }
+.about__value-text strong { display:block; font-size:14px; font-weight:600; color:#0d0d0d; }
+.about__value-text span { font-size:13px; color:#3a2020; }
+
+/* ── AUSBILDUNG ── */
+.ausbildung { background:#fff; padding:96px 0; }
+.ausbildung__inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.ausbildung__text h2 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,48px); line-height:1.08; letter-spacing:-.02em;
+  color:#0d0d0d; margin-bottom:20px;
+}
+.ausbildung__text h2 em { font-style:italic; color:#b20e3b; }
+.ausbildung__text p { font-size:15px; line-height:1.75; color:#3a3a3a; margin-bottom:28px; }
+.ausbildung__features { list-style:none; }
+.ausbildung__features li {
+  display:flex; gap:14px; align-items:flex-start;
+  padding:15px 0; border-bottom:1px solid rgba(0,0,0,.08); font-size:15px; color:#3a3a3a;
+}
+.ausbildung__features .check { color:#b20e3b; font-size:13px; margin-top:2px; }
+
+/* ── PREISE ── */
+.preise { background:#f6f9f7; padding:96px 0; }
+.preise__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start; }
+.preis-card { background:#fff; padding:28px 28px 32px; box-shadow:0 2px 12px rgba(0,0,0,.06); position:relative; }
+.preis-card--featured { background:#59071d; }
+.preis-card__badge {
+  position:absolute; top:-12px; left:50%; transform:translateX(-50%);
+  background:#b20e3b; color:#fff; font-size:9px; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; padding:4px 12px;
+}
+.preis-card__format {
+  display:block; font-size:10px; font-weight:600; letter-spacing:.13em;
+  text-transform:uppercase; margin-bottom:6px;
+}
+.preis-card:not(.preis-card--featured) .preis-card__format { color:#b20e3b; }
+.preis-card--featured .preis-card__format { color:rgba(255,255,255,.5); }
+.preis-card__price { margin-bottom:20px; }
+.preis-card__price span { display:block; font-size:12px; color:#6b6b6b; margin-bottom:2px; }
+.preis-card--featured .preis-card__price span { color:rgba(255,255,255,.45); }
+.preis-card__price strong {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:38px; line-height:1; color:#0d0d0d;
+}
+.preis-card--featured .preis-card__price strong { color:#fff; }
+.preis-card ul {
+  list-style:none; border-top:1px solid rgba(0,0,0,.07);
+  padding-top:16px; margin-bottom:22px;
+}
+.preis-card--featured ul { border-top-color:rgba(255,255,255,.1); }
+.preis-card ul li {
+  font-size:13px; color:#2a2a2a; padding:6px 0;
+  border-bottom:1px solid rgba(0,0,0,.05);
+  display:flex; gap:8px;
+}
+.preis-card ul li::before { content:'–'; color:#b20e3b; flex-shrink:0; }
+.preis-card--featured ul li { color:rgba(255,255,255,.8); border-bottom-color:rgba(255,255,255,.08); }
+.preis-card--featured ul li::before { color:#fc2cb8; }
+.preise__note { text-align:center; font-size:12px; color:#6b6b6b; margin-top:24px; }
+@media (min-width: 769px) {
+  .preis-card--featured { transform:translateY(-12px); box-shadow:0 18px 40px rgba(89,7,29,.18); }
+}
+
+/* ── KONTAKT ── */
+.kontakt { background:#fff; padding:96px 0; }
+.kontakt__grid { display:grid; grid-template-columns:1fr 1.4fr; gap:80px; }
+.kontakt__studios { display:flex; flex-direction:column; gap:0; margin-bottom:28px; }
+.kontakt__studio { padding:20px 0; border-bottom:1px solid rgba(0,0,0,.08); }
+.kontakt__studio strong { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#b20e3b; display:block; margin-bottom:6px; }
+.kontakt__studio p { font-size:14px; line-height:1.6; color:#2a2a2a; }
+.kontakt__studio-kurse { font-size:12px; color:#6b6b6b; margin-top:4px; }
+.kontakt__reach { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+.kontakt__link { display:flex; flex-direction:column; }
+.kontakt__link-label { font-size:9px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#6b6b6b; margin-bottom:2px; }
+.kontakt__link span:last-child { font-size:15px; color:#0d0d0d; }
+.kontakt__link:hover span:last-child { color:#b20e3b; }
+.kontakt__link span:last-child { transition:color .15s; }
+.kontakt__social { display:flex; gap:14px; }
+.kontakt__social a {
+  color:#6b6b6b; transition:color .15s, transform .2s;
+  display:inline-flex; padding:6px; transform-origin:center;
+}
+.kontakt__social a:hover { transform:scale(1.12); color:#b20e3b; }
+.kontakt__social a:hover { color:#b20e3b; }
+
+/* form */
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.form-group label { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#6b6b6b; }
+.form-group input, .form-group select, .form-group textarea {
+  border:1px solid rgba(0,0,0,.18); background:#fff;
+  color:#0d0d0d; font-size:14px; padding:11px 14px;
+  outline:none; border-radius:0;
+  transition:border-color .15s, box-shadow .15s;
+}
+.form-group input:hover, .form-group select:hover, .form-group textarea:hover {
+  border-color:rgba(0,0,0,.32);
+}
+.form-group input:focus-visible, .form-group select:focus-visible, .form-group textarea:focus-visible {
+  border-color:#b20e3b; box-shadow:0 0 0 3px rgba(178,14,59,.18);
+  outline:none;
+}
+.form-group input:invalid:not(:placeholder-shown),
+.form-group select:invalid:not([data-touched="false"]) {
+  border-color:rgba(178,14,59,.55);
+}
+.form-group textarea { resize:vertical; min-height:96px; }
+.form-note { font-size:12px; color:#6b6b6b; text-align:center; margin-top:10px; }
+.form-success {
+  border:1px solid #aed9b3; background:#f6fbf7;
+  padding:18px 20px; margin-top:8px;
+  font-size:14px; line-height:1.55; color:#0d0d0d;
+}
+.form-success strong {
+  display:block; font-family:'Stacion',Georgia,serif;
+  font-weight:300; font-size:20px; margin-bottom:4px; color:#0d0d0d;
+}
+
+/* ── FOOTER ── */
+.footer { background:#0d0d0d; padding:32px 0; }
+.footer__inner {
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px;
+}
+.footer__logo img { height:26px; opacity:.7; }
+.footer__copy { font-size:11px; color:#8c8c8c; }
+.footer__links { display:flex; gap:20px; }
+.footer__links a { font-size:11px; color:#8c8c8c; transition:color .15s; }
+.footer__links a:hover { color:#fff; }
+
+/* ── HAMBURGER ── */
+.nav__hamburger {
+  display:none; flex-direction:column; justify-content:center; align-items:center;
+  gap:5px; background:none; border:none; cursor:pointer;
+  width:44px; height:44px; padding:0; margin-left:auto;
+}
+.nav__hamburger span {
+  display:block; width:22px; height:2px;
+  background:#fff; border-radius:1px;
+  transition:background .3s, transform .25s, opacity .25s;
+  transform-origin:center;
+}
+.nav.scrolled .nav__hamburger span { background:#b20e3b; }
+.nav.menu-open .nav__hamburger span { background:#fff; }
+.nav__hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav__hamburger.open span:nth-child(2) { opacity:0; }
+.nav__hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+/* Nav bekommt dunklen BG wenn Menü offen (unabhängig von scroll) */
+.nav.menu-open {
+  background:rgba(13,13,13,.80);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.nav.menu-open .nav__cta { display:none; }
+
+/* ── MOBILE MENU — außerhalb des headers, kein stacking-context-Problem ── */
+.nav__mobile {
+  position:fixed; top:72px; left:0; right:0; bottom:0;
+  background:rgba(13,13,13,.67);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  z-index:98; overflow-y:auto;
+  display:flex; flex-direction:column;
+  padding:28px 32px 48px;
+  transform:translateX(-100%);
+  transition:transform .38s cubic-bezier(.22,1,.36,1);
+}
+.nav__mobile.open { transform:none; }
+.nav__mobile a {
+  position:relative;
+  font-size:13px; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:rgba(242,218,194,.7);
+  padding:18px 0 18px 18px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  transition:color .15s, padding-left .15s, border-bottom-color .2s;
+}
+.nav__mobile a::before {
+  content:''; position:absolute; left:0; top:50%;
+  width:3px; height:0; background:#b20e3b;
+  transform:translateY(-50%);
+  transition:height .25s ease;
+}
+.nav__mobile a:hover { color:#f2dac2; padding-left:24px; }
+.nav__mobile a.active { color:#f2dac2; }
+.nav__mobile a.active::before { height:24px; }
+.nav__mobile .btn {
+  margin-top:36px; align-self:flex-start;
+  background:#b20e3b; color:#fff; border:none;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .container { padding:0 24px; }
+
+  /* Nav */
+  .nav__links, .nav > .btn--accent { display:none; }
+  .nav__hamburger { display:flex; }
+
+  /* Hero */
+  .hero__headline { font-size:clamp(40px,12vw,64px); }
+  .hero__content { padding-bottom:120px; }
+  .hero__stat { padding:14px 6px; }
+  .hero__stat strong { font-size:26px; white-space:nowrap; }
+  .hero__stat span { font-size:8px; letter-spacing:.06em; }
+
+  /* Manifesto */
+  .manifesto { padding:52px 0; }
+
+  /* Angebote */
+  .angebote { padding:64px 0; }
+  .angebote__grid { grid-template-columns:1fr; gap:2px; }
+
+  /* Feature Banner */
+  .feature-banner { padding:64px 0; }
+
+  /* Studios */
+  .studios { padding-top:64px; }
+  .studios__split { grid-template-columns:1fr; }
+  .studio-panel { height:380px; }
+
+  /* About */
+  .about { padding:64px 0; }
+  .about__inner { grid-template-columns:1fr; gap:36px; }
+  .about__media { aspect-ratio:3/2; }
+  .about__media img { width:100%; height:100%; object-fit:cover; object-position:center 18%; }
+
+  /* Ausbildung */
+  .ausbildung { padding:64px 0; }
+  .ausbildung__inner { grid-template-columns:1fr; gap:40px; }
+
+  /* Preise */
+  .preise { padding:64px 0; }
+  .preise__grid { grid-template-columns:1fr; max-width:420px; margin-inline:auto; }
+  .preis-card--featured { transform:none; }
+
+  /* Kontakt */
+  .kontakt { padding:64px 0; }
+  .kontakt__grid { grid-template-columns:1fr; gap:44px; }
+  .form-row { grid-template-columns:1fr; }
+
+  /* Footer */
+  .footer { padding:40px 0; }
+  .footer__inner { flex-direction:column; align-items:flex-start; gap:24px; }
+  .footer__links { gap:16px; flex-wrap:wrap; }
+}
+
+@media (max-width: 480px) {
+  .hero__actions { flex-direction:column; }
+  .hero__actions .btn { width:100%; text-align:center; }
+  .hero__stat strong { font-size:22px; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+  .kurs-card:hover { transform:none; }
+  .kurs-card:hover .kurs-card__img-wrap img,
+  .studio-panel:hover img { transform:none; }
+  .preis-card--featured { transform:none !important; }
+}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
 <body>
 
-  <!-- ─── NAVIGATION ─── -->
-  <header class="nav" id="nav">
-    <div class="nav__inner container">
+<div id="root"></div>
 
-      <button class="nav__toggle" aria-label="Menü öffnen" aria-expanded="false">
-        <span></span><span></span>
-      </button>
+<script type="text/babel">
+const NAV_IDS = ['angebote','studios','ueber-uns','ausbildung','preise','kontakt'];
+const NAV_LABELS = ['Angebote','Studios','Über uns','Ausbildung','Preise','Kontakt'];
 
-      <a href="#" class="nav__logo">
-        <img class="nav__logo-color" src="media/RZ_Logo_CoreForm_Gudula.png"  alt="core:form – Pilates & Reformer Studio" />
-        <img class="nav__logo-white" src="media/RZ_Logo_CoreForm_Gudula_weiss_pink.png" alt="core:form – Pilates & Reformer Studio" />
-      </a>
+const App = () => {
+  const [scrolled, setScrolled] = React.useState(false);
+  const [activeId, setActiveId] = React.useState('');
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [submitted, setSubmitted] = React.useState(false);
+  const formRef = React.useRef(null);
 
-      <nav class="nav__links" aria-label="Hauptnavigation">
-        <a href="#angebote">Angebote</a>
-        <a href="#studios">Studios</a>
-        <a href="#ueber-uns">Über uns</a>
-        <a href="#ausbildung">Ausbildung</a>
-        <a href="#preise">Preise</a>
-        <a href="#kontakt">Kontakt</a>
+  React.useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+      if (window.scrollY < 80) setActiveId('');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  React.useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) setActiveId(e.target.id); });
+    }, { rootMargin: '-40% 0px -50% 0px' });
+    NAV_IDS.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+    return () => observer.disconnect();
+  }, []);
+
+  const scroll = (id) => {
+    setMobileOpen(false);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (id === 'hero') {
+      setActiveId('');
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      return;
+    }
+    const el = document.getElementById(id);
+    if (el) {
+      window.scrollTo({
+        top: el.getBoundingClientRect().top + window.scrollY - 68,
+        behavior: reduceMotion ? 'auto' : 'smooth'
+      });
+    }
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    if (formRef.current) formRef.current.reset();
+  };
+
+  return (
+    <div>
+      <a href="#main-content" className="skip-link">Zum Inhalt springen</a>
+
+      {/* NAV */}
+      <header className={`nav${scrolled ? ' scrolled' : ''}${mobileOpen ? ' menu-open' : ''}`}>
+        <div className="nav__inner container">
+          <a href="#hero" className="nav__logo" aria-label="core:form Startseite">
+            <img src={scrolled && !mobileOpen ? 'media/RZ_Logo_CoreForm_Gudula.png' : 'media/RZ_Logo_CoreForm_Gudula_weiss_pink.png'} alt="core:form" />
+          </a>
+          <nav className="nav__links" aria-label="Hauptnavigation">
+            {NAV_IDS.map((id, i) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                onClick={(e) => { e.preventDefault(); scroll(id); }}
+                className={activeId === id ? 'active' : ''}
+                aria-current={activeId === id ? 'page' : undefined}
+              >
+                {NAV_LABELS[i]}
+              </a>
+            ))}
+          </nav>
+          <button type="button" className="btn btn--accent nav__cta" onClick={() => scroll('kontakt')}>Kurs buchen</button>
+          <button
+            type="button"
+            className={`nav__hamburger${mobileOpen ? ' open' : ''}`}
+            aria-label={mobileOpen ? 'Menü schließen' : 'Menü öffnen'}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMobileOpen(o => !o)}
+          >
+            <span /><span /><span />
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile menu — außerhalb des headers, damit position:fixed korrekt funktioniert */}
+      <nav
+        id="mobile-menu"
+        className={`nav__mobile${mobileOpen ? ' open' : ''}`}
+        aria-label="Mobile Navigation"
+        aria-hidden={!mobileOpen}
+      >
+        {NAV_IDS.map((id, i) => (
+          <a
+            key={id}
+            href={`#${id}`}
+            onClick={(e) => { e.preventDefault(); scroll(id); }}
+            tabIndex={mobileOpen ? 0 : -1}
+            className={activeId === id ? 'active' : ''}
+            aria-current={activeId === id ? 'page' : undefined}
+          >{NAV_LABELS[i]}</a>
+        ))}
+        <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={() => scroll('kontakt')}>Kurs buchen</button>
       </nav>
 
-      <a href="#kontakt" class="btn btn--accent nav__cta">Kurs buchen</a>
-    </div>
+      <main id="main-content">
 
-    <!-- Mobile overlay menu -->
-    <div class="nav__mobile-menu" id="mobileMenu" aria-hidden="true">
-      <nav>
-        <a href="#angebote"  class="mobile-link">Angebote</a>
-        <a href="#studios"   class="mobile-link">Studios</a>
-        <a href="#ueber-uns" class="mobile-link">Über uns</a>
-        <a href="#ausbildung"class="mobile-link">Ausbildung</a>
-        <a href="#preise"    class="mobile-link">Preise</a>
-        <a href="#kontakt"   class="mobile-link">Kontakt</a>
-      </nav>
-      <div class="mobile-contact">
-        <a href="tel:020185772137">0201 857 721 37</a>
-        <a href="mailto:info@core-form.de">info@core-form.de</a>
-      </div>
-    </div>
-  </header>
-
-  <main>
-
-    <!-- ═══════════════════════════════════════
-         HERO
-    ═══════════════════════════════════════ -->
-    <section class="hero" id="hero">
-      <div class="hero__media">
-        <img src="media/COREFORM_web_015.jpg" alt="Reformer Pilates Training bei core:form" class="hero__img" />
-        <div class="hero__overlay"></div>
-      </div>
-
-      <div class="hero__content container">
-        <h1 class="hero__headline reveal">
-          Kraft.<br />
-          Kontrolle.<br />
-          <em>Bewegung.</em>
-        </h1>
-        <p class="hero__sub reveal reveal--d1">
-          Reformer Pilates &nbsp;·&nbsp; Pilates Matte &nbsp;·&nbsp; Barre Workout
-        </p>
-        <div class="hero__actions reveal reveal--d2">
-          <a href="#angebote" class="btn btn--accent">Kursangebote entdecken</a>
-          <a href="#studios"  class="btn btn--ghost">Unsere Studios</a>
-        </div>
-      </div>
-
-      <div class="hero__stats container">
-        <div class="hero__stat reveal reveal--d1">
-          <strong>2</strong>
-          <span>Studios in Essen</span>
-        </div>
-        <div class="hero__stat reveal reveal--d2">
-          <strong>max.&thinsp;9</strong>
-          <span>Teilnehmer:innen</span>
-        </div>
-        <div class="hero__stat reveal reveal--d3">
-          <strong>3</strong>
-          <span>Kursformate</span>
-        </div>
-      </div>
-
-      <div class="hero__scroll" aria-hidden="true">
-        <div class="hero__scroll-line"></div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════
-         ZAHLEN / MANIFESTO
-    ═══════════════════════════════════════ -->
-    <section class="manifesto">
-      <div class="container">
-        <div class="manifesto__inner reveal">
-          <p class="manifesto__quote">
-            Training, das einfach&nbsp;<em>gut&nbsp;tut.</em>
-          </p>
-          <p class="manifesto__body">
-            core:form steht für ganzheitliches Bewegen –&nbsp;präzise angeleitet,
-            persönlich begleitet, in kleinen Gruppen. Für Kraft, Stabilität
-            und ein tiefes Wohlbefinden.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════
-         ANGEBOTE
-    ═══════════════════════════════════════ -->
-    <section class="angebote" id="angebote">
-      <div class="container">
-        <header class="section-header reveal">
-          <span class="label">Was wir anbieten</span>
-          <h2>Kursangebote</h2>
-        </header>
-
-        <div class="angebote__grid">
-
-          <!-- Reformer — large -->
-          <article class="kurs-card kurs-card--large reveal" style="--d:0s">
-            <div class="kurs-card__img-wrap">
-              <img src="media/COREFORM_web_005.jpg" alt="Reformer Pilates Gruppe" loading="lazy" />
-            </div>
-            <div class="kurs-card__body">
-              <span class="kurs-card__tag tag--pistazie">Studio Südviertel</span>
-              <h3>Reformer<br />Pilates</h3>
-              <p>Training an der Reformer-Apparatur in Kleingruppen – präzise angeleitet für maximale Wirkung.</p>
-              <a href="#kontakt" class="text-link">Mehr erfahren →</a>
-            </div>
-          </article>
-
-          <!-- Matte -->
-          <article class="kurs-card reveal" style="--d:.07s">
-            <div class="kurs-card__img-wrap">
-              <img src="media/Eva-Pilates 01.jpg" alt="Pilates Matte Kurs" loading="lazy" />
-            </div>
-            <div class="kurs-card__body">
-              <span class="kurs-card__tag tag--pistazie">Studio Rüttenscheid</span>
-              <h3>Pilates<br />Matte</h3>
-              <p>Achtsam angeleitetes Training in Kleingruppen – zugänglich und tiefgründig zugleich.</p>
-              <a href="#kontakt" class="text-link">Mehr erfahren →</a>
-            </div>
-          </article>
-
-          <!-- Barre -->
-          <article class="kurs-card reveal" style="--d:.14s">
-            <div class="kurs-card__img-wrap">
-              <img src="media/COREFORM_web_006.jpg" alt="Barre Workout" loading="lazy" />
-            </div>
-            <div class="kurs-card__body">
-              <span class="kurs-card__tag tag--pistazie">Studio Rüttenscheid</span>
-              <h3>Barre<br />Workout</h3>
-              <p>Dynamisches Ganzkörpertraining – Pilates trifft Tanz und Kraft. Eleganz trifft Intensität.</p>
-              <a href="#kontakt" class="text-link">Mehr erfahren →</a>
-            </div>
-          </article>
-
-          <!-- Personal Training -->
-          <article class="kurs-card reveal" style="--d:.21s">
-            <div class="kurs-card__img-wrap">
-              <img src="media/COREFORM_web_002.jpg" alt="Personal Training" loading="lazy" />
-            </div>
-            <div class="kurs-card__body">
-              <span class="kurs-card__tag tag--blau">Beide Studios</span>
-              <h3>Personal<br />Training</h3>
-              <p>1:1 oder 2:1 – individuelles Pilatestraining auf der Matte oder am Reformer.</p>
-              <a href="#kontakt" class="text-link">Anfragen →</a>
-            </div>
-          </article>
-
-          <!-- Raumvermietung -->
-          <article class="kurs-card reveal" style="--d:.28s">
-            <div class="kurs-card__img-wrap">
-              <img src="media/COREFORM_web_012.jpg" alt="Raumvermietung Studio" loading="lazy" />
-            </div>
-            <div class="kurs-card__body">
-              <span class="kurs-card__tag tag--blau">Studio Südviertel</span>
-              <h3>Raum&shy;vermietung</h3>
-              <p>Zwei Balanced Body Reformer – ideal für Kolleg:innen und externe Trainer:innen.</p>
-              <a href="#kontakt" class="text-link">Anfragen →</a>
-            </div>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════
-         FEATURE-BANNER (Vollbild-Zitat)
-    ═══════════════════════════════════════ -->
-    <section class="feature-banner">
-      <div class="feature-banner__media">
-        <img src="media/COREFORM_web_010.jpg" alt="Fokus beim Pilates Training" loading="lazy" />
-        <div class="feature-banner__overlay"></div>
-      </div>
-      <div class="feature-banner__content container reveal">
-        <blockquote>
-          „Jede Bewegung zählt –<br />
-          <em>wenn&nbsp;sie&nbsp;präzise&nbsp;ist.</em>"
-        </blockquote>
-        <p>Maximal 9 Teilnehmer:innen pro Kurs. Persönliche Anleitung. Echte Wirkung.</p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════
-         STUDIOS
-    ═══════════════════════════════════════ -->
-    <section class="studios" id="studios">
-      <div class="container">
-        <header class="section-header reveal">
-          <span class="label">Wo wir sind</span>
-          <h2>Unsere Studios</h2>
-        </header>
-      </div>
-
-      <div class="studios__split">
-        <div class="studio-panel reveal">
-          <div class="studio-panel__media">
-            <img src="media/COREFORM_web_001.jpg" alt="Studio Rüttenscheid – Gruppentraining" loading="lazy" />
-            <div class="studio-panel__overlay"></div>
-          </div>
-          <div class="studio-panel__content">
-            <img class="studio-panel__logo" src="media/RZ_Logo_CoreForm_Gudula_weiss_pink.png" alt="core:form Gudula" />
-            <div>
-              <span class="studio-panel__nr">Studio 01</span>
-              <h3>Rüttenscheid</h3>
-              <p>Gudulastraße · 45131 Essen</p>
-            </div>
-            <div class="studio-panel__kurse">
-              <span>Pilates Matte</span>
-              <span>Barre Workout</span>
-            </div>
-            <a href="#kontakt" class="btn btn--ghost-white">Anfahrt &amp; Infos</a>
+      {/* HERO */}
+      <section className="hero" id="hero" aria-labelledby="hero-headline">
+        <img
+          className="hero__img"
+          src="media/COREFORM_web_015.jpg"
+          alt=""
+          aria-hidden="true"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <div className="hero__overlay" aria-hidden="true" />
+        <div className="hero__content container">
+          <h1 className="hero__headline" id="hero-headline">
+            Kraft.<br />Kontrolle.<br /><em>Bewegung.</em>
+          </h1>
+          <p className="hero__sub">Reformer Pilates &nbsp;·&nbsp; Pilates Matte &nbsp;·&nbsp; Barre Workout</p>
+          <div className="hero__actions">
+            <button type="button" className="btn btn--accent" onClick={() => scroll('angebote')}>Kursangebote entdecken</button>
+            <button type="button" className="btn btn--ghost" onClick={() => scroll('studios')}>Unsere Studios</button>
           </div>
         </div>
-
-        <div class="studio-panel reveal reveal--d1">
-          <div class="studio-panel__media">
-            <img src="media/COREFORM_web_004.jpg" alt="Studio Südviertel – Reformer Pilates" loading="lazy" />
-            <div class="studio-panel__overlay"></div>
-          </div>
-          <div class="studio-panel__content">
-            <img class="studio-panel__logo" src="media/RZ_Logo_CoreForm_Moltke_weiss_pink.png" alt="core:form Moltke" />
-            <div>
-              <span class="studio-panel__nr">Studio 02</span>
-              <h3>Südviertel</h3>
-              <p>Moltkestraße · 45138 Essen</p>
+        <div className="hero__stats" role="list" aria-label="core:form auf einen Blick">
+          {[['2','Studios in Essen'],['max. 9','Teilnehmer:innen'],['3','Kursformate']].map(([n,l]) => (
+            <div className="hero__stat" key={l} role="listitem">
+              <strong>{n}</strong><span>{l}</span>
             </div>
-            <div class="studio-panel__kurse">
-              <span>Reformer Pilates</span>
-              <span>Raumvermietung</span>
-            </div>
-            <a href="#kontakt" class="btn btn--ghost-white">Anfahrt &amp; Infos</a>
-          </div>
+          ))}
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ═══════════════════════════════════════
-         ÜBER UNS
-    ═══════════════════════════════════════ -->
-    <section class="about" id="ueber-uns">
-      <div class="container">
-        <div class="about__inner">
-
-          <div class="about__media reveal">
-            <img src="media/COREFORM_web_008.jpg" alt="Persönliche Betreuung im core:form Studio" loading="lazy" />
-          </div>
-
-          <div class="about__text">
-            <header class="section-header reveal">
-              <span class="label">Über uns</span>
-              <h2>Bewegung<br />mit Haltung.</h2>
-            </header>
-            <p class="reveal reveal--d1">
-              core:form wurde aus der Überzeugung gegründet, dass Pilates mehr ist als ein Workout –
-              es ist eine Praxis. Eine, die Körper und Geist verbindet, präzises Arbeiten mit
-              echter Freude am Bewegen vereint.
+      {/* MANIFESTO */}
+      <section className="manifesto">
+        <div className="container">
+          <div className="manifesto__inner">
+            <p className="manifesto__quote">Training, das einfach&nbsp;<em>gut&nbsp;tut.</em></p>
+            <p className="manifesto__body">
+              core:form steht für ganzheitliches Bewegen – präzise angeleitet, persönlich begleitet, in kleinen Gruppen. Für Kraft, Stabilität und ein tiefes Wohlbefinden.
             </p>
-            <p class="reveal reveal--d1">
-              Eva, Gründerin und leidenschaftliche Pilates-Trainerin, hat beide Studios in Essen
-              aufgebaut. Mit einem Team erfahrener Trainer:innen bietet core:form ein Umfeld,
-              in dem jede:r – ob Anfänger:in oder Fortgeschrittene:r – das Beste aus sich
-              herausholen kann.
-            </p>
-            <div class="about__values reveal reveal--d2">
-              <div class="about__value">
-                <span class="about__value-line"></span>
-                <strong>Präzision</strong>
-                <span>Jede Bewegung zählt</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ANGEBOTE */}
+      <section className="angebote" id="angebote">
+        <div className="container">
+          <div className="section-head">
+            <span className="label">Was wir anbieten</span>
+            <h2>Kursangebote</h2>
+          </div>
+          <div className="angebote__grid">
+            {[
+              { img:'media/COREFORM_web_005.jpg', tag:'Studio Südviertel', title:'Reformer\nPilates', desc:'Training an der Reformer-Apparatur in Kleingruppen – präzise angeleitet für maximale Wirkung.' },
+              { img:'media/Eva-Pilates 01.jpg',   tag:'Studio Rüttenscheid', title:'Pilates\nMatte',   desc:'Achtsam angeleitetes Training in Kleingruppen – zugänglich und tiefgründig zugleich.' },
+              { img:'media/Eva-Pilates 06.jpg', tag:'Studio Rüttenscheid', title:'Barre\nWorkout', desc:'Dynamisches Ganzkörpertraining – Pilates trifft Tanz und Kraft. Eleganz trifft Intensität.' },
+              { img:'media/COREFORM_web_009.jpg', tag:'Beide Studios',        title:'Personal\nTraining', desc:'1:1 oder 2:1 – individuelles Pilatestraining auf der Matte oder am Reformer.' },
+              { img:'media/Eva-Pilates 07.jpg', tag:'Studio Südviertel',    title:'Raum­vermietung', desc:'Zwei Balanced Body Reformer – ideal für Kolleg:innen und externe Trainer:innen.' },
+            ].map((c, i) => (
+              <div className="kurs-card" key={i}>
+                <div className="kurs-card__img-wrap">
+                  <img src={c.img} alt={c.title.replace('\n',' ')} loading="lazy" decoding="async" />
+                </div>
+                <div className="kurs-card__body">
+                  <span className="kurs-card__tag">{c.tag}</span>
+                  <h3>{c.title.split('\n').map((l,j) => <React.Fragment key={j}>{l}{j===0&&<br/>}</React.Fragment>)}</h3>
+                  <p>{c.desc}</p>
+                  <a
+                    className="text-link"
+                    href="#kontakt"
+                    onClick={(e) => { e.preventDefault(); scroll('kontakt'); }}
+                  >
+                    {i < 3 ? 'Mehr erfahren →' : 'Anfragen →'}
+                  </a>
+                </div>
               </div>
-              <div class="about__value">
-                <span class="about__value-line"></span>
-                <strong>Wärme</strong>
-                <span>Persönliche Begleitung</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURE BANNER */}
+      <section className="feature-banner" aria-label="Zitat">
+        <img
+          className="feature-banner__img"
+          src="media/COREFORM_web_010.jpg"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="feature-banner__content container">
+          <blockquote>
+            „Jede Bewegung zählt –<br /><em>wenn&nbsp;sie&nbsp;präzise&nbsp;ist.</em>"
+          </blockquote>
+          <p>Maximal 9 Teilnehmer:innen pro Kurs. Persönliche Anleitung. Echte Wirkung.</p>
+        </div>
+      </section>
+
+      {/* STUDIOS */}
+      <section className="studios" id="studios">
+        <div className="container">
+          <div className="section-head">
+            <span className="label">Wo wir sind</span>
+            <h2>Unsere Studios</h2>
+          </div>
+        </div>
+        <div className="studios__split">
+          <article className="studio-panel">
+            <img src="media/Eva-Pilates 02.jpg" alt="Trainingsraum im Studio Rüttenscheid" loading="lazy" decoding="async" />
+            <div className="studio-panel__overlay" aria-hidden="true" />
+            <div className="studio-panel__content">
+              <img src="media/RZ_Logo_CoreForm_Gudula.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+              <div>
+                <span className="studio-panel__nr">Studio 01</span>
+                <h3>Rüttenscheid</h3>
+                <p>Gudulastraße · 45131 Essen</p>
               </div>
-              <div class="about__value">
-                <span class="about__value-line"></span>
-                <strong>Gemeinschaft</strong>
-                <span>Kleine Gruppen, großes Miteinander</span>
+              <div className="studio-panel__kurse">
+                <span>Pilates Matte</span><span>Barre Workout</span>
+              </div>
+              <button type="button" className="btn btn--ghost" onClick={() => scroll('kontakt')}>Anfahrt & Infos</button>
+            </div>
+          </article>
+          <article className="studio-panel">
+            <img src="media/COREFORM_web_002.jpg" alt="Trainingsraum im Studio Südviertel" loading="lazy" decoding="async" />
+            <div className="studio-panel__overlay" aria-hidden="true" />
+            <div className="studio-panel__content">
+              <img src="media/RZ_Logo_CoreForm_Moltke.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+              <div>
+                <span className="studio-panel__nr">Studio 02</span>
+                <h3>Südviertel</h3>
+                <p>Moltkestraße · 45138 Essen</p>
+              </div>
+              <div className="studio-panel__kurse">
+                <span>Reformer Pilates</span><span>Raumvermietung</span>
+              </div>
+              <button type="button" className="btn btn--ghost" onClick={() => scroll('kontakt')}>Anfahrt & Infos</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* ABOUT */}
+      <section className="about" id="ueber-uns">
+        <div className="container">
+          <div className="about__inner">
+            <div className="about__media">
+              <img src="media/Eva & Jelena.jpg" alt="Eva und Jelena – Gründerinnen von core:form" loading="lazy" decoding="async" />
+            </div>
+            <div className="about__text">
+              <div className="section-head">
+                <span className="label">Über uns</span>
+                <h2>Bewegung<br />mit Haltung.</h2>
+              </div>
+              <p>core:form wurde aus der Überzeugung gegründet, dass Pilates mehr ist als ein Workout – es ist eine Praxis. Eine, die Körper und Geist verbindet, präzises Arbeiten mit echter Freude am Bewegen vereint.</p>
+              <p>Eva, Gründerin und leidenschaftliche Pilates-Trainerin, hat beide Studios in Essen aufgebaut. Mit einem Team erfahrener Trainer:innen bietet core:form ein Umfeld, in dem jede:r das Beste aus sich herausholen kann.</p>
+              <div className="about__values">
+                {[['Präzision','Jede Bewegung zählt'],['Wärme','Persönliche Begleitung'],['Gemeinschaft','Kleine Gruppen, großes Miteinander']].map(([t,s]) => (
+                  <div className="about__value" key={t}>
+                    <span className="about__value-line"></span>
+                    <div className="about__value-text"><strong>{t}</strong><span>{s}</span></div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ═══════════════════════════════════════
-         AUSBILDUNG
-    ═══════════════════════════════════════ -->
-    <section class="ausbildung" id="ausbildung">
-      <div class="container">
-        <div class="ausbildung__inner">
-          <div class="ausbildung__text">
-            <span class="label label--light reveal">Ausbildung</span>
-            <h2 class="reveal reveal--d1">Werde<br /><em>Pilates-Trainer:in.</em></h2>
-            <p class="reveal reveal--d2">
-              core:form bietet strukturierte Ausbildungsprogramme für alle, die Pilates
-              professionell unterrichten möchten. Fundiert, praxisnah und von erfahrenen
-              Trainer:innen begleitet.
-            </p>
-            <a href="#kontakt" class="btn btn--accent reveal reveal--d2">Zur Ausbildung</a>
-          </div>
-          <ul class="ausbildung__features reveal reveal--d1">
-            <li>
-              <span class="check">✓</span>
-              <span>Zertifizierte Programme für Matte &amp; Reformer</span>
-            </li>
-            <li>
-              <span class="check">✓</span>
-              <span>Erfahrene Ausbilder:innen</span>
-            </li>
-            <li>
-              <span class="check">✓</span>
-              <span>Kleine Ausbildungsgruppen</span>
-            </li>
-            <li>
-              <span class="check">✓</span>
-              <span>Praxis &amp; Theorie in zwei Studios</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════
-         PREISE
-    ═══════════════════════════════════════ -->
-    <section class="preise" id="preise">
-      <div class="container">
-        <header class="section-header reveal">
-          <span class="label">Investition</span>
-          <h2>Preise &amp; Pakete</h2>
-        </header>
-
-        <div class="preise__grid">
-
-          <div class="preis-card reveal" style="--d:0s">
-            <span class="preis-card__format">Reformer Pilates</span>
-            <div class="preis-card__price">
-              <span>ab</span><strong>115 €</strong>
+      {/* AUSBILDUNG */}
+      <section className="ausbildung" id="ausbildung">
+        <div className="container">
+          <div className="ausbildung__inner">
+            <div className="ausbildung__text">
+              <span className="label">Ausbildung</span>
+              <h2>Werde<br /><em>Pilates-Trainer:in.</em></h2>
+              <p>core:form bietet strukturierte Ausbildungsprogramme für alle, die Pilates professionell unterrichten möchten. Fundiert, praxisnah und von erfahrenen Trainer:innen begleitet.</p>
+              <button type="button" className="btn btn--accent" onClick={() => scroll('kontakt')}>Zur Ausbildung</button>
             </div>
-            <ul>
-              <li>Einsteigerkurs (mehrere Termine)</li>
-              <li>Maximal 9 Teilnehmer:innen</li>
-              <li>Studio Südviertel</li>
-              <li>Professionelle Anleitung</li>
+            <ul className="ausbildung__features">
+              {['Zertifizierte Programme für Matte & Reformer','Erfahrene Ausbilder:innen','Kleine Ausbildungsgruppen','Praxis & Theorie in zwei Studios'].map(f => (
+                <li key={f}><span className="check">✓</span><span>{f}</span></li>
+              ))}
             </ul>
-            <a href="#kontakt" class="btn btn--outline">Jetzt anfragen</a>
           </div>
-
-          <div class="preis-card preis-card--featured reveal" style="--d:.1s">
-            <span class="preis-card__badge">Empfohlen</span>
-            <span class="preis-card__format">Pilates Matte</span>
-            <div class="preis-card__price">
-              <span>Kurse</span><strong>ab 99 €</strong>
-            </div>
-            <ul>
-              <li>Laufende Kurse &amp; Blöcke</li>
-              <li>Verschiedene Trainer:innen</li>
-              <li>Studio Rüttenscheid</li>
-              <li>Alle Levels willkommen</li>
-            </ul>
-            <a href="#kontakt" class="btn btn--accent">Jetzt anfragen</a>
-          </div>
-
-          <div class="preis-card reveal" style="--d:.2s">
-            <span class="preis-card__format">Personal Training</span>
-            <div class="preis-card__price">
-              <span>Individuell</span><strong>auf Anfrage</strong>
-            </div>
-            <ul>
-              <li>1:1 oder 2:1 Sessions</li>
-              <li>Matte oder Reformer</li>
-              <li>Flexible Terminplanung</li>
-              <li>Maßgeschneidert für dich</li>
-            </ul>
-            <a href="#kontakt" class="btn btn--outline">Anfragen</a>
-          </div>
-
         </div>
-        <p class="preise__note reveal">Alle aktuellen Preise &amp; Termine auf Anfrage oder direkt im Studio.</p>
-      </div>
-    </section>
+      </section>
 
-    <!-- ═══════════════════════════════════════
-         KONTAKT
-    ═══════════════════════════════════════ -->
-    <section class="kontakt" id="kontakt">
-      <div class="container">
-        <header class="section-header reveal">
-          <span class="label label--light">Komm vorbei</span>
-          <h2>Kontakt &amp; Anfahrt</h2>
-        </header>
-
-        <div class="kontakt__grid">
-
-          <div class="kontakt__info reveal">
-
-            <div class="kontakt__studios">
-              <div class="kontakt__studio">
-                <strong>Studio Rüttenscheid</strong>
-                <p>Gudulastraße<br />45131 Essen</p>
-                <p class="kontakt__studio-kurse">Pilates Matte · Barre Workout</p>
-              </div>
-              <div class="kontakt__studio">
-                <strong>Studio Südviertel</strong>
-                <p>Moltkestraße<br />45138 Essen</p>
-                <p class="kontakt__studio-kurse">Reformer Pilates · Raumvermietung</p>
-              </div>
-            </div>
-
-            <div class="kontakt__reach">
-              <a href="tel:020185772137" class="kontakt__link">
-                <span class="kontakt__link-label">Telefon</span>
-                <span>0201 857 721 37</span>
-              </a>
-              <a href="mailto:info@core-form.de" class="kontakt__link">
-                <span class="kontakt__link-label">E-Mail</span>
-                <span>info@core-form.de</span>
-              </a>
-            </div>
-
-            <div class="kontakt__social">
-              <a href="https://instagram.com/coreform_essen" target="_blank" rel="noopener" aria-label="Instagram">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-              </a>
-              <a href="https://facebook.com/evapilates.de" target="_blank" rel="noopener" aria-label="Facebook">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-              </a>
-              <a href="https://youtube.com/channel/UCPZpD1CyB2Vo82C0-_lxUMg" target="_blank" rel="noopener" aria-label="YouTube">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
-              </a>
-            </div>
+      {/* PREISE */}
+      <section className="preise" id="preise">
+        <div className="container">
+          <div className="section-head">
+            <span className="label">Investition</span>
+            <h2>Preise & Pakete</h2>
           </div>
-
-          <form class="kontakt__form reveal reveal--d1" novalidate>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Dein Name" autocomplete="name" />
+          <div className="preise__grid">
+            {[
+              { format:'Reformer Pilates', prefix:'ab', price:'115 €', features:['Einsteigerkurs (mehrere Termine)','Maximal 9 Teilnehmer:innen','Studio Südviertel','Professionelle Anleitung'], featured:false },
+              { format:'Pilates Matte', prefix:'Kurse', price:'ab 99 €', features:['Laufende Kurse & Blöcke','Verschiedene Trainer:innen','Studio Rüttenscheid','Alle Levels willkommen'], featured:true, badge:'Empfohlen' },
+              { format:'Personal Training', prefix:'Individuell', price:'auf Anfrage', features:['1:1 oder 2:1 Sessions','Matte oder Reformer','Flexible Terminplanung','Maßgeschneidert für dich'], featured:false },
+            ].map((p, i) => (
+              <div className={`preis-card${p.featured ? ' preis-card--featured' : ''}`} key={i}>
+                {p.badge && <span className="preis-card__badge">{p.badge}</span>}
+                <span className="preis-card__format">{p.format}</span>
+                <div className="preis-card__price">
+                  <span>{p.prefix}</span><strong>{p.price}</strong>
+                </div>
+                <ul>{p.features.map(f => <li key={f}>{f}</li>)}</ul>
+                <button
+                  type="button"
+                  className={`btn btn--full${p.featured ? ' btn--accent' : ' btn--outline'}`}
+                  onClick={() => scroll('kontakt')}
+                >{i===2 ? 'Anfragen' : 'Jetzt anfragen'}</button>
               </div>
-              <div class="form-group">
-                <label for="email">E-Mail</label>
-                <input type="email" id="email" name="email" placeholder="deine@mail.de" autocomplete="email" />
+            ))}
+          </div>
+          <p className="preise__note">Alle aktuellen Preise & Termine auf Anfrage oder direkt im Studio.</p>
+        </div>
+      </section>
+
+      {/* KONTAKT */}
+      <section className="kontakt" id="kontakt">
+        <div className="container">
+          <div className="section-head">
+            <span className="label">Komm vorbei</span>
+            <h2>Kontakt & Anfahrt</h2>
+          </div>
+          <div className="kontakt__grid">
+            <div className="kontakt__info">
+              <div className="kontakt__studios">
+                <div className="kontakt__studio">
+                  <strong>Studio Rüttenscheid</strong>
+                  <p>Gudulastraße 3e<br />45131 Essen</p>
+                  <p className="kontakt__studio-kurse">Pilates Matte · Barre Workout</p>
+                </div>
+                <div className="kontakt__studio">
+                  <strong>Studio Südviertel</strong>
+                  <p>Moltkestraße 31<br />45138 Essen</p>
+                  <p className="kontakt__studio-kurse">Reformer Pilates · Raumvermietung</p>
+                </div>
+              </div>
+              <div className="kontakt__reach">
+                <a href="tel:020185772137" className="kontakt__link">
+                  <span className="kontakt__link-label">Telefon</span>
+                  <span>0201 857 721 37</span>
+                </a>
+                <a href="mailto:info@core-form.de" className="kontakt__link">
+                  <span className="kontakt__link-label">E-Mail</span>
+                  <span>info@core-form.de</span>
+                </a>
+              </div>
+              <div className="kontakt__social">
+                <a href="https://instagram.com/coreform_essen" target="_blank" rel="noopener noreferrer" aria-label="core:form auf Instagram (öffnet in neuem Tab)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                </a>
+                <a href="https://facebook.com/evapilates.de" target="_blank" rel="noopener noreferrer" aria-label="core:form auf Facebook (öffnet in neuem Tab)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true" focusable="false"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </a>
+                <a href="https://youtube.com/channel/UCPZpD1CyB2Vo82C0-_lxUMg" target="_blank" rel="noopener noreferrer" aria-label="core:form auf YouTube (öffnet in neuem Tab)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true" focusable="false"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+                </a>
               </div>
             </div>
-            <div class="form-group">
-              <label for="interesse">Interesse</label>
-              <select id="interesse" name="interesse">
-                <option value="">Kurs wählen …</option>
-                <option>Reformer Pilates</option>
-                <option>Pilates Matte</option>
-                <option>Barre Workout</option>
-                <option>Personal Training</option>
-                <option>Raumvermietung</option>
-                <option>Ausbildung</option>
-              </select>
+            <form ref={formRef} className="kontakt__form" onSubmit={onSubmit} noValidate>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="name">Name</label>
+                  <input type="text" id="name" name="name" placeholder="Dein Name" autoComplete="name" required />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="email">E-Mail</label>
+                  <input type="email" id="email" name="email" placeholder="deine@mail.de" autoComplete="email" inputMode="email" required />
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="interesse">Interesse</label>
+                <select id="interesse" name="interesse" defaultValue="" required>
+                  <option value="" disabled>Kurs wählen …</option>
+                  <option>Reformer Pilates</option>
+                  <option>Pilates Matte</option>
+                  <option>Barre Workout</option>
+                  <option>Personal Training</option>
+                  <option>Raumvermietung</option>
+                  <option>Ausbildung</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="nachricht">Nachricht</label>
+                <textarea id="nachricht" name="nachricht" rows="4" placeholder="Deine Frage oder Nachricht …"></textarea>
+              </div>
+              <button type="submit" className="btn btn--accent btn--full">Nachricht senden</button>
+              {submitted ? (
+                <div className="form-success" role="status" aria-live="polite">
+                  <strong>Danke für deine Nachricht.</strong>
+                  Wir melden uns schnellstmöglich bei dir.
+                </div>
+              ) : (
+                <p className="form-note">Wir melden uns schnellstmöglich bei dir.</p>
+              )}
+            </form>
+          </div>
+        </div>
+      </section>
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <div className="container">
+          <div className="footer__inner">
+            <div className="footer__logo">
+              <img src="media/RZ_Logo_CoreForm_Moltke_weiss.png" alt="core:form" loading="lazy" decoding="async" />
             </div>
-            <div class="form-group">
-              <label for="nachricht">Nachricht</label>
-              <textarea id="nachricht" name="nachricht" rows="4" placeholder="Deine Frage oder Nachricht …"></textarea>
+            <span className="footer__copy">© {new Date().getFullYear()} core:form Pilates Studio GbR, Essen</span>
+            <div className="footer__links">
+              <a href="#">Impressum</a>
+              <a href="#">Datenschutz</a>
+              <a href="#">AGB</a>
             </div>
-            <button type="submit" class="btn btn--accent btn--full">Nachricht senden</button>
-            <p class="form-note">Wir melden uns schnellstmöglich bei dir.</p>
-          </form>
-
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ─── FOOTER ─── -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__top">
-        <div class="footer__brand">
-          <img src="media/RZ_Logo_CoreForm_Gudula_weiss_pink.png" alt="core:form" class="footer__logo" />
-          <p>Pilates &amp; Reformer Studio<br />Essen · Rüttenscheid &amp; Südviertel</p>
-        </div>
-        <div class="footer__nav">
-          <div class="footer__col">
-            <strong>Studio</strong>
-            <a href="#angebote">Angebote</a>
-            <a href="#studios">Studios</a>
-            <a href="#preise">Preise</a>
-            <a href="#ausbildung">Ausbildung</a>
-          </div>
-          <div class="footer__col">
-            <strong>Info</strong>
-            <a href="#ueber-uns">Über uns</a>
-            <a href="#kontakt">Kontakt</a>
-            <a href="#">FAQ</a>
-            <a href="#">Newsletter</a>
-          </div>
-          <div class="footer__col">
-            <strong>Rechtliches</strong>
-            <a href="#">Impressum</a>
-            <a href="#">Datenschutz</a>
-            <a href="#">AGB</a>
           </div>
         </div>
-      </div>
-      <div class="footer__bottom">
-        <span>© 2025 core:form Pilates Studio GbR, Essen</span>
-        <div class="footer__social-links">
-          <a href="https://instagram.com/coreform_essen" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://facebook.com/evapilates.de"   target="_blank" rel="noopener">Facebook</a>
-          <a href="https://youtube.com/channel/UCPZpD1CyB2Vo82C0-_lxUMg" target="_blank" rel="noopener">YouTube</a>
-        </div>
-      </div>
+      </footer>
     </div>
-  </footer>
+  );
+};
 
-  <script src="js/main.js"></script>
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>

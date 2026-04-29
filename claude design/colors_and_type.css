@@ -1,0 +1,295 @@
+/* ============================================================
+   core:form Design System — Colors & Typography
+   core-form.de | Pilates & Reformer Studio, Essen
+   ============================================================ */
+
+/* -----------------------------------------------------------
+   FONTS
+   ----------------------------------------------------------- */
+@font-face {
+  font-family: 'Stacion';
+  src: url('./fonts/stacion-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Stacion';
+  src: url('./fonts/stacion-italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Stacion';
+  src: url('./fonts/stacion-light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Stacion';
+  src: url('./fonts/stacion-light-italic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* -----------------------------------------------------------
+   COLOR PRIMITIVES
+   ----------------------------------------------------------- */
+:root {
+  /* Brand palette */
+  --color-creme:        #f2dac2;   /* warm off-white, bg accent */
+  --color-brombeere:    #59071d;   /* very dark wine/blackberry */
+  --color-himbeere:     #b20e3b;   /* raspberry — primary action */
+  --color-pistazie:     #aed9b3;   /* pistachio/sage green */
+  --color-pistazie-dark:#91baa3;   /* deeper sage */
+  --color-blau:         #095873;   /* dark teal/blue */
+  --color-pink:         #fc2cb8;   /* hot pink — colon accent */
+
+  /* Neutrals */
+  --color-black:        #0d0d0d;
+  --color-grey-dark:    #2a2a2a;
+  --color-grey-mid:     #8c8c8c;
+  --color-grey-light:   #d4d4d4;
+  --color-off-white:    #f6f9f7;
+  --color-white:        #ffffff;
+
+  /* -----------------------------------------------------------
+     SEMANTIC COLOR TOKENS
+     ----------------------------------------------------------- */
+  --bg-base:            var(--color-white);
+  --bg-warm:            var(--color-creme);       /* section bg, warm */
+  --bg-dark:            var(--color-black);        /* dark hero / footer */
+  --bg-teal:            var(--color-blau);         /* education/highlight section */
+  --bg-subtle:          var(--color-off-white);    /* subtle alternate row */
+
+  --fg-primary:         var(--color-black);
+  --fg-secondary:       var(--color-grey-dark);
+  --fg-muted:           var(--color-grey-mid);
+  --fg-on-dark:         var(--color-white);
+  --fg-on-creme:        var(--color-brombeere);
+
+  --accent-primary:     var(--color-himbeere);     /* CTA buttons, highlights */
+  --accent-dark:        var(--color-brombeere);    /* hover on primary */
+  --accent-teal:        var(--color-blau);
+  --accent-sage:        var(--color-pistazie);
+  --accent-pink:        var(--color-pink);         /* colon in logo */
+
+  --border-light:       rgba(0,0,0,0.1);
+  --border-dark:        rgba(255,255,255,0.15);
+
+  /* -----------------------------------------------------------
+     TYPOGRAPHY PRIMITIVES
+     ----------------------------------------------------------- */
+  --font-display:       'Stacion', Georgia, serif;  /* headlines, editorial */
+  --font-body:          'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-label:         'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --weight-light:       300;
+  --weight-regular:     400;
+  --weight-medium:      500;
+  --weight-bold:        700;
+
+  --tracking-tight:     -0.02em;
+  --tracking-normal:    0em;
+  --tracking-wide:      0.08em;
+  --tracking-widest:    0.15em;
+
+  /* -----------------------------------------------------------
+     TYPE SCALE
+     ----------------------------------------------------------- */
+  --fs-xs:    0.75rem;    /* 12px */
+  --fs-sm:    0.875rem;   /* 14px */
+  --fs-base:  1rem;       /* 16px */
+  --fs-md:    1.125rem;   /* 18px */
+  --fs-lg:    1.25rem;    /* 20px */
+  --fs-xl:    1.5rem;     /* 24px */
+  --fs-2xl:   2rem;       /* 32px */
+  --fs-3xl:   2.75rem;    /* 44px */
+  --fs-4xl:   3.5rem;     /* 56px */
+  --fs-5xl:   4.5rem;     /* 72px */
+  --fs-6xl:   6rem;       /* 96px */
+
+  /* -----------------------------------------------------------
+     SEMANTIC TYPE STYLES
+     ----------------------------------------------------------- */
+  /* h1 — large editorial hero (Stacion light italic) */
+  --h1-font:    var(--font-display);
+  --h1-weight:  var(--weight-light);
+  --h1-size:    var(--fs-5xl);
+  --h1-leading: 1.05;
+  --h1-style:   normal;   /* use italic variant manually */
+
+  /* h2 — section title */
+  --h2-font:    var(--font-display);
+  --h2-weight:  var(--weight-light);
+  --h2-size:    var(--fs-3xl);
+  --h2-leading: 1.1;
+
+  /* h3 — subsection heading */
+  --h3-font:    var(--font-display);
+  --h3-weight:  var(--weight-regular);
+  --h3-size:    var(--fs-xl);
+  --h3-leading: 1.2;
+
+  /* p — body text */
+  --p-font:     var(--font-body);
+  --p-weight:   var(--weight-regular);
+  --p-size:     var(--fs-base);
+  --p-leading:  1.7;
+
+  /* label / eyebrow — small caps, wide tracked */
+  --label-font:     var(--font-label);
+  --label-weight:   var(--weight-medium);
+  --label-size:     var(--fs-xs);
+  --label-tracking: var(--tracking-widest);
+  --label-transform: uppercase;
+
+  /* nav links */
+  --nav-font:       var(--font-label);
+  --nav-weight:     var(--weight-medium);
+  --nav-size:       var(--fs-sm);
+  --nav-tracking:   var(--tracking-wide);
+  --nav-transform:  uppercase;
+
+  /* -----------------------------------------------------------
+     SPACING SCALE
+     ----------------------------------------------------------- */
+  --space-1:    0.25rem;   /* 4px */
+  --space-2:    0.5rem;    /* 8px */
+  --space-3:    0.75rem;   /* 12px */
+  --space-4:    1rem;      /* 16px */
+  --space-5:    1.25rem;   /* 20px */
+  --space-6:    1.5rem;    /* 24px */
+  --space-8:    2rem;      /* 32px */
+  --space-10:   2.5rem;    /* 40px */
+  --space-12:   3rem;      /* 48px */
+  --space-16:   4rem;      /* 64px */
+  --space-20:   5rem;      /* 80px */
+  --space-24:   6rem;      /* 96px */
+  --space-32:   8rem;      /* 128px */
+
+  /* Section vertical padding */
+  --section-pad-y:    var(--space-24);
+  --section-pad-x:    var(--space-8);
+
+  /* -----------------------------------------------------------
+     BORDER RADIUS
+     ----------------------------------------------------------- */
+  --radius-sm:    2px;
+  --radius-md:    4px;
+  --radius-lg:    8px;
+  --radius-pill:  999px;
+  --radius-none:  0;        /* preferred — this brand is largely square */
+
+  /* -----------------------------------------------------------
+     SHADOWS & ELEVATION
+     ----------------------------------------------------------- */
+  --shadow-sm:    0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+  --shadow-card:  0 2px 12px rgba(0,0,0,0.07);
+
+  /* -----------------------------------------------------------
+     TRANSITIONS
+     ----------------------------------------------------------- */
+  --ease-out:     cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast:   150ms;
+  --duration-base:   250ms;
+  --duration-slow:   450ms;
+}
+
+/* -----------------------------------------------------------
+   BASE ELEMENT STYLES (opt-in via class="cf-base")
+   ----------------------------------------------------------- */
+.cf-base {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--p-leading);
+  color: var(--fg-primary);
+  background: var(--bg-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+.cf-base h1 {
+  font-family: var(--h1-font);
+  font-weight: var(--h1-weight);
+  font-size: var(--h1-size);
+  line-height: var(--h1-leading);
+  letter-spacing: var(--tracking-tight);
+}
+
+.cf-base h2 {
+  font-family: var(--h2-font);
+  font-weight: var(--h2-weight);
+  font-size: var(--h2-size);
+  line-height: var(--h2-leading);
+  letter-spacing: var(--tracking-tight);
+}
+
+.cf-base h3 {
+  font-family: var(--h3-font);
+  font-weight: var(--h3-weight);
+  font-size: var(--h3-size);
+  line-height: var(--h3-leading);
+}
+
+.cf-base p {
+  font-family: var(--p-font);
+  font-size: var(--p-size);
+  line-height: var(--p-leading);
+}
+
+.cf-eyebrow {
+  font-family: var(--label-font);
+  font-weight: var(--label-weight);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: var(--label-transform);
+  color: var(--accent-primary);
+}
+
+/* Primary CTA button */
+.cf-btn {
+  display: inline-block;
+  font-family: var(--font-label);
+  font-weight: var(--weight-bold);
+  font-size: var(--fs-sm);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  padding: 0.85em 2em;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-none);
+  transition: background var(--duration-base) var(--ease-out),
+              color var(--duration-base) var(--ease-out);
+}
+
+.cf-btn-primary {
+  background: var(--accent-primary);
+  color: var(--color-white);
+}
+
+.cf-btn-primary:hover {
+  background: var(--accent-dark);
+}
+
+.cf-btn-outline {
+  background: transparent;
+  color: var(--fg-primary);
+  border: 1.5px solid var(--fg-primary);
+}
+
+.cf-btn-outline:hover {
+  background: var(--fg-primary);
+  color: var(--bg-base);
+}
+
+.cf-btn-outline-white {
+  background: transparent;
+  color: var(--color-white);
+  border: 1.5px solid var(--color-white);
+}
+
+.cf-btn-outline-white:hover {
+  background: var(--color-white);
+  color: var(--fg-primary);
+}
