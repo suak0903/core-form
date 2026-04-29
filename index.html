@@ -589,6 +589,7 @@ const App = () => {
 
   const scroll = (id) => {
     setMobileOpen(false);
+    document.body.style.overflow = '';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (id === 'hero') {
       setActiveId('');
@@ -617,7 +618,12 @@ const App = () => {
       {/* NAV */}
       <header className={`nav${scrolled ? ' scrolled' : ''}${mobileOpen ? ' menu-open' : ''}`}>
         <div className="nav__inner container">
-          <a href="#hero" className="nav__logo" aria-label="core:form Startseite">
+          <a
+            href="#hero"
+            className="nav__logo"
+            aria-label="core:form Startseite"
+            onClick={(e) => { e.preventDefault(); scroll('hero'); }}
+          >
             <img src={scrolled && !mobileOpen ? 'media/RZ_Logo_CoreForm_Gudula.png' : 'media/RZ_Logo_CoreForm_Gudula_weiss_pink.png'} alt="core:form" />
           </a>
           <nav className="nav__links" aria-label="Hauptnavigation">
