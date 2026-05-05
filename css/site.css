@@ -110,8 +110,9 @@ a { color:inherit; text-decoration:none; }
 .nav.scrolled .nav__links a, .nav.solid .nav__links a { color:#0d0d0d; }
 .nav__links a:hover, .nav__links a.active { opacity:1; }
 
-/* CTA group: News + buchen sit side-by-side in the desktop nav */
-.nav__cta-group { display:flex; gap:8px; align-items:center; }
+/* CTA group: News + buchen sit side-by-side mit identischer Breite */
+.nav__cta-group { display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:center; }
+.nav__cta-group .nav__cta { width:100%; text-align:center; }
 .nav .btn--accent { opacity:1; }
 .nav:not(.scrolled):not(.solid) .btn--accent {
   background:transparent; border:1.5px solid rgba(255,255,255,.7); color:#fff;
@@ -460,7 +461,8 @@ a { color:inherit; text-decoration:none; }
 }
 .nav__mobile::-webkit-scrollbar { display:none; }
 .nav__mobile.open { transform:none; }
-.nav__mobile a {
+/* Menü-Links — explizit ohne .btn, damit Buchen-Button nicht die Link-Optik erbt */
+.nav__mobile a:not(.btn) {
   position:relative;
   font-size:13px; font-weight:600;
   letter-spacing:.14em; text-transform:uppercase;
@@ -469,15 +471,15 @@ a { color:inherit; text-decoration:none; }
   border-bottom:1px solid rgba(255,255,255,.07);
   transition:color .15s, padding-left .15s, border-bottom-color .2s;
 }
-.nav__mobile a::before {
+.nav__mobile a:not(.btn)::before {
   content:''; position:absolute; left:0; top:50%;
   width:3px; height:0; background:#b20e3b;
   transform:translateY(-50%);
   transition:height .25s ease;
 }
-.nav__mobile a:hover { color:#f2dac2; padding-left:24px; }
-.nav__mobile a.active { color:#f2dac2; }
-.nav__mobile a.active::before { height:24px; }
+.nav__mobile a:not(.btn):hover { color:#f2dac2; padding-left:24px; }
+.nav__mobile a:not(.btn).active { color:#f2dac2; }
+.nav__mobile a:not(.btn).active::before { height:24px; }
 .nav__mobile .nav__mobile-actions {
   display:flex; gap:10px; margin-top:32px;
   align-items:stretch;
@@ -488,8 +490,10 @@ a { color:inherit; text-decoration:none; }
   padding:10px 18px; line-height:1.2;
   font-size:11px; letter-spacing:.15em;
   text-align:center;
-  /* Farben kommen aus .btn--accent — kein Override, damit Hover (Brombeere) korrekt greift */
+  color:rgba(242,218,194,.7);
+  /* Hintergrund/Border kommen aus .btn--accent — kein Override, damit Hover korrekt greift */
 }
+.nav__mobile .nav__mobile-actions .btn:hover { color:#f2dac2; }
 
 /* Social icons inside mobile menu */
 .nav__mobile-social {
@@ -829,7 +833,7 @@ body.popup-open { overflow:hidden; }
   /* Keep just the booking CTA visible at top on mobile; hide News */
   .container { padding:0 18px; }
   .nav__logo img { height:30px; width:90px; }
-  .nav .nav__cta-group { display:flex; gap:5px; margin-left:auto; }
+  .nav .nav__cta-group { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-left:auto; }
   .nav .nav__cta-group .nav__cta {
     padding:8px 10px; font-size:10px; letter-spacing:.04em;
   }
