@@ -75,6 +75,21 @@ const App = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Handle cross-page anchor links: when arriving at index.html#angebote etc.,
+  // scroll to the matching section after React mounts.
+  React.useEffect(() => {
+    if (!window.location.hash) return;
+    const id = window.location.hash.slice(1);
+    const el = document.getElementById(id);
+    if (!el) return;
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: el.getBoundingClientRect().top + window.scrollY - 68,
+        behavior: 'auto'
+      });
+    });
+  }, []);
+
   const scroll = (id) => {
     setMobileOpen(false);
     document.body.style.overflow = '';
@@ -146,9 +161,8 @@ const App = () => {
             ))}
           </nav>
           <div className="nav__cta-group">
-            <button type="button" className="btn btn--accent nav__cta" onClick={openPopup}>News</button>
-            <button type="button" className="btn btn--accent nav__cta" onClick={() => window.location.href = 'buchung.html'}>buchen</button>
-{/*         <button type="button" className="btn btn--accent nav__cta" onClick={() => scroll('kontakt')}>buchen</button> */}
+            <button type="button" className="btn btn--accent nav__cta nav__cta--news" onClick={openPopup}>News</button>
+            <a href="buchung.html" className="btn btn--accent nav__cta">buchen</a>
           </div>
           <button
             type="button"
@@ -181,9 +195,19 @@ const App = () => {
           >{NAV_LABELS[i]}</a>
         ))}
         <div className="nav__mobile-actions">
-{/*       <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={() => scroll('kontakt')}>buchen</button> */}
-          <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={() => window.location.href = 'buchung.html'}>buchen</button>
+          <a href="buchung.html" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1}>buchen</a>
           <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={openPopup}>News</button>
+        </div>
+        <div className="nav__mobile-social">
+          <a href="https://instagram.com/coreform_essen" target="_blank" rel="noopener noreferrer" aria-label="core:form auf Instagram (öffnet in neuem Tab)" tabIndex={mobileOpen ? 0 : -1}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://facebook.com/evapilates.de" target="_blank" rel="noopener noreferrer" aria-label="core:form auf Facebook (öffnet in neuem Tab)" tabIndex={mobileOpen ? 0 : -1}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true" focusable="false"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://youtube.com/channel/UCPZpD1CyB2Vo82C0-_lxUMg" target="_blank" rel="noopener noreferrer" aria-label="core:form auf YouTube (öffnet in neuem Tab)" tabIndex={mobileOpen ? 0 : -1}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true" focusable="false"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+          </a>
         </div>
       </nav>
 
@@ -352,12 +376,12 @@ const App = () => {
               <div>
                 <span className="studio-panel__nr">Studio 01</span>
                 <h3>Rüttenscheid</h3>
-                <p>Gudulastraße · 45131 Essen</p>
+                <p>Gudulastraße 5 (Innenhof) · 45131 Essen</p>
               </div>
               <div className="studio-panel__kurse">
                 <span>Pilates Matte</span><span>Barre Workout</span>
               </div>
-              <button type="button" className="btn btn--ghost" onClick={() => scroll('kontakt')}>Anfahrt & Infos</button>
+              <a href="buchung-ruettenscheid.html" className="btn btn--ghost">Info &amp; Buchung</a>
             </div>
           </article>
           <article className="studio-panel">
@@ -368,12 +392,12 @@ const App = () => {
               <div>
                 <span className="studio-panel__nr">Studio 02</span>
                 <h3>Südviertel</h3>
-                <p>Moltkestraße · 45138 Essen</p>
+                <p>Moltkestraße 16 · 45128 Essen</p>
               </div>
               <div className="studio-panel__kurse">
                 <span>Reformer Pilates</span><span>Raumvermietung</span>
               </div>
-              <button type="button" className="btn btn--ghost" onClick={() => scroll('kontakt')}>Anfahrt & Infos</button>
+              <a href="buchung-suedviertel.html" className="btn btn--ghost">Info &amp; Buchung</a>
             </div>
           </article>
         </div>
@@ -469,12 +493,12 @@ const App = () => {
               <div className="kontakt__studios">
                 <div className="kontakt__studio">
                   <strong>Studio Rüttenscheid</strong>
-                  <p>Gudulastraße 3e<br />45131 Essen</p>
+                  <p>Gudulastraße 5 (Innenhof)<br />45131 Essen</p>
                   <p className="kontakt__studio-kurse">Pilates Matte · Barre Workout</p>
                 </div>
                 <div className="kontakt__studio">
                   <strong>Studio Südviertel</strong>
-                  <p>Moltkestraße 31<br />45138 Essen</p>
+                  <p>Moltkestraße 16<br />45128 Essen</p>
                   <p className="kontakt__studio-kurse">Reformer Pilates · Raumvermietung</p>
                 </div>
               </div>

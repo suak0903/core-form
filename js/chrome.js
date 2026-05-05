@@ -2,6 +2,21 @@
    Handles: scroll-driven nav state, mobile menu, newsletter popup. */
 
 (function () {
+  // If this page itself contains the target section, scroll it into view
+  // after the layout settles (handles cross-page anchor links like
+  // index.html#angebote that don't always land correctly).
+  if (window.location.hash) {
+    const targetId = window.location.hash.slice(1);
+    const scrollToHash = () => {
+      const el = document.getElementById(targetId);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 68;
+        window.scrollTo({ top, behavior: 'auto' });
+      }
+    };
+    window.addEventListener('load', () => requestAnimationFrame(scrollToHash));
+  }
+
   const nav = document.querySelector('.nav');
   const hamburger = document.querySelector('.nav__hamburger');
   const mobileMenu = document.querySelector('.nav__mobile');
