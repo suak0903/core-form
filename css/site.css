@@ -583,6 +583,8 @@ body.popup-open { overflow:hidden; }
   font-family:'Stacion',Georgia,serif; font-weight:300;
   font-size:clamp(40px,5vw,64px); line-height:1.05;
   letter-spacing:-.02em; color:#0d0d0d;
+  overflow-wrap:anywhere;
+  hyphens:auto;
 }
 .subpage__hero h1 em { font-style:italic; color:#b20e3b; }
 .subpage__hero p {
@@ -706,23 +708,25 @@ body.popup-open { overflow:hidden; }
   .footer__inner { flex-direction:column; align-items:flex-start; gap:24px; }
   .footer__links { gap:16px; flex-wrap:wrap; }
 
-  /* Newsletter popup — fullscreen on mobile (covers nav too) */
+  /* Newsletter popup — fullscreen + frosted on mobile (covers nav too) */
   .newsletter-pop {
     top:0; max-width:none; width:100%;
     box-shadow:none;
-    background:#f2dac2;
+    background:rgba(242,218,194,.72);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
     transform:translateX(100%);
     z-index:130;
   }
   .newsletter-pop.open { transform:none; }
   .newsletter-pop__backdrop { display:none; }
   .newsletter-pop__head {
-    background:#f2dac2;
+    background:transparent;
     padding:22px 28px;
     border-bottom:1px solid rgba(89,7,29,.18);
   }
   .newsletter-pop__body {
-    background:#f2dac2;
+    background:transparent;
     color:#3a2020;
     padding:28px;
   }
@@ -735,6 +739,7 @@ body.popup-open { overflow:hidden; }
 
   /* Subpage hero */
   .subpage__hero { padding:64px 0 40px; }
+  .subpage__hero h1 { font-size:clamp(32px,9vw,52px); }
   .subpage__content { padding:48px 0 72px; }
   .prose h2 { margin-top:32px; }
   .faq-item summary { font-size:17px; padding-right:28px; }
