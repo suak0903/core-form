@@ -1,13 +1,550 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>core:form — Pilates & Reformer Studio Essen</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css">
 <style>
-/* page-specific overrides for index.html (chrome lives in css/site.css) */
+@font-face { font-family:'Stacion'; src:url('font/stacion-regular.otf') format('opentype'); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:'Stacion'; src:url('font/stacion-italic.otf') format('opentype'); font-weight:400; font-style:italic; font-display:swap; }
+@font-face { font-family:'Stacion'; src:url('font/stacion-light.otf') format('opentype'); font-weight:300; font-style:normal; font-display:swap; }
+@font-face { font-family:'Stacion'; src:url('font/stacion-light-italic.otf') format('opentype'); font-weight:300; font-style:italic; font-display:swap; }
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body { font-family:'DM Sans','Helvetica Neue',Arial,sans-serif; background:#fff; color:#0d0d0d; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+input,select,textarea,button { font-family:inherit; }
+img { display:block; max-width:100%; }
+a { color:inherit; text-decoration:none; }
+
+/* ── FOCUS / A11Y ── */
+:focus { outline:none; }
+:focus-visible {
+  outline:2px solid #b20e3b; outline-offset:3px;
+  border-radius:0;
+}
+.btn:focus-visible { outline-offset:3px; }
+.nav__links a:focus-visible,
+.nav__mobile a:focus-visible,
+.text-link:focus-visible,
+.kontakt__link:focus-visible,
+.kontakt__social a:focus-visible,
+.footer__links a:focus-visible { outline-offset:4px; }
+
+.skip-link {
+  position:absolute; top:0; left:0; z-index:1000;
+  background:#0d0d0d; color:#fff;
+  font-size:12px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; padding:12px 18px;
+  transform:translateY(-110%); transition:transform .2s;
+}
+.skip-link:focus-visible { transform:translateY(0); outline:2px solid #b20e3b; outline-offset:-2px; }
+
+[role="button"], button, .nav__links a, .nav__mobile a, .text-link, .kurs-card a, .kontakt__link { cursor:pointer; }
+
+/* ── SHARED ── */
+.container { max-width:1160px; margin:0 auto; padding:0 40px; }
+.label {
+  display:block; font-size:11px; font-weight:600;
+  letter-spacing:.15em; text-transform:uppercase; color:#b20e3b;
+  margin-bottom:12px;
+}
+.label--light { color:rgba(255,255,255,.5); }
+.section-head { margin-bottom:52px; }
+.section-head h2 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,48px); line-height:1.08;
+  letter-spacing:-.02em; color:#0d0d0d;
+}
+.text-link {
+  display:inline-block; font-size:12px; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; color:#b20e3b;
+  border-bottom:1px solid #b20e3b; padding-bottom:1px;
+  transition:opacity .2s;
+}
+.text-link:hover { opacity:.7; }
+.btn {
+  display:inline-block; font-family:inherit; font-weight:700;
+  font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+  padding:13px 26px; border-radius:0; cursor:pointer;
+  transition:background .2s, color .2s, border-color .2s; border:none;
+}
+.btn--accent { background:#b20e3b; color:#fff; }
+.btn--accent:hover { background:#59071d; }
+.btn--outline { background:transparent; color:#0d0d0d; border:1.5px solid #0d0d0d; }
+.btn--outline:hover { background:#0d0d0d; color:#fff; }
+.btn--ghost { background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.6); }
+.btn--ghost:hover { background:#fff; color:#0d0d0d; }
+.btn--full { width:100%; text-align:center; }
+
+/* ── NAV ── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:transparent;
+  transition:background .3s ease, box-shadow .3s ease;
+}
+.nav.scrolled {
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(8px);
+  box-shadow:0 1px 16px rgba(0,0,0,.07);
+  border-bottom:1px solid rgba(0,0,0,.07);
+}
+.nav__inner {
+  display:flex; align-items:center; height:72px; gap:0;
+}
+.nav__logo img { height:36px; }
+.nav__links {
+  display:flex; gap:28px; flex:1; justify-content:center;
+}
+.nav__links a {
+  font-size:12px; font-weight:500; letter-spacing:.08em;
+  text-transform:uppercase; color:#fff; white-space:nowrap;
+  opacity:.8; transition:opacity .15s;
+  position:relative; padding-bottom:3px;
+}
+.nav__links a::after {
+  content:''; position:absolute; bottom:0; left:0;
+  width:0; height:1.5px; background:#b20e3b;
+  transition:width .2s ease;
+}
+.nav__links a:hover::after, .nav__links a.active::after { width:100%; }
+.nav.scrolled .nav__links a { color:#0d0d0d; }
+.nav__links a:hover, .nav__links a.active { opacity:1; }
+.nav .btn--accent { opacity:1; }
+.nav:not(.scrolled) .btn--accent {
+  background:transparent; border:1.5px solid rgba(255,255,255,.7); color:#fff;
+}
+.nav:not(.scrolled) .btn--accent:hover {
+  background:#fff; color:#0d0d0d;
+}
+
+/* ── HERO ── */
+.hero {
+  position:relative; height:100vh; min-height:600px;
+  display:flex; align-items:flex-end; overflow:hidden;
+  background:#0d0d0d;
+}
+.hero__img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; opacity:.55;
+}
+.hero__overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.78) 0%, rgba(0,0,0,.22) 55%, rgba(0,0,0,.15) 100%);
+}
+.hero__content {
+  position:relative; padding-bottom:140px;
+}
+.hero__headline {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(56px,8.5vw,100px); line-height:1.02;
+  letter-spacing:-.025em; color:#fff; margin-bottom:24px;
+}
+.hero__headline em { font-style:italic; color:#f2dac2; }
+.hero__sub {
+  font-size:12px; font-weight:500; letter-spacing:.14em;
+  text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:36px;
+}
+.hero__actions { display:flex; gap:12px; }
+.hero__stats {
+  position:absolute; bottom:0; left:0; right:0;
+  display:flex; width:100%; max-width:none; padding:0; margin:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(4px);
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.hero__stat {
+  flex:1; padding:24px 32px; text-align:center;
+  border-right:1px solid rgba(255,255,255,.1);
+}
+.hero__stat:last-child { border-right:none; }
+.hero__stat strong {
+  display:block; font-family:'Stacion',Georgia,serif;
+  font-weight:300; font-size:42px; color:#fff; line-height:1;
+}
+.hero__stat span {
+  display:block; font-size:10px; font-weight:600;
+  letter-spacing:.13em; text-transform:uppercase;
+  color:rgba(255,255,255,.45); margin-top:5px;
+}
+
+/* ── MANIFESTO ── */
+.manifesto { background:#f2dac2; padding:80px 0; }
+.manifesto__inner { max-width:760px; }
+.manifesto__quote {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,52px); line-height:1.1;
+  letter-spacing:-.02em; color:#0d0d0d; margin-bottom:24px;
+}
+.manifesto__quote em { font-style:italic; color:#b20e3b; }
+.manifesto__body {
+  font-size:16px; line-height:1.75; color:#3a2020; max-width:560px;
+}
+
+/* ── ANGEBOTE ── */
+.angebote { background:#fff; padding:96px 0; }
+.angebote__grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+}
+.kurs-card {
+  background:#f6f9f7; overflow:hidden; position:relative;
+  transition:box-shadow .3s ease;
+}
+.kurs-card:hover { box-shadow:0 14px 32px rgba(0,0,0,.08); }
+.kurs-card__img-wrap { height:220px; overflow:hidden; }
+.kurs-card__img-wrap img {
+  width:100%; height:100%; object-fit:cover; object-position:center 22%;
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
+}
+.kurs-card:hover .kurs-card__img-wrap img { transform:scale(1.04); }
+.kurs-card__body { padding:22px 22px 26px; }
+.kurs-card__tag {
+  display:inline-block; font-size:9px; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase;
+  color:#b20e3b; margin-bottom:10px;
+}
+.kurs-card__body h3 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:22px; line-height:1.15; color:#0d0d0d; margin-bottom:10px;
+}
+.kurs-card__body p { font-size:13px; line-height:1.65; color:#3a3a3a; margin-bottom:14px; }
+
+/* ── FEATURE BANNER ── */
+.feature-banner {
+  position:relative; padding:100px 0; overflow:hidden; background:#0d0d0d;
+}
+.feature-banner__img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; opacity:.35;
+}
+.feature-banner__content { position:relative; text-align:center; }
+.feature-banner__content blockquote {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(28px,4vw,48px); line-height:1.15;
+  letter-spacing:-.02em; color:#fff; margin-bottom:16px;
+}
+.feature-banner__content blockquote em { font-style:italic; color:#f2dac2; }
+.feature-banner__content p {
+  font-size:11px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:rgba(255,255,255,.45);
+}
+
+/* ── STUDIOS ── */
+.studios { background:#fff; padding:96px 0; }
+.studios__split { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:52px; }
+.studio-panel { position:relative; height:480px; overflow:hidden; }
+.studio-panel img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+.studio-panel:hover img { transform:scale(1.03); }
+.studio-panel__overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.1) 55%, transparent 100%);
+}
+.studio-panel__content {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:28px 28px 32px; display:flex; flex-direction:column; gap:10px;
+}
+.studio-panel__content img { height:44px; width:auto; object-fit:contain; object-position:left; }
+.studio-panel__nr {
+  font-size:9px; font-weight:600; letter-spacing:.15em;
+  text-transform:uppercase; color:rgba(255,255,255,.5);
+}
+.studio-panel__content h3 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:28px; color:#fff; line-height:1.1;
+}
+.studio-panel__content p { font-size:13px; color:rgba(255,255,255,.7); }
+.studio-panel__kurse { display:flex; gap:8px; }
+.studio-panel__kurse span {
+  font-size:10px; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; color:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.25); padding:4px 10px;
+}
+
+/* ── ABOUT ── */
+.about { background:#f2dac2; padding:96px 0; }
+.about__inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.about__media img { width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center 25%; }
+.about__text .section-head { margin-bottom:24px; }
+.about__text .section-head h2 { color:#0d0d0d; }
+.about__text p { font-size:15px; line-height:1.75; color:#3a2020; margin-bottom:16px; }
+.about__values { display:flex; flex-direction:column; gap:0; margin-top:28px; }
+.about__value {
+  display:grid; grid-template-columns:3px 1fr;
+  gap:16px; align-items:start; padding:14px 0;
+  border-bottom:1px solid rgba(0,0,0,.1);
+}
+.about__value-line { background:#b20e3b; height:100%; min-height:40px; }
+.about__value-text strong { display:block; font-size:14px; font-weight:600; color:#0d0d0d; }
+.about__value-text span { font-size:13px; color:#3a2020; }
+
+/* ── AUSBILDUNG ── */
+.ausbildung { background:#fff; padding:96px 0; }
+.ausbildung__inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.ausbildung__text h2 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,48px); line-height:1.08; letter-spacing:-.02em;
+  color:#0d0d0d; margin-bottom:20px;
+}
+.ausbildung__text h2 em { font-style:italic; color:#b20e3b; }
+.ausbildung__text p { font-size:15px; line-height:1.75; color:#3a3a3a; margin-bottom:28px; }
+.ausbildung__features { list-style:none; }
+.ausbildung__features li {
+  display:flex; gap:14px; align-items:flex-start;
+  padding:15px 0; border-bottom:1px solid rgba(0,0,0,.08); font-size:15px; color:#3a3a3a;
+}
+.ausbildung__features .check { color:#b20e3b; font-size:13px; margin-top:2px; }
+
+/* ── PREISE ── */
+.preise { background:#f6f9f7; padding:96px 0; }
+.preise__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start; }
+.preis-card { background:#fff; padding:28px 28px 32px; box-shadow:0 2px 12px rgba(0,0,0,.06); position:relative; }
+.preis-card--featured { background:#59071d; }
+.preis-card__badge {
+  position:absolute; top:-12px; left:50%; transform:translateX(-50%);
+  background:#b20e3b; color:#fff; font-size:9px; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; padding:4px 12px;
+}
+.preis-card__format {
+  display:block; font-size:10px; font-weight:600; letter-spacing:.13em;
+  text-transform:uppercase; margin-bottom:6px;
+}
+.preis-card:not(.preis-card--featured) .preis-card__format { color:#b20e3b; }
+.preis-card--featured .preis-card__format { color:rgba(255,255,255,.5); }
+.preis-card__price { margin-bottom:20px; }
+.preis-card__price span { display:block; font-size:12px; color:#6b6b6b; margin-bottom:2px; }
+.preis-card--featured .preis-card__price span { color:rgba(255,255,255,.45); }
+.preis-card__price strong {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:38px; line-height:1; color:#0d0d0d;
+}
+.preis-card--featured .preis-card__price strong { color:#fff; }
+.preis-card ul {
+  list-style:none; border-top:1px solid rgba(0,0,0,.07);
+  padding-top:16px; margin-bottom:22px;
+}
+.preis-card--featured ul { border-top-color:rgba(255,255,255,.1); }
+.preis-card ul li {
+  font-size:13px; color:#2a2a2a; padding:6px 0;
+  border-bottom:1px solid rgba(0,0,0,.05);
+  display:flex; gap:8px;
+}
+.preis-card ul li::before { content:'–'; color:#b20e3b; flex-shrink:0; }
+.preis-card--featured ul li { color:rgba(255,255,255,.8); border-bottom-color:rgba(255,255,255,.08); }
+.preis-card--featured ul li::before { color:#fc2cb8; }
+.preise__note { text-align:center; font-size:12px; color:#6b6b6b; margin-top:24px; }
+@media (min-width: 769px) {
+  .preis-card--featured { transform:translateY(-12px); box-shadow:0 18px 40px rgba(89,7,29,.18); }
+}
+
+/* ── KONTAKT ── */
+.kontakt { background:#fff; padding:96px 0; }
+.kontakt__grid { display:grid; grid-template-columns:1fr 1.4fr; gap:80px; }
+.kontakt__studios { display:flex; flex-direction:column; gap:0; margin-bottom:28px; }
+.kontakt__studio { padding:20px 0; border-bottom:1px solid rgba(0,0,0,.08); }
+.kontakt__studio strong { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#b20e3b; display:block; margin-bottom:6px; }
+.kontakt__studio p { font-size:14px; line-height:1.6; color:#2a2a2a; }
+.kontakt__studio-kurse { font-size:12px; color:#6b6b6b; margin-top:4px; }
+.kontakt__reach { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+.kontakt__link { display:flex; flex-direction:column; }
+.kontakt__link-label { font-size:9px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#6b6b6b; margin-bottom:2px; }
+.kontakt__link span:last-child { font-size:15px; color:#0d0d0d; }
+.kontakt__link:hover span:last-child { color:#b20e3b; }
+.kontakt__link span:last-child { transition:color .15s; }
+.kontakt__social { display:flex; gap:14px; }
+.kontakt__social a {
+  color:#6b6b6b; transition:color .15s, transform .2s;
+  display:inline-flex; padding:6px; transform-origin:center;
+}
+.kontakt__social a:hover { transform:scale(1.12); color:#b20e3b; }
+.kontakt__social a:hover { color:#b20e3b; }
+
+/* form */
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.form-group label { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#6b6b6b; }
+.form-group input, .form-group select, .form-group textarea {
+  border:1px solid rgba(0,0,0,.18); background:#fff;
+  color:#0d0d0d; font-size:14px; padding:11px 14px;
+  outline:none; border-radius:0;
+  transition:border-color .15s, box-shadow .15s;
+}
+.form-group input:hover, .form-group select:hover, .form-group textarea:hover {
+  border-color:rgba(0,0,0,.32);
+}
+.form-group input:focus-visible, .form-group select:focus-visible, .form-group textarea:focus-visible {
+  border-color:#b20e3b; box-shadow:0 0 0 3px rgba(178,14,59,.18);
+  outline:none;
+}
+.form-group input:invalid:not(:placeholder-shown),
+.form-group select:invalid:not([data-touched="false"]) {
+  border-color:rgba(178,14,59,.55);
+}
+.form-group textarea { resize:vertical; min-height:96px; }
+.form-note { font-size:12px; color:#6b6b6b; text-align:center; margin-top:10px; }
+.form-success {
+  border:1px solid #aed9b3; background:#f6fbf7;
+  padding:18px 20px; margin-top:8px;
+  font-size:14px; line-height:1.55; color:#0d0d0d;
+}
+.form-success strong {
+  display:block; font-family:'Stacion',Georgia,serif;
+  font-weight:300; font-size:20px; margin-bottom:4px; color:#0d0d0d;
+}
+
+/* ── FOOTER ── */
+.footer { background:#0d0d0d; padding:32px 0; }
+.footer__inner {
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:16px;
+}
+.footer__logo img { height:26px; opacity:.7; }
+.footer__copy { font-size:11px; color:#8c8c8c; }
+.footer__links { display:flex; gap:20px; }
+.footer__links a { font-size:11px; color:#8c8c8c; transition:color .15s; }
+.footer__links a:hover { color:#fff; }
+
+/* ── HAMBURGER ── */
+.nav__hamburger {
+  display:none; flex-direction:column; justify-content:center; align-items:center;
+  gap:5px; background:none; border:none; cursor:pointer;
+  width:44px; height:44px; padding:0; margin-left:auto;
+}
+.nav__hamburger span {
+  display:block; width:22px; height:2px;
+  background:#fff; border-radius:1px;
+  transition:background .3s, transform .25s, opacity .25s;
+  transform-origin:center;
+}
+.nav.scrolled .nav__hamburger span { background:#b20e3b; }
+.nav.menu-open .nav__hamburger span { background:#fff; }
+.nav__hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav__hamburger.open span:nth-child(2) { opacity:0; }
+.nav__hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+/* Nav bekommt dunklen BG wenn Menü offen (unabhängig von scroll) */
+.nav.menu-open {
+  background:rgba(13,13,13,.80);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.nav.menu-open .nav__cta { display:none; }
+
+/* ── MOBILE MENU — außerhalb des headers, kein stacking-context-Problem ── */
+.nav__mobile {
+  position:fixed; top:72px; left:0; right:0; bottom:0;
+  background:rgba(13,13,13,.67);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  z-index:98; overflow-y:auto;
+  display:flex; flex-direction:column;
+  padding:28px 32px 48px;
+  transform:translateX(-100%);
+  transition:transform .38s cubic-bezier(.22,1,.36,1);
+}
+.nav__mobile.open { transform:none; }
+.nav__mobile a {
+  position:relative;
+  font-size:13px; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:rgba(242,218,194,.7);
+  padding:18px 0 18px 18px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  transition:color .15s, padding-left .15s, border-bottom-color .2s;
+}
+.nav__mobile a::before {
+  content:''; position:absolute; left:0; top:50%;
+  width:3px; height:0; background:#b20e3b;
+  transform:translateY(-50%);
+  transition:height .25s ease;
+}
+.nav__mobile a:hover { color:#f2dac2; padding-left:24px; }
+.nav__mobile a.active { color:#f2dac2; }
+.nav__mobile a.active::before { height:24px; }
+.nav__mobile .btn {
+  margin-top:36px; align-self:flex-start;
+  background:#b20e3b; color:#fff; border:none;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .container { padding:0 24px; }
+
+  /* Nav */
+  .nav__links, .nav > .btn--accent { display:none; }
+  .nav__hamburger { display:flex; }
+
+  /* Hero */
+  .hero__headline { font-size:clamp(40px,12vw,64px); }
+  .hero__content { padding-bottom:120px; }
+  .hero__stat { padding:14px 6px; }
+  .hero__stat strong { font-size:26px; white-space:nowrap; }
+  .hero__stat span { font-size:8px; letter-spacing:.06em; }
+
+  /* Manifesto */
+  .manifesto { padding:52px 0; }
+
+  /* Angebote */
+  .angebote { padding:64px 0; }
+  .angebote__grid { grid-template-columns:1fr; gap:2px; }
+
+  /* Feature Banner */
+  .feature-banner { padding:64px 0; }
+
+  /* Studios */
+  .studios { padding-top:64px; }
+  .studios__split { grid-template-columns:1fr; }
+  .studio-panel { height:380px; }
+
+  /* About */
+  .about { padding:64px 0; }
+  .about__inner { grid-template-columns:1fr; gap:36px; }
+  .about__media { aspect-ratio:3/2; }
+  .about__media img { width:100%; height:100%; object-fit:cover; object-position:center 18%; }
+
+  /* Ausbildung */
+  .ausbildung { padding:64px 0; }
+  .ausbildung__inner { grid-template-columns:1fr; gap:40px; }
+
+  /* Preise */
+  .preise { padding:64px 0; }
+  .preise__grid { grid-template-columns:1fr; max-width:420px; margin-inline:auto; }
+  .preis-card--featured { transform:none; }
+
+  /* Kontakt */
+  .kontakt { padding:64px 0; }
+  .kontakt__grid { grid-template-columns:1fr; gap:44px; }
+  .form-row { grid-template-columns:1fr; }
+
+  /* Footer */
+  .footer { padding:40px 0; }
+  .footer__inner { flex-direction:column; align-items:flex-start; gap:24px; }
+  .footer__links { gap:16px; flex-wrap:wrap; }
+}
+
+@media (max-width: 480px) {
+  .hero__actions { flex-direction:column; }
+  .hero__actions .btn { width:100%; text-align:center; }
+  .hero__stat strong { font-size:22px; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+  .kurs-card:hover { transform:none; }
+  .kurs-card:hover .kurs-card__img-wrap img,
+  .studio-panel:hover img { transform:none; }
+  .preis-card--featured { transform:none !important; }
+}
 </style>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -25,14 +562,8 @@ const App = () => {
   const [scrolled, setScrolled] = React.useState(false);
   const [activeId, setActiveId] = React.useState('');
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [popupOpen, setPopupOpen] = React.useState(false);
-  const [newsletterHtml, setNewsletterHtml] = React.useState('');
-  const [newsletterError, setNewsletterError] = React.useState(false);
-  const [newsletterSent, setNewsletterSent] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(false);
   const formRef = React.useRef(null);
-  const popupCloseRef = React.useRef(null);
-  const lastFocusRef = React.useRef(null);
 
   React.useEffect(() => {
     const onScroll = () => {
@@ -44,28 +575,9 @@ const App = () => {
   }, []);
 
   React.useEffect(() => {
-    const lock = mobileOpen || popupOpen;
-    document.body.style.overflow = lock ? 'hidden' : '';
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
-  }, [mobileOpen, popupOpen]);
-
-  React.useEffect(() => {
-    if (!popupOpen || newsletterHtml || newsletterError) return;
-    let cancelled = false;
-    fetch('data/newsletter.html', { cache: 'no-cache' })
-      .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
-      .then(html => { if (!cancelled) setNewsletterHtml(html); })
-      .catch(() => { if (!cancelled) setNewsletterError(true); });
-    return () => { cancelled = true; };
-  }, [popupOpen, newsletterHtml, newsletterError]);
-
-  React.useEffect(() => {
-    if (!popupOpen) return;
-    const onKey = (e) => { if (e.key === 'Escape') closePopup(); };
-    document.addEventListener('keydown', onKey);
-    const t = setTimeout(() => { if (popupCloseRef.current) popupCloseRef.current.focus(); }, 60);
-    return () => { document.removeEventListener('keydown', onKey); clearTimeout(t); };
-  }, [popupOpen]);
+  }, [mobileOpen]);
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(entries => {
@@ -99,24 +611,6 @@ const App = () => {
     if (formRef.current) formRef.current.reset();
   };
 
-  const openPopup = () => {
-    lastFocusRef.current = document.activeElement;
-    setMobileOpen(false);
-    setPopupOpen(true);
-  };
-  const closePopup = () => {
-    setPopupOpen(false);
-    if (lastFocusRef.current && typeof lastFocusRef.current.focus === 'function') {
-      setTimeout(() => lastFocusRef.current.focus(), 0);
-    }
-  };
-
-  const onNewsletterSubmit = (e) => {
-    e.preventDefault();
-    setNewsletterSent(true);
-    e.target.reset();
-  };
-
   return (
     <div>
       <a href="#main-content" className="skip-link">Zum Inhalt springen</a>
@@ -145,10 +639,7 @@ const App = () => {
               </a>
             ))}
           </nav>
-          <div className="nav__cta-group">
-            <button type="button" className="btn btn--accent nav__cta" onClick={openPopup}>News</button>
-            <button type="button" className="btn btn--accent nav__cta" onClick={() => scroll('kontakt')}>buchen</button>
-          </div>
+          <button type="button" className="btn btn--accent nav__cta" onClick={() => scroll('kontakt')}>Kurs buchen</button>
           <button
             type="button"
             className={`nav__hamburger${mobileOpen ? ' open' : ''}`}
@@ -179,60 +670,8 @@ const App = () => {
             aria-current={activeId === id ? 'page' : undefined}
           >{NAV_LABELS[i]}</a>
         ))}
-        <div className="nav__mobile-actions">
-          <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={() => scroll('kontakt')}>buchen</button>
-          <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={openPopup}>News</button>
-        </div>
+        <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={() => scroll('kontakt')}>Kurs buchen</button>
       </nav>
-
-      {/* Newsletter popup — slidet von rechts ein, Inhalt aus data/newsletter.html */}
-      <div
-        className={`newsletter-pop__backdrop${popupOpen ? ' open' : ''}`}
-        onClick={closePopup}
-        aria-hidden="true"
-      />
-      <aside
-        className={`newsletter-pop${popupOpen ? ' open' : ''}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Newsletter"
-        aria-hidden={!popupOpen}
-      >
-        <div className="newsletter-pop__head">
-          <span className="label">Newsletter</span>
-          <button
-            type="button"
-            ref={popupCloseRef}
-            className="newsletter-pop__close"
-            aria-label="Newsletter schließen"
-            onClick={closePopup}
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true" focusable="false">
-              <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
-            </svg>
-          </button>
-        </div>
-        <div
-          className="newsletter-pop__body"
-          onSubmit={onNewsletterSubmit}
-        >
-          {newsletterError ? (
-            <p>Newsletter-Inhalt konnte nicht geladen werden. Bitte später erneut versuchen.</p>
-          ) : newsletterHtml ? (
-            <React.Fragment>
-              <div dangerouslySetInnerHTML={{ __html: newsletterHtml }} />
-              {newsletterSent && (
-                <div className="form-success" role="status" aria-live="polite">
-                  <strong>Danke!</strong>
-                  Wir melden uns bei dir.
-                </div>
-              )}
-            </React.Fragment>
-          ) : (
-            <p>Wird geladen …</p>
-          )}
-        </div>
-      </aside>
 
       <main id="main-content">
 
@@ -550,10 +989,9 @@ const App = () => {
             </div>
             <span className="footer__copy">© {new Date().getFullYear()} core:form Pilates Studio GbR, Essen</span>
             <div className="footer__links">
-              <a href="impressum.html">Impressum</a>
-              <a href="datenschutz.html">Datenschutz</a>
-              <a href="agb.html">AGB</a>
-              <a href="faq.html">FAQ</a>
+              <a href="#">Impressum</a>
+              <a href="#">Datenschutz</a>
+              <a href="#">AGB</a>
             </div>
           </div>
         </div>
