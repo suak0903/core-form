@@ -147,7 +147,8 @@ const App = () => {
           </nav>
           <div className="nav__cta-group">
             <button type="button" className="btn btn--accent nav__cta" onClick={openPopup}>News</button>
-            <button type="button" className="btn btn--accent nav__cta" onClick={() => scroll('kontakt')}>buchen</button>
+            <button type="button" className="btn btn--accent nav__cta" onClick={() => window.location.href = 'buchung.html'}>buchen</button>
+{/*         <button type="button" className="btn btn--accent nav__cta" onClick={() => scroll('kontakt')}>buchen</button> */}
           </div>
           <button
             type="button"
@@ -180,7 +181,8 @@ const App = () => {
           >{NAV_LABELS[i]}</a>
         ))}
         <div className="nav__mobile-actions">
-          <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={() => scroll('kontakt')}>buchen</button>
+{/*       <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={() => scroll('kontakt')}>buchen</button> */}
+          <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={() => window.location.href = 'buchung.html'}>buchen</button>
           <button type="button" className="btn btn--accent" tabIndex={mobileOpen ? 0 : -1} onClick={openPopup}>News</button>
         </div>
       </nav>
