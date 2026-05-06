@@ -44,111 +44,6 @@ const App = () => {
   }, []);
 
   React.useEffect(() => {
-    const TOP_LIMIT = 40;
-    let armed = false;
-    let disarming = false;
-  
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
-    }
-  
-    const cleanUrl = () => window.location.pathname + window.location.search;
-    const isAtTop = () => window.scrollY <= TOP_LIMIT;
-  
-    const markBase = () => {
-      window.history.replaceState({ coreformBackGuard: false }, '', cleanUrl());
-    };
-  
-    const armBackGuard = () => {
-      if (armed || disarming) return;
-  
-      window.history.pushState({ coreformBackGuard: true }, '', cleanUrl());
-      armed = true;
-    };
-  
-    window.__coreformArmBackGuard = armBackGuard;
-  
-    const forceTop = () => {
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    };
-  
-    const scrollHomeTop = () => {
-      forceTop();
-      requestAnimationFrame(forceTop);
-      setTimeout(forceTop, 50);
-      setTimeout(forceTop, 150);
-  
-      setScrolled(false);
-      setActiveId('');
-      armed = false;
-      markBase();
-    };
-  
-    const disarmAtTop = () => {
-      if (!armed || disarming) return;
-  
-      disarming = true;
-      window.history.back();
-  
-      setTimeout(() => {
-        armed = false;
-        disarming = false;
-        markBase();
-      }, 120);
-    };
-  
-    const onScroll = () => {
-      if (isAtTop()) {
-        disarmAtTop();
-        return;
-      }
-  
-      armBackGuard();
-    };
-  
-    const onWheel = (e) => {
-      if (e.deltaY > 0) armBackGuard();
-    };
-  
-    const onTouchMove = () => {
-      if (!isAtTop()) armBackGuard();
-    };
-  
-    const onKeyDown = (e) => {
-      const keys = ['ArrowDown', 'PageDown', 'End', ' '];
-      if (keys.includes(e.key)) armBackGuard();
-    };
-  
-    const onPopState = () => {
-      if (disarming) return;
-  
-      if (!isAtTop() || armed) {
-        scrollHomeTop();
-      }
-    };
-  
-    markBase();
-  
-    document.addEventListener('wheel', onWheel, { passive: true, capture: true });
-    document.addEventListener('touchmove', onTouchMove, { passive: true, capture: true });
-    document.addEventListener('keydown', onKeyDown, true);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('popstate', onPopState);
-  
-    return () => {
-      delete window.__coreformArmBackGuard;
-  
-      document.removeEventListener('wheel', onWheel, { capture: true });
-      document.removeEventListener('touchmove', onTouchMove, { capture: true });
-      document.removeEventListener('keydown', onKeyDown, true);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('popstate', onPopState);
-    };
-  }, []);
-
-  React.useEffect(() => {
     const lock = mobileOpen || popupOpen;
     document.body.style.overflow = lock ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -204,11 +99,6 @@ const App = () => {
       window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
       return;
     }
-    
-    if (id !== 'hero' && window.__coreformArmBackGuard) {
-      window.__coreformArmBackGuard();
-    }
-    
     const el = document.getElementById(id);
     if (el) {
       window.scrollTo({
