@@ -90,10 +90,11 @@ const App = () => {
     });
   }, []);
 
-  // Back-button trap: any back command (browser back, mouse-back) while the user
-  // is scrolled away from the top scrolls them up first; only at the top is a
-  // real navigation away from the page allowed. The sentinel is pushed lazily
-  // (on first scroll) so a back press while still at the top leaves immediately.
+  // Back-button trap: any back command (browser back, mouse-back, Android-back,
+  // edge-swipe) while the user is scrolled away from the top scrolls them up
+  // first; only at the top is a real navigation away from the page allowed.
+  // The sentinel is pushed lazily (on first scroll) so a back press while still
+  // at the top leaves immediately.
   React.useEffect(() => {
     const THRESHOLD = 50;
     let sentinelActive = false;
@@ -106,26 +107,68 @@ const App = () => {
       } catch (e) { /* some embedded contexts disallow pushState */ }
     };
 
-    const onScroll = () => {
+    // Push from real user-gesture handlers — pushState in a plain 'scroll'
+    // handler is not associated with transient user activation, so Chromium's
+    // "same-document history skipping" intervention will skip our sentinel
+    // when the user hits the browser's Back button. Wheel / touchmove /
+    // keydown / pointerdown all carry activation.
+    const onUserGesture = () => {
       if (window.scrollY > THRESHOLD) pushSentinel();
+    };
+
+    const forceScrollTop = () => {
+      // Belt-and-braces: scroll-behavior:smooth on <html> is buggy on iOS Safari
+      // and some Android Chromes, so we hit every scroll surface explicitly.
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
     };
 
     const onPopState = () => {
       // Sentinel was popped by the back action.
       sentinelActive = false;
-      if (window.scrollY > THRESHOLD) {
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-        // Re-trap so the next back press fires popstate again.
-        pushSentinel();
-      }
-      // else: at top — let the next back press leave the page naturally.
+      if (window.scrollY <= THRESHOLD) return; // at top → let next back leave naturally
+
+      // Re-trap immediately so subsequent back presses keep firing popstate
+      // (push BEFORE scrolling — pushState mid-smooth-scroll cancels the
+      // animation in some mobile browsers).
+      pushSentinel();
+
+      // Any open overlay locks <body> via overflow:hidden, which on mobile
+      // also blocks the scroll — close them first.
+      setMobileOpen(false);
+      setPopupOpen(false);
+      document.body.style.overflow = '';
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Defer to next frame so the body-unlock and React state flushes settle
+      // before we kick off the scroll animation.
+      requestAnimationFrame(() => {
+        try {
+          window.scrollTo({ top: 0, left: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+        } catch (e) {
+          forceScrollTop();
+        }
+      });
+
+      // Hard-snap fallback: if the smooth scroll got interrupted (touch
+      // gesture, address-bar resize on iOS, focus jump, …) make sure we
+      // actually land at 0 after the animation should have completed.
+      setTimeout(() => {
+        if (window.scrollY > 0) forceScrollTop();
+      }, 700);
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const gestureEvents = ['wheel', 'touchmove', 'keydown', 'pointerdown'];
+    gestureEvents.forEach(evt =>
+      window.addEventListener(evt, onUserGesture, { passive: true })
+    );
     window.addEventListener('popstate', onPopState);
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      gestureEvents.forEach(evt =>
+        window.removeEventListener(evt, onUserGesture)
+      );
       window.removeEventListener('popstate', onPopState);
     };
   }, []);
