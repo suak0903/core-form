@@ -21,6 +21,80 @@
 const NAV_IDS = ['angebote','studios','ueber-uns','ausbildung','preise','kontakt'];
 const NAV_LABELS = ['Angebote','Studios','Über uns','Ausbildung','Preise','Kontakt'];
 
+// Team-Karussell auf der „Über uns"-Sektion. Reihenfolge bestimmt die Slideshow.
+// Wenn `img: null`, rendert eine getypte Initial-Kachel (Himbeere/Brombeere-Verlauf
+// mit Stacion-Italic-Initial). Sobald ein Foto vorhanden ist, einfach den Pfad
+// in `media/Vorname.jpg` ablegen und hier eintragen — die Initial-Kachel wird
+// automatisch ersetzt.
+const TEAM = [
+  {
+    name: 'Das Team',
+    role: 'core:form',
+    img: 'media/EvaPilates_Portraits_2025_067.jpg',
+    bio: 'Ein Kreis erfahrener Pilates- und Bewegungspraktiker:innen, der core:form trägt — präzise angeleitet, persönlich begleitet. Jede:r bringt eigene Schwerpunkte mit, vom Reformer über Barre bis zur klassischen Matte.'
+  },
+  {
+    name: 'Eva',
+    role: 'Inhaberin & Gründerin',
+    img: 'media/EvaPilates_Portraits_2025_011.jpg',
+    bio: 'Pilates begleitet mich seit über 25 Jahren – seit meinem Tanzstudium, über viele Jahre Unterrichtserfahrung bis hin zur Eröffnung meines ersten Studios 2014. Heute leite ich core:form mit zwei Studios in Essen und bilde Trainer:innen für Matte und Reformer aus. Ich unterrichte vor allem Reformerkurse und fortgeschrittene Mattenstunden.'
+  },
+  {
+    name: 'Charlotta',
+    role: 'Pilates & Barre',
+    img: 'media/EvaPilates_Portraits_2025_030.jpg',
+    bio: 'Charlotta gehört fast von Anfang an zum core:form-Team. Ihre Pilates-Ausbildung absolvierte sie bei Pilates bodymotion und unterrichtet heute Pilates und Barre Workout. „Mit den Füßen sicher geerdet, mit dem Kopf hoch erhoben und in einer starken Mitte ruhend – das ist mein Pilates-Gefühl."'
+  },
+  {
+    name: 'Jelena',
+    role: 'Reformer & Ausbildung',
+    img: 'media/IMG-20251214-WA00021.jpg',
+    bio: 'Pilates begleitet ihren beruflichen Weg seit vielen Jahren. Als ausgebildete Tänzerin bringt Jelena ein ausgeprägtes Körperbewusstsein, Präzision und Bewegungserfahrung mit, die sie durch zahlreiche Aus- und Weiterbildungen im Bereich Pilates und Reformer kontinuierlich vertieft hat. Sie unterrichtet ausschließlich Reformer-Kurse mit großem Fokus auf Technik, individuelle Korrekturen und ein strukturiertes, professionelles Training.'
+  },
+  {
+    name: 'Anja',
+    role: 'Matte, Reformer & Personal',
+    img: 'media/EvaPilates_Portraits_2025_003.jpg',
+    bio: 'Anja vermittelt fundiert und individuell angepasst die Grundlagen für ein effektives und gesundes Training. Sie unterrichtet auf der Matte, am Reformer und im Personal Training und begleitet Teilnehmer:innen persönlich und achtsam.'
+  },
+  {
+    name: 'Nina',
+    role: 'BASI® Pilates Trainerin',
+    img: 'media/EvaPilates_Portraits_2025_051.jpg',
+    bio: 'Body & Mind Coach seit rund 20 Jahren, BASI® Pilates Trainerin seit 2012. Nina stärkt vor allem die tiefe Bauchmuskulatur durch abwechslungsreiche, kreative Flows für den ganzen Körper.'
+  },
+  {
+    name: 'Pia',
+    role: 'Pilates Trainerin',
+    img: 'media/EvaPilates_Portraits_2025_042.jpg',
+    bio: 'Nach ihrer Ausbildung zur Pilates-Trainerin 2025 vereint Pia ihre Erfahrungen als freischaffende Schauspielerin und Tänzerin im Studio. Ihr Fokus: korrekte Form, Anatomie und humorvolle Trainingsmomente.'
+  },
+  {
+    name: 'Bille',
+    role: 'Pilates & Sporttherapie',
+    img: 'media/coreform_2025_002.jpg',
+    bio: 'Ausgebildete Sporttherapeutin und frisch ausgebildete Pilates-Trainerin mit Erfahrung aus der Reha-Arbeit. Ihr Unterricht zeichnet sich durch klare Anleitungen, taktile Korrekturen und eine motivierende Atmosphäre aus.'
+  },
+  {
+    name: 'Julia',
+    role: 'Pilates Trainerin',
+    img: 'media/EvaPilates_Portraits_2025_075-skaliert.jpg',
+    bio: '„Pilates hat mein Leben verändert." Aus der begeisterten Teilnehmerin wurde eine Trainerin mit der Leidenschaft, die positiven Effekte von Pilates weiterzugeben.'
+  },
+  {
+    name: 'Cristina',
+    role: 'Pilates & Barre',
+    img: 'media/coreform_2025_077.jpg',
+    bio: 'Cristina ist Ärztin und seit über sechs Jahren im Pilates und Barre Workout aktiv. Nach ihrer Pilates-Trainerausbildung bei Eva unterrichtet sie auch Barre. Sie legt viel Wert auf kontrollierte Bewegungen und intensive, effektive Muskelarbeit.'
+  },
+  {
+    name: 'Rebecca',
+    role: 'Pilates Trainerin',
+    img: 'media/EvaPilates_Portraits_2025_035.jpg',
+    bio: '„Pilates ist für mich mehr als ein Training – es ist eine Einladung, den eigenen Körper neu zu entdecken." Im Unterricht geht es Rebecca um Bewusstsein: bewusste Atmung, bewusste Bewegung, bewusster Umgang mit dem eigenen Körper.'
+  },
+];
+
 const App = () => {
   const [scrolled, setScrolled] = React.useState(false);
   const [activeId, setActiveId] = React.useState('');
@@ -30,9 +104,18 @@ const App = () => {
   const [newsletterError, setNewsletterError] = React.useState(false);
   const [newsletterSent, setNewsletterSent] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(false);
+  const [teamIndex, setTeamIndex] = React.useState(0);
+  const [teamHovered, setTeamHovered] = React.useState(false);
+  const [teamExpanded, setTeamExpanded] = React.useState(false);
   const formRef = React.useRef(null);
   const popupCloseRef = React.useRef(null);
   const lastFocusRef = React.useRef(null);
+  const teamTouchStartRef = React.useRef(null);
+
+  const goTeam = (delta) => {
+    setTeamIndex(i => (i + delta + TEAM.length) % TEAM.length);
+    setTeamExpanded(false);
+  };
 
   React.useEffect(() => {
     const onScroll = () => {
@@ -165,13 +248,37 @@ const App = () => {
       window.addEventListener(evt, onUserGesture, { passive: true })
     );
     window.addEventListener('popstate', onPopState);
+
+    // Arm the trap immediately when we land already scrolled — happens when
+    // the user jumps from a subpage's mobile menu into a section anchor like
+    // index.html#preise. Without this, the cross-page-anchor scroll alone
+    // doesn't push the sentinel (no user gesture on this page yet), so the
+    // first browser-back leaves the page instead of scrolling up. The
+    // navigation that brought the user here grants the new document sticky
+    // user activation, so this initial pushState is honored by the browser.
+    const initialArm = setTimeout(() => {
+      if (window.scrollY > THRESHOLD) pushSentinel();
+    }, 80);
+
     return () => {
+      clearTimeout(initialArm);
       gestureEvents.forEach(evt =>
         window.removeEventListener(evt, onUserGesture)
       );
       window.removeEventListener('popstate', onPopState);
     };
   }, []);
+
+  // Team-Karussell: alle 4.5 s rotieren. Pausiert bei Hover (Desktop) und
+  // wenn die Bio aufgeklappt ist. Bei prefers-reduced-motion komplett aus.
+  React.useEffect(() => {
+    if (teamHovered || teamExpanded) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = setInterval(() => {
+      setTeamIndex(i => (i + 1) % TEAM.length);
+    }, 4500);
+    return () => clearInterval(id);
+  }, [teamHovered, teamExpanded]);
 
   const scroll = (id) => {
     setMobileOpen(false);
@@ -486,8 +593,97 @@ const App = () => {
       <section className="about" id="ueber-uns">
         <div className="container">
           <div className="about__inner">
-            <div className="about__media">
-              <img src="media/Eva & Jelena.jpg" alt="Eva und Jelena – Gründerinnen von core:form" loading="lazy" decoding="async" />
+            <div
+              className={`about__media team-stage${teamExpanded ? ' team-stage--expanded' : ''}`}
+              onMouseEnter={() => setTeamHovered(true)}
+              onMouseLeave={() => setTeamHovered(false)}
+              onTouchStart={(e) => {
+                if (e.touches && e.touches.length === 1) {
+                  teamTouchStartRef.current = e.touches[0].clientX;
+                }
+              }}
+              onTouchEnd={(e) => {
+                if (teamTouchStartRef.current === null) return;
+                const startX = teamTouchStartRef.current;
+                teamTouchStartRef.current = null;
+                const endX = (e.changedTouches && e.changedTouches[0]?.clientX) ?? startX;
+                const delta = endX - startX;
+                if (Math.abs(delta) < 40) return; // < 40 px = Tap, kein Swipe
+                goTeam(delta < 0 ? 1 : -1);
+              }}
+            >
+              {TEAM.map((m, i) => {
+                const isActive = i === teamIndex;
+                return (
+                  <div
+                    key={m.name}
+                    className={`team-slide${isActive ? ' active' : ''}`}
+                    aria-hidden={!isActive}
+                    role="button"
+                    tabIndex={isActive ? 0 : -1}
+                    aria-expanded={isActive ? teamExpanded : undefined}
+                    aria-label={`${m.name} – ${m.role}. ${teamExpanded && isActive ? 'Bio ausblenden' : 'Bio einblenden'}`}
+                    onClick={() => { if (isActive) setTeamExpanded(e => !e); }}
+                    onKeyDown={(e) => {
+                      if (!isActive) return;
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setTeamExpanded(v => !v);
+                      } else if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        goTeam(-1);
+                      } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        goTeam(1);
+                      }
+                    }}
+                  >
+                    {m.img ? (
+                      <img src={m.img} alt="" loading="lazy" decoding="async" />
+                    ) : (
+                      <span className="team-slide__placeholder" aria-hidden="true">{m.name.charAt(0)}</span>
+                    )}
+                    <span className="team-slide__overlay" aria-hidden="true" />
+                    <div className="team-slide__caption">
+                      <span className="team-slide__role">{m.role}</span>
+                      <span className="team-slide__name">{m.name}</span>
+                      <p className="team-slide__bio">{m.bio}</p>
+                    </div>
+                  </div>
+                );
+              })}
+              <button
+                type="button"
+                className="team-arrow team-arrow--prev"
+                aria-label="Vorherige Person"
+                onClick={(e) => { e.stopPropagation(); goTeam(-1); }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button
+                type="button"
+                className="team-arrow team-arrow--next"
+                aria-label="Nächste Person"
+                onClick={(e) => { e.stopPropagation(); goTeam(1); }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <div className="team-pagination" aria-label="Team Navigation">
+                {TEAM.map((m, i) => (
+                  <button
+                    key={m.name}
+                    type="button"
+                    className={`team-dot${i === teamIndex ? ' active' : ''}`}
+                    aria-label={`Zu ${m.name}`}
+                    aria-current={i === teamIndex ? 'true' : undefined}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setTeamIndex(i);
+                      setTeamExpanded(false);
+                    }}
+                  />
+                ))}
+              </div>
             </div>
             <div className="about__text">
               <div className="section-head">
