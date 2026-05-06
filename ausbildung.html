@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reformer-Lehrerausbildung 2026 — core:form</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Zum Inhalt springen</a>
+
+<!-- NAV -->
+<header class="nav solid">
+  <div class="nav__inner container">
+    <a href="index.html" class="nav__logo" aria-label="core:form Startseite">
+      <img
+        src="media/RZ_Logo_CoreForm_Gudula.png"
+        data-logo-dark="media/RZ_Logo_CoreForm_Gudula.png"
+        data-logo-light="media/RZ_Logo_CoreForm_Gudula_weiss_pink.png"
+        alt="core:form" />
+    </a>
+    <nav class="nav__links" aria-label="Hauptnavigation">
+      <a href="index.html#angebote">Angebote</a>
+      <a href="index.html#studios">Studios</a>
+      <a href="index.html#ueber-uns">Über uns</a>
+      <a href="index.html#ausbildung">Ausbildung</a>
+      <a href="index.html#preise">Preise</a>
+      <a href="index.html#kontakt">Kontakt</a>
+    </nav>
+    <div class="nav__cta-group">
+      <a href="buchung.html" class="btn btn--accent nav__cta">buchen</a>
+      <button type="button" class="btn btn--accent nav__cta nav__cta--news" data-newsletter-trigger>News</button>
+    </div>
+    <button type="button" class="nav__hamburger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<nav id="mobile-menu" class="nav__mobile" aria-label="Mobile Navigation" aria-hidden="true">
+  <a href="index.html#angebote" tabindex="-1">Angebote</a>
+  <a href="index.html#studios" tabindex="-1">Studios</a>
+  <a href="index.html#ueber-uns" tabindex="-1">Über uns</a>
+  <a href="index.html#ausbildung" tabindex="-1">Ausbildung</a>
+  <a href="index.html#preise" tabindex="-1">Preise</a>
+  <a href="index.html#kontakt" tabindex="-1">Kontakt</a>
+  <div class="nav__mobile-actions">
+    <a href="buchung.html" class="btn btn--accent" tabindex="-1">buchen</a>
+    <button type="button" class="btn btn--accent" data-newsletter-trigger tabindex="-1">News</button>
+  </div>
+  <div class="nav__mobile-social">
+    <a href="https://instagram.com/coreform_essen" target="_blank" rel="noopener noreferrer" aria-label="core:form auf Instagram (öffnet in neuem Tab)" tabindex="-1">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <a href="https://facebook.com/evapilates.de" target="_blank" rel="noopener noreferrer" aria-label="core:form auf Facebook (öffnet in neuem Tab)" tabindex="-1">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+    </a>
+    <a href="https://youtube.com/channel/UCPZpD1CyB2Vo82C0-_lxUMg" target="_blank" rel="noopener noreferrer" aria-label="core:form auf YouTube (öffnet in neuem Tab)" tabindex="-1">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+    </a>
+  </div>
+</nav>
+
+<!-- Newsletter popup -->
+<div class="newsletter-pop__backdrop" aria-hidden="true"></div>
+<aside class="newsletter-pop" role="dialog" aria-modal="true" aria-label="Newsletter" aria-hidden="true">
+  <div class="newsletter-pop__head">
+    <span class="label">Newsletter</span>
+    <button type="button" class="newsletter-pop__close" aria-label="Newsletter schließen">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false">
+        <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+      </svg>
+    </button>
+  </div>
+  <div class="newsletter-pop__body"><p>Wird geladen …</p></div>
+</aside>
+
+<main id="main-content" class="subpage">
+
+  <!-- HERO -->
+  <section class="subpage__hero ausbildung-hero">
+    <div class="container">
+      <span class="label">Ausbildung 2026</span>
+      <h1>Reformer-<br /><em>Lehrerausbildung.</em></h1>
+      <p>Umfassende Ausbildung für angehende Pilates-Reformer-Trainer:innen in Essen. Fundiert, praxisnah und modern. Strukturiertes, intensives Lernen in wertschätzender Atmosphäre – mit einem erfahrenen Ausbildungsteam an deiner Seite.</p>
+      <div class="ausbildung-hero__actions">
+        <a href="#bewerbung" class="btn btn--accent">Erstgespräch anfragen</a>
+        <a href="#termine" class="btn btn--outline">Termine ansehen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DAS BESONDERE -->
+  <section class="ausbildung-besondere">
+    <div class="container">
+      <div class="section-head">
+        <span class="label">Was uns auszeichnet</span>
+        <h2>Das Besondere<br /><em>an core:form.</em></h2>
+      </div>
+      <ul class="usp-grid">
+        <li>
+          <span class="usp-grid__nr">01</span>
+          <h3>Praxisnah ab Tag 1</h3>
+          <p>Vom ersten Termin an arbeiten wir direkt am Reformer – nicht in der Theorie, sondern am Gerät.</p>
+        </li>
+        <li>
+          <span class="usp-grid__nr">02</span>
+          <h3>Persönliche Begleitung</h3>
+          <p>Individuelle Aufmerksamkeit für jede Teilnehmer:in. Wir sehen, wo du stehst, und holen dich dort ab.</p>
+        </li>
+        <li>
+          <span class="usp-grid__nr">03</span>
+          <h3>Klare Didaktik</h3>
+          <p>Komplexe Inhalte verständlich vermittelt – Schritt für Schritt, ohne Umweg über Fachjargon.</p>
+        </li>
+        <li>
+          <span class="usp-grid__nr">04</span>
+          <h3>Realistische Vorbereitung</h3>
+          <p>Du wirst nicht für ein Lehrbuch ausgebildet, sondern für reale Gruppenkurse mit echten Menschen.</p>
+        </li>
+        <li>
+          <span class="usp-grid__nr">05</span>
+          <h3>Wertschätzende Lernkultur</h3>
+          <p>Eine motivierende Atmosphäre, in der Fragen erwünscht sind und Fehler dazugehören.</p>
+        </li>
+        <li>
+          <span class="usp-grid__nr">06</span>
+          <h3>Erfahrenes Team</h3>
+          <p>Eva mit über 25 Jahren Pilates-Erfahrung, Jelena mit über 10 Jahren Reformer-Praxis und einem Tanz-Background.</p>
+        </li>
+        <li>
+          <span class="usp-grid__nr">07</span>
+          <h3>Lernen im echten Studiobetrieb</h3>
+          <p>Du erlebst von Anfang an, wie ein professionelles Studio funktioniert – nicht im sterilen Schulungsraum.</p>
+        </li>
+        <li>
+          <span class="usp-grid__nr">08</span>
+          <h3>Hochwertiges Skript</h3>
+          <p>Strukturiertes Ausbildungsskript zum Mitnehmen – auch nach der Ausbildung dein Nachschlagewerk.</p>
+        </li>
+        <li>
+          <span class="usp-grid__nr">09</span>
+          <h3>Austausch & Wachstum</h3>
+          <p>Feedback in der Gruppe, gegenseitiges Unterrichten, gemeinsam besser werden.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- INHALTE -->
+  <section class="ausbildung-inhalte">
+    <div class="container">
+      <div class="ausbildung-inhalte__inner">
+        <div class="ausbildung-inhalte__text">
+          <span class="label">Curriculum</span>
+          <h2>Was du<br /><em>lernen wirst.</em></h2>
+          <p>Die Ausbildung deckt das vollständige Handwerkszeug einer Reformer-Trainer:in ab – vom Übungskanon über Cueing bis zur Arbeit mit unterschiedlichen Zielgruppen.</p>
+          <div class="ausbildung-inhalte__hinweis">
+            <span class="label">Wichtiger Hinweis</span>
+            <p>Die Ausbildung ist ein <strong>studiointernes Qualifizierungsformat</strong> und keine verbandlich zertifizierte Ausbildung. Nach Abschluss kannst du Personaltrainings und/oder Gruppenkurse anleiten.</p>
+          </div>
+        </div>
+        <ul class="ausbildung-inhalte__list">
+          <li><span class="check">✓</span><div><strong>Ca. 80 Reformer-Grundübungen</strong><span>Mit zahlreichen Varianten und Modifikationen für jedes Niveau.</span></div></li>
+          <li><span class="check">✓</span><div><strong>Anatomisch sinnvolle Bewegungsabläufe</strong><span>Verstehen, warum eine Übung wirkt – nicht nur, wie sie aussieht.</span></div></li>
+          <li><span class="check">✓</span><div><strong>Aufbau strukturierter Reformer-Stunden</strong><span>Stundenbilder konstruieren, die didaktisch und anatomisch aufgehen.</span></div></li>
+          <li><span class="check">✓</span><div><strong>Teaching-Tipps & Cueing-Techniken</strong><span>Verbal anleiten, sodass deine Teilnehmer:innen es spüren.</span></div></li>
+          <li><span class="check">✓</span><div><strong>Hands-on-Techniken</strong><span>Sicheres taktiles Korrigieren mit Respekt und Klarheit.</span></div></li>
+          <li><span class="check">✓</span><div><strong>Sicherheitsprinzipien</strong><span>Geräteumgang, Federwiderstand, häufige Risikomomente.</span></div></li>
+          <li><span class="check">✓</span><div><strong>Übungen für Einsteiger:innen, Flow-Kurse & Mixed Levels</strong><span>Programme für unterschiedliche Erfahrungsstufen entwickeln.</span></div></li>
+          <li><span class="check">✓</span><div><strong>Umgang mit verschiedenen Zielgruppen</strong><span>Anfänger:innen, Fortgeschrittene, ältere Teilnehmer:innen, Männer.</span></div></li>
+          <li><span class="check">✓</span><div><strong>Beschwerden & Kontraindikationen</strong><span>Wann eine Übung nicht angezeigt ist und welche Alternativen es gibt.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUFBAU & TERMINE -->
+  <section class="ausbildung-termine" id="termine">
+    <div class="container">
+      <div class="section-head">
+        <span class="label">Aufbau & Termine</span>
+        <h2>Vier Präsenztage,<br /><em>begleitet von eigener Praxis.</em></h2>
+      </div>
+      <div class="termine-grid">
+        <div class="termine-block">
+          <span class="termine-block__label">Präsenztermine — jeweils 10:00 bis 16:00 Uhr</span>
+          <ol class="termine-list">
+            <li><span class="termine-list__date">25.04.2026</span><span class="termine-list__nr">Modul 01</span></li>
+            <li><span class="termine-list__date">16.05.2026</span><span class="termine-list__nr">Modul 02</span></li>
+            <li><span class="termine-list__date">20.06.2026</span><span class="termine-list__nr">Modul 03</span></li>
+            <li><span class="termine-list__date">11.07.2026</span><span class="termine-list__nr">Modul 04</span></li>
+          </ol>
+          <p class="termine-block__ort">Ort: <strong>core:form, Moltkestraße 16, Essener Südviertel</strong></p>
+        </div>
+        <div class="termine-block termine-block--praxis">
+          <span class="termine-block__label">Begleitende Praxis (Pflichtanteil)</span>
+          <ul class="praxis-list">
+            <li>
+              <strong>Eigene Praxis</strong>
+              <p>Mindestens 25 Stunden Reformer-Training – idealerweise bei verschiedenen Trainer:innen und in verschiedenen Studios.</p>
+            </li>
+            <li>
+              <strong>Stundenprotokolle</strong>
+              <p>Mindestens 5 dokumentierte Einheiten, um die Perspektive als Unterrichtende:r zu entwickeln.</p>
+            </li>
+            <li>
+              <strong>Hospitationen</strong>
+              <p>Optional und empfohlen: Möglichkeit, in laufenden core:form-Kursen zu assistieren.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ZIELGRUPPE -->
+  <section class="ausbildung-zielgruppe">
+    <div class="container">
+      <div class="ausbildung-zielgruppe__inner">
+        <div class="ausbildung-zielgruppe__text">
+          <span class="label">Für wen?</span>
+          <h2>Diese Ausbildung<br /><em>ist für dich.</em></h2>
+          <p>Wenn du Pilates ernst nimmst und Reformer professionell unterrichten möchtest, bist du hier richtig. Auch wenn du bereits in verwandten Bereichen arbeitest, profitierst du von der Tiefe und Struktur unserer Ausbildung.</p>
+        </div>
+        <ul class="zielgruppe-list">
+          <li>Du bist <strong>begeistert von Pilates</strong> und möchtest tiefer einsteigen.</li>
+          <li>Du willst <strong>Reformer professionell unterrichten</strong> – als Hauptberuf oder zweites Standbein.</li>
+          <li>Du arbeitest bereits als <strong>Trainer:in im Bereich Fitness, Yoga oder Tanz</strong> und möchtest dein Repertoire erweitern.</li>
+          <li>Du willst deine eigene <strong>Technik vertiefen und Kenntnisse fundieren</strong>.</li>
+          <li>Du möchtest später bei <strong>core:form oder in anderen Studios</strong> Gruppen oder Personaltraining unterrichten.</li>
+        </ul>
+      </div>
+      <div class="ausbildung-voraussetzung">
+        <span class="label">Voraussetzung</span>
+        <p>Wer keine Pilates-Mattenausbildung absolviert hat, sollte am <strong>Pilates-Grundlagen-Kompaktseminar am 18.04.2026</strong> teilnehmen (zusätzlich 250 €). Hier werden die wesentlichen Pilates-Techniken sowie die zugrundeliegenden Prinzipien vermittelt.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="ausbildung-team">
+    <div class="container">
+      <div class="section-head">
+        <span class="label">Ausbildungsteam</span>
+        <h2>Eva &amp; Jelena —<br /><em>im Team-Teaching.</em></h2>
+      </div>
+      <div class="team-grid">
+        <article class="team-card">
+          <div class="team-card__media">
+            <img src="media/EvaPilates_Portraits_2025_067.jpg" alt="Eva Wiedwald" loading="lazy" decoding="async" />
+          </div>
+          <div class="team-card__body">
+            <span class="team-card__role">Ausbildungsleitung & Inhaberin</span>
+            <h3>Eva Wiedwald</h3>
+            <p>Eva unterrichtet seit über 25 Jahren Pilates, davon 14 Jahre hauptberuflich. Ihr Unterricht ist geprägt von Klarheit und einer tiefen Kenntnis des Pilates-Systems.</p>
+            <p>Durch langjährige Erfahrung im Reformer- und Mattentraining hat sie einen besonderen Blick dafür entwickelt, wie Menschen sinnvoll, sicher und mit Freude bewegt werden können. Ihre Stärke ist es, komplexe Inhalte verständlich zu machen und jeder Person genau dort zu begegnen, wo sie steht.</p>
+            <p>Sie leitet die Ausbildung strukturiert, verständlich und mit viel Herz.</p>
+          </div>
+        </article>
+        <article class="team-card">
+          <div class="team-card__media">
+            <img src="media/EvaPilates_Portraits_2025_011.jpg" alt="Jelena Grjasnowa" loading="lazy" decoding="async" />
+          </div>
+          <div class="team-card__body">
+            <span class="team-card__role">Ausbildungsassistenz</span>
+            <h3>Jelena Grjasnowa</h3>
+            <p>Jelena war viele Jahre professionelle Balletttänzerin und unterrichtet seit über 10 Jahren Reformertraining – im Personaltraining wie auch in der Gruppe.</p>
+            <p>Sie bringt Dynamik, Präzision und einen wunderbaren Blick für Technik und Bewegungsqualität mit. In der Ausbildung unterstützt sie besonders bei Technik, Flow und der sicheren Ausführung am Gerät.</p>
+          </div>
+        </article>
+      </div>
+      <div class="team-credentials">
+        <div class="team-credentials__item">
+          <img src="media/DPV_PremiumSiegel2026.png" alt="Deutscher Pilates Verband — Premium-Siegel 2026" loading="lazy" decoding="async" />
+          <p><strong>Premium-Mitglied</strong><span>Deutscher Pilates Verband</span></p>
+        </div>
+        <div class="team-credentials__item">
+          <img src="media/Zertifikat2026.png" alt="Zertifikat 2026" loading="lazy" decoding="async" />
+          <p><strong>Zertifizierte Ausbilder:innen</strong><span>Aktuelle Qualifikation 2026</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVESTITION -->
+  <section class="ausbildung-investition">
+    <div class="container">
+      <div class="section-head">
+        <span class="label">Investition</span>
+        <h2>Deine Investition<br /><em>in echtes Können.</em></h2>
+      </div>
+      <div class="investition-grid">
+        <article class="investition-card investition-card--main">
+          <span class="investition-card__tag">Reformer-Lehrerausbildung 2026</span>
+          <div class="investition-card__price">
+            <strong>1.390 €</strong>
+            <span>inkl. MwSt.</span>
+          </div>
+          <ul>
+            <li>Alle 4 Präsenztermine (jeweils 10–16 Uhr)</li>
+            <li>Ausführliches Ausbildungsskript</li>
+            <li>Teilnahmebescheinigung nach Abschluss</li>
+            <li>Individuelle Betreuung durch Eva &amp; Jelena</li>
+            <li>Nutzung der Reformer zum Selbststudium (nach Verfügbarkeit)</li>
+          </ul>
+          <p class="investition-card__note">Ratenzahlung möglich.</p>
+        </article>
+        <div class="investition-add">
+          <article class="investition-card investition-card--add">
+            <span class="investition-card__tag">Optional</span>
+            <h3>Pilates-Grundlagen-Seminar</h3>
+            <div class="investition-card__price-sm">+ 250 €</div>
+            <p>Kompaktseminar am 18.04.2026 für alle ohne abgeschlossene Mattenausbildung. Vermittelt die wesentlichen Pilates-Techniken und Prinzipien.</p>
+          </article>
+          <article class="investition-card investition-card--add">
+            <span class="investition-card__tag">Optional</span>
+            <h3>Practice Day</h3>
+            <div class="investition-card__price-sm">+ 120 €</div>
+            <p>Zusätzlicher Praxistag zur Vertiefung. Ideal als Auffrischung kurz vor dem ersten eigenen Unterrichten.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEWERBUNG / ERSTGESPRÄCH -->
+  <section class="ausbildung-bewerbung" id="bewerbung">
+    <div class="container">
+      <div class="bewerbung-inner">
+        <div class="bewerbung-text">
+          <span class="label">Bewerbung & Erstgespräch</span>
+          <h2>Wir lernen uns<br /><em>vorher persönlich kennen.</em></h2>
+          <p>Vor jeder Anmeldung steht ein persönliches Erstgespräch. Wir möchten sicher gehen, dass die Ausbildung für dich passt – und du bekommst ein klares Bild davon, was dich erwartet. Das Gespräch ist <strong>unverbindlich und kostenlos</strong>.</p>
+        </div>
+        <ul class="bewerbung-list">
+          <li>Deine Motivation &amp; Ziele</li>
+          <li>Deine Vorerfahrung mit Pilates und Bewegung</li>
+          <li>Ob die Ausbildung aktuell für dich geeignet ist</li>
+          <li>Ob du das Grundlagen-Seminar brauchst</li>
+          <li>Alle offenen Fragen</li>
+        </ul>
+        <div class="bewerbung-cta">
+          <a href="mailto:info@core-form.de?subject=Reformer-Ausbildung%202026%20%E2%80%94%20Erstgespr%C3%A4ch" class="btn btn--accent">Erstgespräch anfragen</a>
+          <a href="tel:020185772137" class="btn btn--outline">0201 857 721 37</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS — wichtigster Abschnitt unten -->
+  <section class="ausbildung-testimonials" aria-labelledby="testimonials-head">
+    <div class="container">
+      <div class="section-head" id="testimonials-head">
+        <span class="label">Stimmen aus der Ausbildung</span>
+        <h2>Was Trainer:innen<br /><em>über uns sagen.</em></h2>
+      </div>
+    </div>
+    <div class="testimonial-carousel" role="list" aria-label="Erfahrungsberichte">
+      <article class="testimonial-card" role="listitem">
+        <svg class="testimonial-card__quote" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.17 17q-1.32 0-2.25-.93Q4 15.13 4 13.83v-1.66q0-2.78 1.27-5.05T9.13 3.5l1.42 1.42q-1.66 1.16-2.61 2.7-.96 1.55-.96 3.13H8.5q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Zm9 0q-1.32 0-2.25-.93Q13 15.13 13 13.83v-1.66q0-2.78 1.27-5.05T18.13 3.5l1.42 1.42q-1.66 1.16-2.62 2.7-.96 1.55-.96 3.13h1.53q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Z"/></svg>
+        <p>Die Ausbildung bei Jelena und Eva ist besonders toll, weil sie durch hohe fachliche Qualität, klare Struktur und eine außergewöhnlich wertschätzende Lernatmosphäre überzeugt. Weil man hier nicht nur fachlich geschult wird, sondern auch als Mensch wirklich gesehen wird. Weil die beiden eine Umgebung schaffen, in der man sich sicher, unterstützt und motiviert fühlt. Und weil ihre Kombination aus Kompetenz, Authentizität, Herz und feinem Humor jede Einheit besonders macht und fachliches wie persönliches Wachstum ermöglicht. Eine Ausbildung, die nachhaltig wirkt und für die ich sehr dankbar bin.</p>
+        <footer>
+          <strong>Elle</strong>
+          <span>Trainerin</span>
+        </footer>
+      </article>
+
+      <article class="testimonial-card" role="listitem">
+        <svg class="testimonial-card__quote" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.17 17q-1.32 0-2.25-.93Q4 15.13 4 13.83v-1.66q0-2.78 1.27-5.05T9.13 3.5l1.42 1.42q-1.66 1.16-2.61 2.7-.96 1.55-.96 3.13H8.5q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Zm9 0q-1.32 0-2.25-.93Q13 15.13 13 13.83v-1.66q0-2.78 1.27-5.05T18.13 3.5l1.42 1.42q-1.66 1.16-2.62 2.7-.96 1.55-.96 3.13h1.53q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Z"/></svg>
+        <p>Eva begleitet einen mit ihrer wertschätzenden, offenen und humorvollen Art durch die Reformer-Ausbildung. Ich habe von ihrem hohen Fachwissen als Pilates-Trainerin absolut profitiert. Eine super Ergänzung ist das Ausbildungs-Skript, welches nicht nur beim Lernen zwischen den praktischen Tagen unterstützt, sondern mit viel Herzblut und Fachwissen von Eva gespickt ist. Man merkt, wie wichtig ihr ist, den Auszubildenden nicht nur die Übungen, sondern auch Fachwissen und didaktische Grundlagen beizubringen, damit ich als Trainerin sicher durchstarten kann. Danke dafür, Eva.</p>
+        <footer>
+          <strong>Franziska</strong>
+          <span>Trainerin</span>
+        </footer>
+      </article>
+
+      <article class="testimonial-card" role="listitem">
+        <svg class="testimonial-card__quote" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.17 17q-1.32 0-2.25-.93Q4 15.13 4 13.83v-1.66q0-2.78 1.27-5.05T9.13 3.5l1.42 1.42q-1.66 1.16-2.61 2.7-.96 1.55-.96 3.13H8.5q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Zm9 0q-1.32 0-2.25-.93Q13 15.13 13 13.83v-1.66q0-2.78 1.27-5.05T18.13 3.5l1.42 1.42q-1.66 1.16-2.62 2.7-.96 1.55-.96 3.13h1.53q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Z"/></svg>
+        <p>Die Ausbildung zur Reformer-Trainerin bei Eva von core:form ist für mich eine sehr bereichernde Erfahrung. Mit ihrer offenen, wertschätzenden Art leitet Eva sowohl die Ausbildung als auch ihre Kurse. Ihr Fachwissen und ihre Erfahrung werden in jedem Modul der Ausbildung deutlich. Besonders schätze ich die Praxisnähe, das aufwändig ausgearbeitete Handout und die klar strukturierte Vermittlung der Inhalte. Schritt für Schritt begleitet Eva den Weg zur Trainerin – mit fundiertem Hintergrundwissen und einer individuellen Vorbereitung auf die eigene Trainerpraxis. Auch im Studioalltag zeigen sich die hohe Qualität der Trainer:innen und die persönliche, wertschätzende Begleitung.</p>
+        <footer>
+          <strong>Marina</strong>
+          <span>Trainerin</span>
+        </footer>
+      </article>
+
+      <article class="testimonial-card" role="listitem">
+        <svg class="testimonial-card__quote" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.17 17q-1.32 0-2.25-.93Q4 15.13 4 13.83v-1.66q0-2.78 1.27-5.05T9.13 3.5l1.42 1.42q-1.66 1.16-2.61 2.7-.96 1.55-.96 3.13H8.5q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Zm9 0q-1.32 0-2.25-.93Q13 15.13 13 13.83v-1.66q0-2.78 1.27-5.05T18.13 3.5l1.42 1.42q-1.66 1.16-2.62 2.7-.96 1.55-.96 3.13h1.53q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Z"/></svg>
+        <p>Seit über 13 Jahren trainiere ich Pilates am Reformer unter Evas Anleitung. Dadurch hat sich mein Fitnessniveau deutlich verbessert, und das Training ist zu einem festen Bestandteil meiner Gesundheit geworden. Evas außergewöhnliche Präzision, ihr geschulter Blick und ihre Fähigkeit, Bewegungen differenziert zu analysieren und gezielt zu korrigieren, haben mich über all die Jahre nachhaltig geprägt. Der konsequente Höhepunkt dieser langjährigen Praxis war für mich die Ausbildung zum Trainer, die ich bei Eva und Jelena im Team-Teaching absolvieren durfte. Diese Zusammenarbeit ist mir als besonders stimmiges Gesamtbild in Erinnerung geblieben: Eva mit ihrer klaren Struktur und der konsequenten Vermittlung der Pilates-Prinzipien, und Jelena, die mit großer Präzision in der Ausführung und Vermittlung der Übungen meine Ausbildung auf ideale Weise ergänzt hat. Ich bin sehr dankbar, von beiden gelernt zu haben.</p>
+        <footer>
+          <strong>Rolf</strong>
+          <span>Trainer</span>
+        </footer>
+      </article>
+
+      <article class="testimonial-card" role="listitem">
+        <svg class="testimonial-card__quote" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.17 17q-1.32 0-2.25-.93Q4 15.13 4 13.83v-1.66q0-2.78 1.27-5.05T9.13 3.5l1.42 1.42q-1.66 1.16-2.61 2.7-.96 1.55-.96 3.13H8.5q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Zm9 0q-1.32 0-2.25-.93Q13 15.13 13 13.83v-1.66q0-2.78 1.27-5.05T18.13 3.5l1.42 1.42q-1.66 1.16-2.62 2.7-.96 1.55-.96 3.13h1.53q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Z"/></svg>
+        <p>Die Ausbildung bei Eva ist total praxisnah aufgebaut, da man in jeder Einheit spürt, dass Eva aus 20 Jahren Erfahrung spricht und dieses Wissen direkt anwendbar macht. Zusammen mit Jelena ergibt das eine super Kombi, die die Inhalte nicht nur verständlich, sondern auch inspirierend vermittelt.</p>
+        <footer class="testimonial-card__footer-with-img">
+          <img src="media/Selina.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+          <div>
+            <strong>Selina</strong>
+            <span>Trainerin</span>
+          </div>
+        </footer>
+      </article>
+
+      <article class="testimonial-card" role="listitem">
+        <svg class="testimonial-card__quote" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.17 17q-1.32 0-2.25-.93Q4 15.13 4 13.83v-1.66q0-2.78 1.27-5.05T9.13 3.5l1.42 1.42q-1.66 1.16-2.61 2.7-.96 1.55-.96 3.13H8.5q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Zm9 0q-1.32 0-2.25-.93Q13 15.13 13 13.83v-1.66q0-2.78 1.27-5.05T18.13 3.5l1.42 1.42q-1.66 1.16-2.62 2.7-.96 1.55-.96 3.13h1.53q1.04 0 1.77.73.73.74.73 1.77v2q0 1.04-.73 1.77-.73.73-1.77.73h-1.33Z"/></svg>
+        <p>Vom ersten Termin an habe ich mich unglaublich gut aufgehoben gefühlt. An der Ausbildung bei Eva und Jelena hat mir besonders die persönliche Betreuung gefallen. Lernen macht hier nicht nur Spaß, sondern motiviert richtig.</p>
+        <footer>
+          <strong>Shari</strong>
+          <span>Trainerin</span>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <!-- ABSCHLIESSENDE CTA -->
+  <section class="ausbildung-final-cta">
+    <div class="container">
+      <div class="final-cta-inner">
+        <span class="label label--light">Reformer-Lehrerausbildung 2026</span>
+        <h2>Bereit, deine Praxis<br /><em>zur Profession zu machen?</em></h2>
+        <p>Plätze sind begrenzt. Schreib uns für ein unverbindliches Erstgespräch oder ruf direkt im Studio an.</p>
+        <div class="final-cta-actions">
+          <a href="mailto:info@core-form.de?subject=Reformer-Ausbildung%202026%20%E2%80%94%20Erstgespr%C3%A4ch" class="btn btn--accent">Erstgespräch anfragen</a>
+          <a href="tel:020185772137" class="btn btn--ghost">0201 857 721 37</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__logo">
+        <img src="media/RZ_Logo_CoreForm_Gudula_weiss.png" alt="core:form" loading="lazy" decoding="async" />
+      </div>
+      <span class="footer__copy">© <span data-current-year>2026</span> core:form Pilates Studio GbR, Essen</span>
+      <div class="footer__links">
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutz</a>
+        <a href="agb.html">AGB</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('[data-current-year]').forEach(function (el) {
+    el.textContent = new Date().getFullYear();
+  });
+</script>
+<script src="js/chrome.js"></script>
+</body>
+</html>

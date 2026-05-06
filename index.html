@@ -313,9 +313,9 @@ const App = () => {
           </div>
           <div className="angebote__grid">
             {[
-              { img:'media/COREFORM_web_005.jpg', tag:'Studio Südviertel', title:'Reformer\nPilates', desc:'Training an der Reformer-Apparatur in Kleingruppen – präzise angeleitet für maximale Wirkung.' },
-              { img:'media/Eva-Pilates 01.jpg',   tag:'Studio Rüttenscheid', title:'Pilates\nMatte',   desc:'Achtsam angeleitetes Training in Kleingruppen – zugänglich und tiefgründig zugleich.' },
-              { img:'media/Eva-Pilates 06.jpg', tag:'Studio Rüttenscheid', title:'Barre\nWorkout', desc:'Dynamisches Ganzkörpertraining – Pilates trifft Tanz und Kraft. Eleganz trifft Intensität.' },
+              { img:'media/COREFORM_web_005.jpg', tag:'Studio Südviertel', title:'Reformer\nPilates', desc:'Training an der Reformer-Apparatur in Kleingruppen – präzise angeleitet für maximale Wirkung.', link:'buchung-suedviertel.html' },
+              { img:'media/Eva-Pilates 01.jpg',   tag:'Studio Rüttenscheid', title:'Pilates\nMatte',   desc:'Achtsam angeleitetes Training in Kleingruppen – zugänglich und tiefgründig zugleich.', link:'buchung-ruettenscheid.html' },
+              { img:'media/Eva-Pilates 06.jpg', tag:'Studio Rüttenscheid', title:'Barre\nWorkout', desc:'Dynamisches Ganzkörpertraining – Pilates trifft Tanz und Kraft. Eleganz trifft Intensität.', link:'buchung-ruettenscheid.html' },
               { img:'media/COREFORM_web_009.jpg', tag:'Beide Studios',        title:'Personal\nTraining', desc:'1:1 oder 2:1 – individuelles Pilatestraining auf der Matte oder am Reformer.' },
               { img:'media/Eva-Pilates 07.jpg', tag:'Studio Südviertel',    title:'Raum­vermietung', desc:'Zwei Balanced Body Reformer – ideal für Kolleg:innen und externe Trainer:innen.' },
             ].map((c, i) => (
@@ -327,13 +327,15 @@ const App = () => {
                   <span className="kurs-card__tag">{c.tag}</span>
                   <h3>{c.title.split('\n').map((l,j) => <React.Fragment key={j}>{l}{j===0&&<br/>}</React.Fragment>)}</h3>
                   <p>{c.desc}</p>
-                  <a
-                    className="text-link"
-                    href="#kontakt"
-                    onClick={(e) => { e.preventDefault(); scroll('kontakt'); }}
-                  >
-                    {i < 3 ? 'Mehr erfahren →' : 'Anfragen →'}
-                  </a>
+                  {c.link ? (
+                    <a className="text-link" href={c.link}>Mehr erfahren →</a>
+                  ) : (
+                    <a
+                      className="text-link"
+                      href="#kontakt"
+                      onClick={(e) => { e.preventDefault(); scroll('kontakt'); }}
+                    >Anfragen →</a>
+                  )}
                 </div>
               </div>
             ))}
@@ -432,7 +434,7 @@ const App = () => {
               <span className="label">Ausbildung</span>
               <h2>Werde<br /><em>Pilates-Trainer:in.</em></h2>
               <p>core:form bietet strukturierte Ausbildungsprogramme für alle, die Pilates professionell unterrichten möchten. Fundiert, praxisnah und von erfahrenen Trainer:innen begleitet.</p>
-              <button type="button" className="btn btn--accent" onClick={() => scroll('kontakt')}>Zur Ausbildung</button>
+              <a href="ausbildung.html" className="btn btn--accent">Zur Ausbildung</a>
             </div>
             <ul className="ausbildung__features">
               {['Zertifizierte Programme für Matte & Reformer','Erfahrene Ausbilder:innen','Kleine Ausbildungsgruppen','Praxis & Theorie in zwei Studios'].map(f => (
@@ -566,7 +568,7 @@ const App = () => {
         <div className="container">
           <div className="footer__inner">
             <div className="footer__logo">
-              <img src="media/RZ_Logo_CoreForm_Moltke_weiss.png" alt="core:form" loading="lazy" decoding="async" />
+              <img src="media/RZ_Logo_CoreForm_Gudula_weiss.png" alt="core:form" loading="lazy" decoding="async" />
             </div>
             <span className="footer__copy">© {new Date().getFullYear()} core:form Pilates Studio GbR, Essen</span>
             <div className="footer__links">
