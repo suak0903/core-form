@@ -6,7 +6,13 @@
 @font-face { font-family:'Stacion'; src:url('../font/stacion-light.otf') format('opentype'); font-weight:300; font-style:normal; font-display:swap; }
 @font-face { font-family:'Stacion'; src:url('../font/stacion-light-italic.otf') format('opentype'); font-weight:300; font-style:italic; font-display:swap; }
 
-*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+*, *::before, *::after {
+  box-sizing:border-box; margin:0; padding:0;
+  /* iOS Safari + Android Chrome blenden beim Antippen ein hellblaues
+     Highlight ein. Das passt nicht zum Brand — wir liefern Feedback
+     stattdessen über :hover, :active und :focus-visible.               */
+  -webkit-tap-highlight-color:transparent;
+}
 html { scroll-behavior:smooth; scrollbar-gutter:stable; }
 section[id] { scroll-margin-top:88px; }
 body { font-family:'DM Sans','Helvetica Neue',Arial,sans-serif; background:#fff; color:#0d0d0d; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
