@@ -16,6 +16,7 @@ Statisches Multi-Page-Setup. Kein Build-Step, kein npm.
 |---|---|---|
 | `index.html` | React 18 + Babel Standalone via CDN, JSX inline | Startseite (Single-Page-Scroll) |
 | `buchung.html`, `buchung-ruettenscheid.html`, `buchung-suedviertel.html` | Vanilla HTML | Buchungsseiten mit Eversports-Widget |
+| `ausbildung.html` | Vanilla HTML | Reformer-Lehrerausbildung (Landingpage mit Testimonial-Karussell) |
 | `faq.html`, `impressum.html`, `datenschutz.html`, `agb.html` | Vanilla HTML | Inhalts- und Rechtsseiten |
 | `css/site.css` | gemeinsames CSS für alle Seiten (inkl. `index.html`) | Design-System, Layout, Subpage-Styles |
 | `js/chrome.js` | gemeinsames JS für alle **statischen** Subpages | Nav, Mobile-Menu, Newsletter-Popup |
@@ -24,6 +25,7 @@ Statisches Multi-Page-Setup. Kein Build-Step, kein npm.
 ```
 index.html             ← React-App
 buchung*.html          ← statisch, nutzen chrome.js
+ausbildung.html        ← statisch, nutzen chrome.js (Landingpage mit Testimonial-Karussell)
 faq.html               ← statisch, nutzen chrome.js
 impressum.html         ← statisch, nutzen chrome.js
 datenschutz.html       ← statisch, nutzen chrome.js
@@ -313,6 +315,8 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 | Format-Karussell | `section.formate > .container > .format-carousel` | weiß | buchung.html |
 | Eversports-Widget | `section.booking-widget > .container > .booking-widget__head` + Widget-Div | off-white `#f6f9f7` | alle buchung*.html |
 | Bild-/Text-Hero (mit BG-Image) | nicht in `.subpage`, sondern `.hero` Klasse — siehe `index.html` | dunkel | nur Startseite |
+| **Landingpage-Sektionen (Ausbildung & ähnliche Pages)** | siehe Sektionsliste unten | wechselnd weiß / creme / off-white / dunkel | ausbildung.html |
+| **Testimonial-Karussell** | `section.ausbildung-testimonials > .testimonial-carousel > article.testimonial-card` | dunkel `#0d0d0d` | ausbildung.html |
 
 ### 3. Pflichtregeln für jede neue Seite
 
@@ -370,6 +374,54 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 
 - Anker auf Sektionen der Startseite: `index.html#angebote` etc. (`chrome.js` und der React-Mount-Effect korrigieren den Scroll-Offset für die fixierte Nav um –68 px).
 - Anker innerhalb einer Subpage: `<section id="…">` + Link `#…`. Funktioniert via `scroll-margin-top:88px` aus `css/site.css`.
+
+### 6. Landingpage-Pattern (für umfangreiche Themenseiten — Vorlage: `ausbildung.html`)
+
+Wenn eine neue Seite mehr ist als nur Fließtext oder ein Buchungswidget — etwa eine Ausbildung, ein Workshop-Programm, ein Membership-Paket — folgt sie dieser Sektionsfolge. Sie ist in `css/site.css` ausgestylt und sollte **in dieser Reihenfolge** verwendet werden, damit der Hintergrund-Rhythmus stimmt:
+
+| # | Sektion | Klasse | BG | Zweck |
+|---|---|---|---|---|
+| 1 | Hero | `.subpage__hero` (+ optionale Modifier) | creme | Eyebrow + H1 + Lead + 2 CTAs (`.btn--accent`, `.btn--outline`) |
+| 2 | Argumente / USPs | `.ausbildung-besondere > .container > .usp-grid` | weiß | 3×3 Karten mit Nummer, H3, Kurzbeschreibung |
+| 3 | Inhalte / Curriculum | `.ausbildung-inhalte > .container > .ausbildung-inhalte__inner` | creme | 2-spaltig: Text + `<ul class="ausbildung-inhalte__list">` mit `✓` |
+| 4 | Termine / Aufbau | `.ausbildung-termine > .container > .termine-grid` | weiß | 2 Blöcke (z. B. Präsenz + Praxis), `.termine-list` für Datums-Reihen |
+| 5 | Zielgruppe + Voraussetzung | `.ausbildung-zielgruppe` | off-white | 2-spaltig + abgesetzter `.ausbildung-voraussetzung`-Hinweis |
+| 6 | Team | `.ausbildung-team > .container > .team-grid` | weiß | 2 Trainer:innen-Karten (Foto 4:5 + Text), optional `.team-credentials`-Reihe |
+| 7 | Investition | `.ausbildung-investition > .container > .investition-grid` | creme | 1 dunkle Hauptkarte (`.investition-card--main`) + 2 Add-Ons (`--add`) |
+| 8 | Bewerbung / Kontaktfunnel | `.ausbildung-bewerbung > .container > .bewerbung-inner` | weiß | Text + `.bewerbung-list` + `.bewerbung-cta` mit Mail+Tel-Button |
+| 9 | **Testimonial-Karussell** | `.ausbildung-testimonials` | dunkel `#0d0d0d` | siehe Block unten |
+| 10 | Final-CTA | `.ausbildung-final-cta` | brombeere `#59071d` | zentrierter Abschluss-Banner mit 2 CTAs (`.btn--accent` + `.btn--ghost`) |
+
+**Testimonial-Karussell — Pflicht-Markup pro Karte:**
+
+```html
+<section class="ausbildung-testimonials" aria-labelledby="testimonials-head">
+  <div class="container">
+    <div class="section-head" id="testimonials-head">
+      <span class="label">Stimmen</span>
+      <h2>Headline mit <em>Italic.</em></h2>
+    </div>
+  </div>
+  <div class="testimonial-carousel" role="list" aria-label="Erfahrungsberichte">
+    <article class="testimonial-card" role="listitem">
+      <svg class="testimonial-card__quote" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="…" /></svg>
+      <p>Vollständiger Testimonial-Text — NICHT kürzen, Originalzitate respektieren.</p>
+      <footer>
+        <strong>Vorname</strong>
+        <span>Rolle</span>
+      </footer>
+    </article>
+    <!-- … weitere Karten -->
+  </div>
+</section>
+```
+
+- Wenn ein Foto vorhanden: `<footer class="testimonial-card__footer-with-img">` mit `<img>` (48 × 48 px, **quadratisch** — kein `border-radius`) + `<div><strong>…</strong><span>…</span></div>`.
+- Karten-Breite ist fix `460px` desktop / `86%` mobile — Karussell scrollt horizontal mit `scroll-snap`.
+- BG der Sektion ist Schwarz, Akzent-Farbe Himbeere `#b20e3b`. Italic-Em im Headline darf zur Auflockerung Creme `#f2dac2` annehmen. **Pink `#fc2cb8` bleibt strikt dem Logo-Doppelpunkt vorbehalten.**
+- **Testimonials nie sinngemäß zusammenfassen oder kürzen.** Original-Wortlaut der Trainer:innen ist Markenkern und wirkt auch durch Länge authentisch.
+
+**Wann nicht alle Sektionen verwenden:** Reicht ein dünneres Format (z. B. ein einzelner Workshop), kann auf Investitions- oder Termin-Block verzichtet werden — aber Hero + USPs + Team + Final-CTA sollten immer dabei sein.
 
 ---
 

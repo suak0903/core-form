@@ -826,6 +826,394 @@ body.popup-open { overflow:hidden; }
 .faq-item__body p { margin-bottom:12px; }
 .faq-item__body p:last-child { margin-bottom:0; }
 
+/* ── AUSBILDUNGSSEITE ── */
+
+/* Hero — leichte Erweiterung des Standard-subpage__hero mit CTA-Reihe */
+.ausbildung-hero__actions {
+  display:flex; flex-wrap:wrap; gap:14px;
+  margin-top:32px;
+}
+
+/* USP-Grid: 3 Spalten Karten mit Nummer */
+.ausbildung-besondere { background:#fff; padding:96px 0; }
+.usp-grid {
+  list-style:none; padding:0; margin:0;
+  display:grid; grid-template-columns:repeat(3, 1fr);
+  gap:1px; background:rgba(0,0,0,.08);
+}
+.usp-grid li {
+  background:#fff; padding:36px 32px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.usp-grid__nr {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:32px; color:#b20e3b; line-height:1;
+  margin-bottom:6px;
+}
+.usp-grid h3 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:22px; line-height:1.2; color:#0d0d0d;
+  letter-spacing:-.01em;
+}
+.usp-grid p { font-size:14px; line-height:1.6; color:#2a2a2a; }
+
+/* Inhalte — 2-Spalten Text + Liste, Hintergrund creme */
+.ausbildung-inhalte { background:#f2dac2; padding:96px 0; }
+.ausbildung-inhalte__inner {
+  display:grid; grid-template-columns:1fr 1.1fr; gap:64px;
+  align-items:start;
+}
+.ausbildung-inhalte__text h2 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,48px); line-height:1.08;
+  letter-spacing:-.02em; color:#0d0d0d; margin:8px 0 18px;
+}
+.ausbildung-inhalte__text h2 em { font-style:italic; color:#b20e3b; }
+.ausbildung-inhalte__text > p {
+  font-size:16px; line-height:1.7; color:#0d0d0d;
+  max-width:480px; margin-bottom:28px;
+}
+.ausbildung-inhalte__hinweis {
+  background:rgba(255,255,255,.55);
+  border-left:3px solid #b20e3b;
+  padding:18px 22px; max-width:480px;
+}
+.ausbildung-inhalte__hinweis .label { margin-bottom:8px; }
+.ausbildung-inhalte__hinweis p {
+  font-size:14px; line-height:1.6; color:#0d0d0d; margin:0;
+}
+.ausbildung-inhalte__list {
+  list-style:none; padding:0; margin:0;
+  display:flex; flex-direction:column;
+}
+.ausbildung-inhalte__list li {
+  display:grid; grid-template-columns:24px 1fr; gap:14px;
+  padding:16px 0; border-bottom:1px solid rgba(0,0,0,.12);
+  align-items:start;
+}
+.ausbildung-inhalte__list li:last-child { border-bottom:none; }
+.ausbildung-inhalte__list .check {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:22px; height:22px; color:#b20e3b; font-weight:700; font-size:14px;
+  margin-top:2px;
+}
+.ausbildung-inhalte__list strong {
+  display:block; font-size:15px; color:#0d0d0d;
+  font-weight:600; margin-bottom:4px;
+}
+.ausbildung-inhalte__list span {
+  display:block; font-size:14px; line-height:1.55; color:#2a2a2a;
+}
+
+/* Termine — 2 Blöcke nebeneinander */
+.ausbildung-termine { background:#fff; padding:96px 0; }
+.termine-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:2px;
+  background:rgba(0,0,0,.08); margin-top:8px;
+}
+.termine-block {
+  background:#fff; padding:40px 36px;
+  display:flex; flex-direction:column;
+}
+.termine-block--praxis { background:#f6f9f7; }
+.termine-block__label {
+  display:block; font-size:11px; font-weight:600;
+  letter-spacing:.15em; text-transform:uppercase; color:#b20e3b;
+  margin-bottom:24px;
+}
+.termine-list {
+  list-style:none; padding:0; margin:0 0 24px;
+}
+.termine-list li {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:18px 0; border-bottom:1px solid rgba(0,0,0,.12);
+}
+.termine-list li:last-child { border-bottom:none; }
+.termine-list__date {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:24px; color:#0d0d0d; letter-spacing:-.01em;
+}
+.termine-list__nr {
+  font-size:11px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:#8c8c8c;
+}
+.termine-block__ort {
+  font-size:14px; line-height:1.6; color:#2a2a2a;
+  margin-top:auto;
+}
+.praxis-list {
+  list-style:none; padding:0; margin:0;
+  display:flex; flex-direction:column; gap:22px;
+}
+.praxis-list strong {
+  display:block; font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:20px; color:#0d0d0d; margin-bottom:6px;
+  letter-spacing:-.01em;
+}
+.praxis-list p { font-size:14px; line-height:1.6; color:#2a2a2a; margin:0; }
+
+/* Zielgruppe — Liste + Voraussetzung-Block */
+.ausbildung-zielgruppe { background:#f6f9f7; padding:96px 0; }
+.ausbildung-zielgruppe__inner {
+  display:grid; grid-template-columns:1fr 1.2fr; gap:64px;
+  align-items:start;
+}
+.ausbildung-zielgruppe__text h2 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,48px); line-height:1.08;
+  letter-spacing:-.02em; color:#0d0d0d; margin:8px 0 18px;
+}
+.ausbildung-zielgruppe__text h2 em { font-style:italic; color:#b20e3b; }
+.ausbildung-zielgruppe__text p {
+  font-size:16px; line-height:1.7; color:#2a2a2a; max-width:460px;
+}
+.zielgruppe-list {
+  list-style:none; padding:0; margin:0;
+}
+.zielgruppe-list li {
+  position:relative; padding:18px 0 18px 32px;
+  border-bottom:1px solid rgba(0,0,0,.12);
+  font-size:15px; line-height:1.6; color:#2a2a2a;
+}
+.zielgruppe-list li:last-child { border-bottom:none; }
+.zielgruppe-list li::before {
+  content:''; position:absolute; left:0; top:26px;
+  width:18px; height:1px; background:#b20e3b;
+}
+.zielgruppe-list strong { color:#0d0d0d; font-weight:600; }
+.ausbildung-voraussetzung {
+  margin-top:48px; max-width:780px;
+  background:#fff; border-left:3px solid #b20e3b;
+  padding:24px 28px;
+}
+.ausbildung-voraussetzung .label { margin-bottom:8px; }
+.ausbildung-voraussetzung p {
+  font-size:15px; line-height:1.7; color:#0d0d0d; margin:0;
+}
+.ausbildung-voraussetzung strong { color:#0d0d0d; font-weight:600; }
+
+/* Team — 2 Karten + Credentials */
+.ausbildung-team { background:#fff; padding:96px 0; }
+.team-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:48px;
+}
+.team-card { display:flex; flex-direction:column; }
+.team-card__media {
+  aspect-ratio:4/5; overflow:hidden; background:#0d0d0d;
+  margin-bottom:24px;
+}
+.team-card__media img {
+  width:100%; height:100%; object-fit:cover; object-position:center 18%;
+}
+.team-card__role {
+  display:block; font-size:11px; font-weight:600;
+  letter-spacing:.15em; text-transform:uppercase; color:#b20e3b;
+  margin-bottom:10px;
+}
+.team-card h3 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:32px; line-height:1.05; color:#0d0d0d;
+  letter-spacing:-.02em; margin-bottom:18px;
+}
+.team-card p {
+  font-size:15px; line-height:1.7; color:#2a2a2a;
+  margin-bottom:14px;
+}
+.team-card p:last-child { margin-bottom:0; }
+.team-credentials {
+  display:flex; gap:48px; flex-wrap:wrap;
+  margin-top:64px; padding-top:48px;
+  border-top:1px solid rgba(0,0,0,.1);
+}
+.team-credentials__item {
+  display:flex; align-items:center; gap:18px;
+}
+.team-credentials__item img {
+  height:80px; width:auto; object-fit:contain;
+}
+.team-credentials__item p {
+  display:flex; flex-direction:column; gap:2px;
+  font-size:14px; line-height:1.4; color:#2a2a2a; margin:0;
+}
+.team-credentials__item strong { color:#0d0d0d; font-weight:600; font-size:14px; }
+.team-credentials__item span { color:#8c8c8c; font-size:12px; }
+
+/* Investition — 1 Hauptkarte + 2 Add-Ons */
+.ausbildung-investition { background:#f2dac2; padding:96px 0; }
+.investition-grid {
+  display:grid; grid-template-columns:1.2fr 1fr; gap:32px;
+  align-items:stretch;
+}
+.investition-card {
+  background:#fff; padding:36px 36px 40px;
+  display:flex; flex-direction:column;
+}
+.investition-card--main { background:#0d0d0d; color:#fff; }
+.investition-card__tag {
+  display:block; font-size:11px; font-weight:600;
+  letter-spacing:.15em; text-transform:uppercase;
+  color:#b20e3b; margin-bottom:18px;
+}
+.investition-card--main .investition-card__tag { color:#b20e3b; }
+.investition-card__price {
+  display:flex; align-items:baseline; gap:10px;
+  margin-bottom:28px;
+}
+.investition-card__price strong {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:64px; line-height:1; letter-spacing:-.02em;
+  color:#fff;
+}
+.investition-card--main .investition-card__price strong { color:#fff; }
+.investition-card:not(.investition-card--main) .investition-card__price strong { color:#0d0d0d; }
+.investition-card__price span {
+  font-size:13px; color:rgba(255,255,255,.6);
+}
+.investition-card:not(.investition-card--main) .investition-card__price span { color:#8c8c8c; }
+.investition-card ul {
+  list-style:none; padding:0; margin:0 0 24px;
+  display:flex; flex-direction:column;
+}
+.investition-card ul li {
+  padding:12px 0; border-bottom:1px solid rgba(255,255,255,.12);
+  font-size:14px; line-height:1.55; color:rgba(255,255,255,.85);
+}
+.investition-card ul li:last-child { border-bottom:none; }
+.investition-card__note {
+  margin-top:auto; font-size:13px; color:rgba(255,255,255,.6);
+  font-style:italic;
+}
+.investition-add { display:flex; flex-direction:column; gap:32px; }
+.investition-card--add { padding:28px 28px 32px; }
+.investition-card--add h3 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:24px; line-height:1.15; color:#0d0d0d;
+  letter-spacing:-.01em; margin-bottom:14px;
+}
+.investition-card__price-sm {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:32px; color:#b20e3b; letter-spacing:-.01em;
+  margin-bottom:14px;
+}
+.investition-card--add p {
+  font-size:14px; line-height:1.6; color:#2a2a2a; margin:0;
+}
+
+/* Bewerbung */
+.ausbildung-bewerbung { background:#fff; padding:96px 0; }
+.bewerbung-inner {
+  max-width:780px;
+  display:flex; flex-direction:column; gap:32px;
+}
+.bewerbung-text h2 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,48px); line-height:1.08;
+  letter-spacing:-.02em; color:#0d0d0d; margin:8px 0 18px;
+}
+.bewerbung-text h2 em { font-style:italic; color:#b20e3b; }
+.bewerbung-text p {
+  font-size:16px; line-height:1.7; color:#2a2a2a;
+}
+.bewerbung-list {
+  list-style:none; padding:0; margin:0;
+}
+.bewerbung-list li {
+  position:relative; padding:14px 0 14px 32px;
+  border-bottom:1px solid rgba(0,0,0,.1);
+  font-size:15px; color:#0d0d0d;
+}
+.bewerbung-list li:last-child { border-bottom:none; }
+.bewerbung-list li::before {
+  content:''; position:absolute; left:0; top:22px;
+  width:18px; height:1px; background:#b20e3b;
+}
+.bewerbung-cta {
+  display:flex; flex-wrap:wrap; gap:14px; margin-top:8px;
+}
+
+/* Testimonial-Karussell — wichtigster Block. Horizontal scroll-snap. */
+.ausbildung-testimonials { background:#0d0d0d; color:#fff; padding:96px 0; }
+.ausbildung-testimonials .label { color:#b20e3b; }
+.ausbildung-testimonials .section-head h2 { color:#fff; }
+.ausbildung-testimonials .section-head h2 em { font-style:italic; color:#f2dac2; }
+.testimonial-carousel {
+  display:flex; gap:24px;
+  overflow-x:auto; overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  padding:8px 40px 32px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(178,14,59,.4) rgba(255,255,255,.08);
+}
+.testimonial-carousel::-webkit-scrollbar { height:6px; }
+.testimonial-carousel::-webkit-scrollbar-thumb { background:rgba(178,14,59,.4); }
+.testimonial-carousel::-webkit-scrollbar-track { background:rgba(255,255,255,.08); }
+.testimonial-card {
+  flex:0 0 460px;
+  scroll-snap-align:start;
+  background:#1a1a1a;
+  padding:40px 36px 32px;
+  display:flex; flex-direction:column; gap:22px;
+  position:relative;
+  border:1px solid rgba(255,255,255,.08);
+}
+.testimonial-card__quote {
+  width:36px; height:36px; fill:#b20e3b;
+  flex-shrink:0;
+}
+.testimonial-card p {
+  font-size:15px; line-height:1.7; color:rgba(255,255,255,.88);
+  flex:1;
+}
+.testimonial-card footer {
+  display:flex; flex-direction:column; gap:2px;
+  padding-top:20px; border-top:1px solid rgba(255,255,255,.12);
+}
+.testimonial-card footer strong {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:22px; color:#fff; letter-spacing:-.01em;
+}
+.testimonial-card footer span {
+  font-size:11px; font-weight:600; letter-spacing:.15em;
+  text-transform:uppercase; color:#b20e3b;
+}
+.testimonial-card__footer-with-img {
+  flex-direction:row !important; align-items:center; gap:14px !important;
+}
+.testimonial-card__footer-with-img img {
+  width:48px; height:48px; object-fit:cover;
+  flex-shrink:0;
+}
+.testimonial-card__footer-with-img > div {
+  display:flex; flex-direction:column; gap:2px;
+}
+
+/* Final CTA — dunkler Banner-Abschluss */
+.ausbildung-final-cta {
+  background:#59071d; color:#fff;
+  padding:96px 0;
+}
+.final-cta-inner {
+  max-width:680px; margin:0 auto;
+  text-align:center;
+  display:flex; flex-direction:column; gap:18px; align-items:center;
+}
+.final-cta-inner .label { color:rgba(255,255,255,.55); margin-bottom:0; }
+.final-cta-inner h2 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(32px,4vw,52px); line-height:1.08;
+  letter-spacing:-.02em; color:#fff;
+}
+.final-cta-inner h2 em { font-style:italic; color:#f2dac2; }
+.final-cta-inner p {
+  font-size:16px; line-height:1.7; color:rgba(255,255,255,.8);
+  max-width:520px;
+}
+.final-cta-actions {
+  display:flex; flex-wrap:wrap; gap:14px; justify-content:center;
+  margin-top:14px;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .container { padding:0 24px; }
@@ -934,6 +1322,39 @@ body.popup-open { overflow:hidden; }
   .format-card { flex:0 0 80%; }
   .booking-widget { padding:48px 0 64px; }
   .booking-widget__embed { min-height:440px; padding:36px 18px; }
+
+  /* Ausbildungsseite */
+  .ausbildung-hero__actions { flex-direction:column; align-items:stretch; }
+  .ausbildung-hero__actions .btn { width:100%; text-align:center; }
+  .ausbildung-besondere { padding:48px 0; }
+  .usp-grid { grid-template-columns:1fr; }
+  .usp-grid li { padding:28px 24px; }
+  .ausbildung-inhalte { padding:48px 0; }
+  .ausbildung-inhalte__inner { grid-template-columns:1fr; gap:36px; }
+  .ausbildung-inhalte__hinweis { max-width:none; }
+  .ausbildung-termine { padding:48px 0; }
+  .termine-grid { grid-template-columns:1fr; }
+  .termine-block { padding:28px 24px; }
+  .termine-list__date { font-size:20px; }
+  .ausbildung-zielgruppe { padding:48px 0; }
+  .ausbildung-zielgruppe__inner { grid-template-columns:1fr; gap:36px; }
+  .ausbildung-voraussetzung { margin-top:32px; padding:20px 22px; }
+  .ausbildung-team { padding:48px 0; }
+  .team-grid { grid-template-columns:1fr; gap:48px; }
+  .team-credentials { gap:28px; flex-direction:column; margin-top:48px; padding-top:36px; }
+  .ausbildung-investition { padding:48px 0; }
+  .investition-grid { grid-template-columns:1fr; gap:24px; }
+  .investition-card { padding:28px 24px 32px; }
+  .investition-card__price strong { font-size:48px; }
+  .ausbildung-bewerbung { padding:48px 0; }
+  .bewerbung-cta { flex-direction:column; align-items:stretch; }
+  .bewerbung-cta .btn { width:100%; text-align:center; }
+  .ausbildung-testimonials { padding:48px 0; }
+  .testimonial-carousel { padding:8px 24px 24px; gap:18px; }
+  .testimonial-card { flex:0 0 86%; padding:32px 28px 28px; }
+  .ausbildung-final-cta { padding:48px 0; }
+  .final-cta-actions { flex-direction:column; align-items:stretch; width:100%; }
+  .final-cta-actions .btn { width:100%; text-align:center; }
 }
 
 @media (max-width: 480px) {
