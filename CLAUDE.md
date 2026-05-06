@@ -404,19 +404,23 @@ Wenn eine neue Seite mehr ist als nur Fließtext oder ein Buchungswidget — etw
   </div>
   <div class="testimonial-carousel" role="list" aria-label="Erfahrungsberichte">
     <article class="testimonial-card" role="listitem">
+      <header class="testimonial-card__head">
+        <img src="media/Vorname.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        <div>
+          <strong>Vorname</strong>
+          <span>Rolle</span>
+        </div>
+      </header>
       <svg class="testimonial-card__quote" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="…" /></svg>
       <p>Vollständiger Testimonial-Text — NICHT kürzen, Originalzitate respektieren.</p>
-      <footer>
-        <strong>Vorname</strong>
-        <span>Rolle</span>
-      </footer>
     </article>
     <!-- … weitere Karten -->
   </div>
 </section>
 ```
 
-- Wenn ein Foto vorhanden: `<footer class="testimonial-card__footer-with-img">` mit `<img>` (48 × 48 px, **quadratisch** — kein `border-radius`) + `<div><strong>…</strong><span>…</span></div>`.
+- Reihenfolge in jeder Karte: **Header (Foto + Name + Rolle) → Quote-SVG → Zitat-Text.** Foto und Name oben sorgen für klare Attribution beim Scannen.
+- `<header class="testimonial-card__head">` enthält `<img>` (56 × 56 px, **quadratisch** — kein `border-radius`) + `<div><strong>…</strong><span>…</span></div>`. Trennlinie unten zum Zitat ist Teil des Stylings.
 - Karten-Breite ist fix `460px` desktop / `86%` mobile — Karussell scrollt horizontal mit `scroll-snap`.
 - BG der Sektion ist Schwarz, Akzent-Farbe Himbeere `#b20e3b`. Italic-Em im Headline darf zur Auflockerung Creme `#f2dac2` annehmen. **Pink `#fc2cb8` bleibt strikt dem Logo-Doppelpunkt vorbehalten.**
 - **Testimonials nie sinngemäß zusammenfassen oder kürzen.** Original-Wortlaut der Trainer:innen ist Markenkern und wirkt auch durch Länge authentisch.

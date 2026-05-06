@@ -1157,35 +1157,33 @@ body.popup-open { overflow:hidden; }
   position:relative;
   border:1px solid rgba(255,255,255,.08);
 }
-.testimonial-card__quote {
-  width:36px; height:36px; fill:#b20e3b;
+.testimonial-card__head {
+  display:flex; align-items:center; gap:14px;
+  padding-bottom:20px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.testimonial-card__head img {
+  width:56px; height:56px; object-fit:cover;
   flex-shrink:0;
 }
-.testimonial-card p {
-  font-size:15px; line-height:1.7; color:rgba(255,255,255,.88);
-  flex:1;
-}
-.testimonial-card footer {
+.testimonial-card__head > div {
   display:flex; flex-direction:column; gap:2px;
-  padding-top:20px; border-top:1px solid rgba(255,255,255,.12);
 }
-.testimonial-card footer strong {
+.testimonial-card__head strong {
   font-family:'Stacion',Georgia,serif; font-weight:300;
   font-size:22px; color:#fff; letter-spacing:-.01em;
 }
-.testimonial-card footer span {
+.testimonial-card__head span {
   font-size:11px; font-weight:600; letter-spacing:.15em;
   text-transform:uppercase; color:#b20e3b;
 }
-.testimonial-card__footer-with-img {
-  flex-direction:row !important; align-items:center; gap:14px !important;
+.testimonial-card__quote {
+  width:32px; height:32px; fill:#b20e3b;
+  flex-shrink:0; opacity:.85;
 }
-.testimonial-card__footer-with-img img {
-  width:48px; height:48px; object-fit:cover;
-  flex-shrink:0;
-}
-.testimonial-card__footer-with-img > div {
-  display:flex; flex-direction:column; gap:2px;
+.testimonial-card p {
+  font-size:15px; line-height:1.7; color:rgba(255,255,255,.88);
+  flex:1; margin:0;
 }
 
 /* Final CTA — dunkler Banner-Abschluss */

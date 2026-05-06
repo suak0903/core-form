@@ -90,6 +90,46 @@ const App = () => {
     });
   }, []);
 
+  // Back-button trap: any back command (browser back, mouse-back) while the user
+  // is scrolled away from the top scrolls them up first; only at the top is a
+  // real navigation away from the page allowed. The sentinel is pushed lazily
+  // (on first scroll) so a back press while still at the top leaves immediately.
+  React.useEffect(() => {
+    const THRESHOLD = 50;
+    let sentinelActive = false;
+
+    const pushSentinel = () => {
+      if (sentinelActive) return;
+      try {
+        window.history.pushState({ cfBackTrap: true }, '');
+        sentinelActive = true;
+      } catch (e) { /* some embedded contexts disallow pushState */ }
+    };
+
+    const onScroll = () => {
+      if (window.scrollY > THRESHOLD) pushSentinel();
+    };
+
+    const onPopState = () => {
+      // Sentinel was popped by the back action.
+      sentinelActive = false;
+      if (window.scrollY > THRESHOLD) {
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+        // Re-trap so the next back press fires popstate again.
+        pushSentinel();
+      }
+      // else: at top — let the next back press leave the page naturally.
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('popstate', onPopState);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('popstate', onPopState);
+    };
+  }, []);
+
   const scroll = (id) => {
     setMobileOpen(false);
     document.body.style.overflow = '';
