@@ -13,6 +13,12 @@
      stattdessen über :hover, :active und :focus-visible.               */
   -webkit-tap-highlight-color:transparent;
 }
+
+/* Text-Selektion: dezenter Himbeere-Wash statt System-Blau. Die
+   Originalfarbe des Texts bleibt erhalten — nur der Hintergrund
+   bekommt einen leichten Brand-Tint.                                 */
+::selection { background:rgba(178,14,59,.08); }
+::-moz-selection { background:rgba(178,14,59,.08); }
 html { scroll-behavior:smooth; scrollbar-gutter:stable; }
 section[id] { scroll-margin-top:88px; }
 body { font-family:'DM Sans','Helvetica Neue',Arial,sans-serif; background:#fff; color:#0d0d0d; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
