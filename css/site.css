@@ -1075,6 +1075,91 @@ body.popup-open { overflow:hidden; }
 .faq-item__body p { margin-bottom:12px; }
 .faq-item__body p:last-child { margin-bottom:0; }
 
+/* ── GALERIE ── */
+.galerie { background:#fff; padding:0 0 96px; }
+.galerie-grid {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:12px;
+}
+.galerie-tile {
+  position:relative;
+  aspect-ratio:4/5;
+  overflow:hidden;
+  background:#0d0d0d;
+  border:none; padding:0; margin:0;
+  cursor:pointer;
+  border-radius:0;
+}
+.galerie-tile img {
+  width:100%; height:100%; object-fit:cover; object-position:center;
+  display:block;
+  transition:transform 600ms cubic-bezier(.22,1,.36,1), filter 350ms ease-out;
+}
+@media (hover: hover) {
+  .galerie-tile:hover img {
+    transform:scale(1.04);
+    filter:brightness(.85);
+  }
+}
+.galerie-tile:focus-visible { outline:2px solid #b20e3b; outline-offset:3px; }
+
+/* Lightbox */
+.galerie-lightbox {
+  position:fixed; inset:0; z-index:160;
+  background:rgba(13,13,13,.94);
+  display:flex; align-items:center; justify-content:center;
+  padding:48px 64px;
+  opacity:0; visibility:hidden;
+  transition:opacity .25s ease-out, visibility 0s linear .25s;
+}
+.galerie-lightbox.open {
+  opacity:1; visibility:visible;
+  transition:opacity .25s ease-out, visibility 0s linear 0s;
+}
+.galerie-lightbox__stage {
+  position:relative;
+  max-width:100%; max-height:100%;
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+  margin:0;
+}
+.galerie-lightbox__img {
+  max-width:100%; max-height:calc(100vh - 140px);
+  object-fit:contain;
+  display:block;
+}
+.galerie-lightbox__counter {
+  font-size:11px; font-weight:600;
+  letter-spacing:.15em; text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+}
+.galerie-lightbox__close,
+.galerie-lightbox__nav {
+  position:absolute;
+  background:transparent; border:none; padding:0; cursor:pointer;
+  color:#fff; opacity:.7;
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .2s, color .2s;
+  border-radius:0;
+  /* Über das Bild legen — sonst überdeckt das Bild den Prev-Button,
+     der im Quelltext vor der figure steht.                        */
+  z-index:2;
+}
+.galerie-lightbox__close:hover,
+.galerie-lightbox__nav:hover { opacity:1; color:#b20e3b; }
+.galerie-lightbox__close:focus-visible,
+.galerie-lightbox__nav:focus-visible { outline:2px solid #fff; outline-offset:3px; opacity:1; }
+.galerie-lightbox__close {
+  top:24px; right:24px;
+  width:44px; height:44px;
+}
+.galerie-lightbox__nav {
+  top:50%; transform:translateY(-50%);
+  width:48px; height:48px;
+}
+.galerie-lightbox__prev { left:16px; }
+.galerie-lightbox__next { right:16px; }
+
 /* ── AUSBILDUNGSSEITE ── */
 
 /* Hero — leichte Erweiterung des Standard-subpage__hero mit CTA-Reihe */
@@ -1581,6 +1666,16 @@ body.popup-open { overflow:hidden; }
   .booking-widget { padding:48px 0 64px; }
   .booking-widget__embed { min-height:440px; padding:36px 18px; }
 
+  /* Galerie */
+  .galerie { padding:0 0 56px; }
+  .galerie-grid { grid-template-columns:repeat(2, 1fr); gap:6px; }
+  .galerie-lightbox { padding:24px 12px; }
+  .galerie-lightbox__close { top:12px; right:12px; }
+  .galerie-lightbox__nav { width:40px; height:40px; }
+  .galerie-lightbox__prev { left:6px; }
+  .galerie-lightbox__next { right:6px; }
+  .galerie-lightbox__img { max-height:calc(100vh - 100px); }
+
   /* Ausbildungsseite */
   .ausbildung-hero__actions { flex-direction:column; align-items:stretch; }
   .ausbildung-hero__actions .btn { width:100%; text-align:center; }
@@ -1619,6 +1714,7 @@ body.popup-open { overflow:hidden; }
   .hero__actions { flex-direction:column; }
   .hero__actions .btn { width:100%; text-align:center; }
   .hero__stat strong { font-size:22px; }
+  .galerie-grid { grid-template-columns:1fr; }
 }
 
 /* ── REDUCED MOTION ── */

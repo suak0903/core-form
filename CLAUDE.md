@@ -17,6 +17,7 @@ Statisches Multi-Page-Setup. Kein Build-Step, kein npm.
 | `index.html` | React 18 + Babel Standalone via CDN, JSX inline | Startseite (Single-Page-Scroll) |
 | `buchung.html`, `buchung-ruettenscheid.html`, `buchung-suedviertel.html` | Vanilla HTML | Buchungsseiten mit Eversports-Widget |
 | `ausbildung.html` | Vanilla HTML | Reformer-Lehrerausbildung (Landingpage mit Testimonial-Karussell) |
+| `galerie.html` | Vanilla HTML | Galerie mit Lightbox (Inline-Script, Tasten- & Swipe-Navigation) |
 | `faq.html`, `impressum.html`, `datenschutz.html`, `agb.html` | Vanilla HTML | Inhalts- und Rechtsseiten |
 | `css/site.css` | gemeinsames CSS für alle Seiten (inkl. `index.html`) | Design-System, Layout, Subpage-Styles |
 | `js/chrome.js` | gemeinsames JS für alle **statischen** Subpages | Nav, Mobile-Menu, Newsletter-Popup |
@@ -26,6 +27,7 @@ Statisches Multi-Page-Setup. Kein Build-Step, kein npm.
 index.html             ← React-App
 buchung*.html          ← statisch, nutzen chrome.js
 ausbildung.html        ← statisch, nutzen chrome.js (Landingpage mit Testimonial-Karussell)
+galerie.html           ← statisch, nutzen chrome.js + eigene Lightbox (Inline-Script)
 faq.html               ← statisch, nutzen chrome.js
 impressum.html         ← statisch, nutzen chrome.js
 datenschutz.html       ← statisch, nutzen chrome.js
@@ -317,6 +319,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 | Bild-/Text-Hero (mit BG-Image) | nicht in `.subpage`, sondern `.hero` Klasse — siehe `index.html` | dunkel | nur Startseite |
 | **Landingpage-Sektionen (Ausbildung & ähnliche Pages)** | siehe Sektionsliste unten | wechselnd weiß / creme / off-white / dunkel | ausbildung.html |
 | **Testimonial-Karussell** | `section.ausbildung-testimonials > .testimonial-carousel > article.testimonial-card` | dunkel `#0d0d0d` | ausbildung.html |
+| **Galerie-Grid + Lightbox** | `section.galerie > .container > .galerie-grid > button.galerie-tile` + `div#galerie-lightbox` | weiß | galerie.html |
 
 ### 3. Pflichtregeln für jede neue Seite
 
@@ -375,6 +378,31 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 - Anker auf Sektionen der Startseite: `index.html#angebote` etc. (`chrome.js` und der React-Mount-Effect korrigieren den Scroll-Offset für die fixierte Nav um –68 px).
 - Anker innerhalb einer Subpage: `<section id="…">` + Link `#…`. Funktioniert via `scroll-margin-top:88px` aus `css/site.css`.
 
+### 5a. Icon-Reihe im Mobile-Menü und im Kontaktbereich
+
+Die Social-Icon-Zeile (`.nav__mobile-social` im Mobile-Menü, `.kontakt__social` auf der Startseite) hat eine **feste Reihenfolge**, die auf jeder Seite identisch eingehalten wird:
+
+1. **Instagram** → externer Link mit Vendor-Icon
+2. **Facebook** → externer Link
+3. **YouTube** → externer Link
+4. **Galerie** → `galerie.html` mit Bilderrahmen-SVG (rechts außen, optisch von den drei externen Plattformen abgesetzt)
+
+Galerie-Icon-Markup (1:1 kopieren, **als letztes Element** in den Social-Container einfügen):
+
+```html
+<a href="galerie.html" aria-label="Galerie ansehen" tabindex="-1">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+       aria-hidden="true" focusable="false">
+    <rect x="3" y="3" width="18" height="18"/>
+    <circle cx="9" cy="9" r="1.8"/>
+    <path d="m21 15-4.5-4.5L6 21"/>
+  </svg>
+</a>
+```
+
+Das Icon (Rechteck + Sonne + Berg-Linie) ist universell als Galerie/Bilder lesbar; Eckenradius bleibt 0 (Brand-Regel).
+
 ### 6. Landingpage-Pattern (für umfangreiche Themenseiten — Vorlage: `ausbildung.html`)
 
 Wenn eine neue Seite mehr ist als nur Fließtext oder ein Buchungswidget — etwa eine Ausbildung, ein Workshop-Programm, ein Membership-Paket — folgt sie dieser Sektionsfolge. Sie ist in `css/site.css` ausgestylt und sollte **in dieser Reihenfolge** verwendet werden, damit der Hintergrund-Rhythmus stimmt:
@@ -426,6 +454,29 @@ Wenn eine neue Seite mehr ist als nur Fließtext oder ein Buchungswidget — etw
 - **Testimonials nie sinngemäß zusammenfassen oder kürzen.** Original-Wortlaut der Trainer:innen ist Markenkern und wirkt auch durch Länge authentisch.
 
 **Wann nicht alle Sektionen verwenden:** Reicht ein dünneres Format (z. B. ein einzelner Workshop), kann auf Investitions- oder Termin-Block verzichtet werden — aber Hero + USPs + Team + Final-CTA sollten immer dabei sein.
+
+### 7. Galerie-Pattern (für visuelle Sammlungen — Vorlage: `galerie.html`)
+
+Wenn eine Sammlung aus 8+ Bildern visuell gezeigt werden soll (Studio-Eindrücke, Workshops, Events), folgt sie diesem Muster:
+
+- **Grid:** `.galerie-grid` mit 3 Spalten desktop / 2 Spalten tablet / 1 Spalte mobil. Aspect-Ratio pro Kachel `4/5`, `object-fit:cover`.
+- **Tile-Hover (Desktop):** Bild fährt sanft auf `scale(1.04)` und Brightness `.85` — gleiches Pattern wie bei `.studio-cta` und Team-Karussell.
+- **Lightbox:** ein zentraler `<div id="galerie-lightbox">` außerhalb von `<main>`. Inline-Script am Seitenende öffnet/schließt, navigiert prev/next und reagiert auf:
+  - Klick auf Tile → Lightbox öffnet bei diesem Index
+  - Klick auf X-Button, Backdrop oder `Escape` → schließt
+  - Klick auf Pfeil-Buttons, Pfeiltasten ←/→ oder Touch-Swipe → vor/zurück
+- **Counter-Caption** (`1 / 15`) unter dem Bild, in Himbeere-Eyebrow-Stil.
+- **Body-Lock** beim Öffnen via `body.popup-open` (greift auf die bestehende Klasse aus `css/site.css` zurück — nichts Neues).
+
+Tile-Markup (für jede Kachel identisch, nur `data-galerie-index` und Bildpfad ändern):
+
+```html
+<button type="button" class="galerie-tile" data-galerie-index="0">
+  <img src="media/COREFORM_web_001.jpg" alt="Studio-Eindruck 1" loading="lazy" decoding="async" />
+</button>
+```
+
+Das Inline-Script unten in `galerie.html` ist die Quelle der Wahrheit — bei neuen Galerie-Seiten 1:1 kopieren oder die Daten-IDs konsistent durchnummerieren.
 
 ---
 
