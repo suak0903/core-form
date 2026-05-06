@@ -1,4 +1,4 @@
-/* core:form — shared site styles
+﻿/* core:form — shared site styles
    Used by index.html and all subpages (impressum, datenschutz, agb, faq). */
 
 @font-face { font-family:'Stacion'; src:url('../font/stacion-regular.otf') format('opentype'); font-weight:400; font-style:normal; font-display:swap; }
@@ -1011,8 +1011,13 @@ body.popup-open { overflow:hidden; }
 .format-card__body p { font-size:13px; line-height:1.6; color:#2a2a2a; }
 
 /* Eversports widget placeholder */
-.booking-widget {
+.booking-widget-sued {
   background:#f6f9f7;
+  padding:96px 0 96px;
+}
+/* Eversports widget placeholder */
+.booking-widget-rue {
+  background:#fdf6fa;
   padding:96px 0 96px;
 }
 .booking-widget .label { color:#b20e3b; }
