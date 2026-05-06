@@ -752,6 +752,96 @@ a { color:inherit; text-decoration:none; }
 /* Body lock when popup open */
 body.popup-open { overflow:hidden; }
 
+/* ── PREIS-MODAL ── */
+.price-modal__backdrop {
+  position:fixed; inset:0; z-index:140;
+  background:rgba(13,13,13,.65);
+  opacity:0; visibility:hidden;
+  transition:opacity .25s ease-out, visibility 0s linear .25s;
+}
+.price-modal__backdrop.open {
+  opacity:1; visibility:visible;
+  transition:opacity .25s ease-out, visibility 0s linear 0s;
+}
+.price-modal {
+  position:fixed; z-index:150;
+  top:50%; left:50%; transform:translate(-50%, -48%) scale(.98);
+  width:min(560px, calc(100vw - 32px));
+  max-height:calc(100vh - 64px);
+  background:#fff; color:#0d0d0d;
+  display:flex; flex-direction:column;
+  opacity:0; visibility:hidden;
+  transition:opacity .3s ease-out, transform .35s cubic-bezier(.22,1,.36,1), visibility 0s linear .35s;
+  box-shadow:0 30px 80px rgba(0,0,0,.35);
+}
+.price-modal.open {
+  opacity:1; visibility:visible;
+  transform:translate(-50%, -50%) scale(1);
+  transition:opacity .3s ease-out, transform .35s cubic-bezier(.22,1,.36,1), visibility 0s linear 0s;
+}
+.price-modal__head {
+  position:relative;
+  padding:36px 36px 28px;
+  background:#f2dac2;
+}
+.price-modal__head .label { color:#b20e3b; margin-bottom:10px; }
+.price-modal__head h2 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:clamp(28px,3vw,36px); line-height:1.1;
+  letter-spacing:-.02em; color:#0d0d0d;
+  padding-right:48px;
+}
+.price-modal__close {
+  position:absolute; top:18px; right:18px;
+  width:36px; height:36px;
+  display:flex; align-items:center; justify-content:center;
+  background:transparent; border:none; padding:0; cursor:pointer;
+  color:#0d0d0d; border-radius:0;
+  transition:color .2s, background .2s;
+}
+.price-modal__close:hover { color:#b20e3b; background:rgba(255,255,255,.45); }
+.price-modal__close:focus-visible { outline:2px solid #b20e3b; outline-offset:2px; }
+
+.price-modal__body {
+  padding:28px 36px 36px;
+  overflow-y:auto;
+  flex:1;
+}
+.price-section + .price-section { margin-top:24px; }
+.price-section__label {
+  display:block;
+  font-size:11px; font-weight:600;
+  letter-spacing:.15em; text-transform:uppercase;
+  color:#b20e3b;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(0,0,0,.12);
+  margin-bottom:4px;
+}
+.price-list {
+  list-style:none; padding:0; margin:0;
+}
+.price-list li {
+  display:flex; justify-content:space-between; align-items:baseline;
+  gap:18px;
+  padding:14px 0;
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+.price-list li:last-child { border-bottom:none; }
+.price-list span {
+  font-size:15px; line-height:1.4; color:#0d0d0d;
+}
+.price-list strong {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:22px; line-height:1; letter-spacing:-.01em;
+  color:#0d0d0d; white-space:nowrap;
+}
+.price-modal__note {
+  margin:20px 0 24px;
+  font-size:12px; line-height:1.6; color:#8c8c8c;
+  font-style:italic;
+}
+.price-modal__body .btn { margin-top:8px; }
+
 /* ── SUBPAGE LAYOUT (Impressum, Datenschutz, AGB, FAQ, Buchung*) ──
    Section rhythm folgt der Design-Vorgabe: 96px desktop / 48px mobile.
    Hero auf Creme; Content auf Weiß. Italic-Em-Wörter in Himbeere.        */
@@ -1423,6 +1513,16 @@ body.popup-open { overflow:hidden; }
   .footer { padding:40px 0; }
   .footer__inner { flex-direction:column; align-items:flex-start; gap:24px; }
   .footer__links { gap:16px; flex-wrap:wrap; }
+
+  /* Preis-Modal — auf Mobile fullscreen ohne Schatten */
+  .price-modal {
+    top:0; left:0; transform:none;
+    width:100vw; max-height:100vh;
+    box-shadow:none;
+  }
+  .price-modal.open { transform:none; }
+  .price-modal__head { padding:24px 24px 20px; }
+  .price-modal__body { padding:24px; }
 
   /* Newsletter popup — fullscreen + frosted on mobile (covers nav too) */
   .newsletter-pop {

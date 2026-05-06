@@ -21,6 +21,75 @@
 const NAV_IDS = ['angebote','studios','ueber-uns','ausbildung','preise','kontakt'];
 const NAV_LABELS = ['Angebote','Studios','Über uns','Ausbildung','Preise','Kontakt'];
 
+// Preis-Modal-Inhalte. Quelle: Originalwebseite. „note" steht unten in
+// kleiner Schrift, „sections" gruppiert die Preiszeilen (z. B. Monats-
+// modelle vs. 10er-Karten). Personal Training hat nur einen Block.
+const PRICES = {
+  reformer: {
+    title: 'Reformer-Kurse',
+    eyebrow: 'Studio Südviertel',
+    sections: [
+      {
+        label: 'Monatliche Preismodelle',
+        rows: [
+          ['1× / Woche', '89 €'],
+          ['1× / Woche ermäßigt*', '79 €'],
+          ['2× / Woche', '160 €'],
+          ['2× / Woche ermäßigt*', '144 €'],
+        ],
+      },
+      {
+        label: '10er Karten',
+        rows: [
+          ['6 Monate Laufzeit', '250 €'],
+          ['6 Monate ermäßigt*', '225 €'],
+          ['Drop-In', '30 €'],
+          ['Probestunde', '25 €'],
+        ],
+      },
+    ],
+    note: '*Rentner:innen, Schüler:innen / Studierende, Alleinerziehende, Mitglieder',
+  },
+  matte: {
+    title: 'Pilates Matte & Barre',
+    eyebrow: 'Studio Rüttenscheid',
+    sections: [
+      {
+        label: 'Monatliche Preismodelle',
+        rows: [
+          ['1× / Woche', '50 €'],
+          ['2× / Woche', '79 €'],
+          ['Probestunde', '15 €'],
+          ['Drop-In', '20 €'],
+        ],
+      },
+      {
+        label: '10er Karten',
+        rows: [
+          ['6 Monate Laufzeit', '170 €'],
+          ['6 Monate ermäßigt*', '135 €'],
+        ],
+      },
+    ],
+    note: '*Rentner:innen, Schüler:innen / Studierende, Alleinerziehende',
+  },
+  personal: {
+    title: 'Personal Training',
+    eyebrow: 'Beide Studios',
+    sections: [
+      {
+        label: 'Angebot',
+        rows: [
+          ['Probestunde', '60 €'],
+          ['Einzelstunde', '70 €'],
+          ['Duo-Training* (pro Person)', '40 €'],
+        ],
+      },
+    ],
+    note: '*Preis pro Person bei 2:1-Training',
+  },
+};
+
 // Team-Karussell auf der „Über uns"-Sektion. Reihenfolge bestimmt die Slideshow.
 // Wenn `img: null`, rendert eine getypte Initial-Kachel (Himbeere/Brombeere-Verlauf
 // mit Stacion-Italic-Initial). Sobald ein Foto vorhanden ist, einfach den Pfad
@@ -107,6 +176,7 @@ const App = () => {
   const [teamIndex, setTeamIndex] = React.useState(0);
   const [teamHovered, setTeamHovered] = React.useState(false);
   const [teamExpanded, setTeamExpanded] = React.useState(false);
+  const [priceModalKey, setPriceModalKey] = React.useState(null);
   const formRef = React.useRef(null);
   const popupCloseRef = React.useRef(null);
   const lastFocusRef = React.useRef(null);
@@ -127,10 +197,18 @@ const App = () => {
   }, []);
 
   React.useEffect(() => {
-    const lock = mobileOpen || popupOpen;
+    const lock = mobileOpen || popupOpen || priceModalKey;
     document.body.style.overflow = lock ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
-  }, [mobileOpen, popupOpen]);
+  }, [mobileOpen, popupOpen, priceModalKey]);
+
+  // Esc schließt das Preis-Modal
+  React.useEffect(() => {
+    if (!priceModalKey) return;
+    const onKey = (e) => { if (e.key === 'Escape') setPriceModalKey(null); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [priceModalKey]);
 
   React.useEffect(() => {
     if (!popupOpen || newsletterHtml || newsletterError) return;
@@ -221,6 +299,7 @@ const App = () => {
       // also blocks the scroll — close them first.
       setMobileOpen(false);
       setPopupOpen(false);
+      setPriceModalKey(null);
       document.body.style.overflow = '';
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -449,6 +528,63 @@ const App = () => {
           )}
         </div>
       </aside>
+
+      {/* Preis-Modal — öffnet beim Klick auf eine Preis-Karte */}
+      <div
+        className={`price-modal__backdrop${priceModalKey ? ' open' : ''}`}
+        onClick={() => setPriceModalKey(null)}
+        aria-hidden="true"
+      />
+      <div
+        className={`price-modal${priceModalKey ? ' open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="price-modal-title"
+        aria-hidden={!priceModalKey}
+      >
+        {priceModalKey && (() => {
+          const data = PRICES[priceModalKey];
+          return (
+            <React.Fragment>
+              <div className="price-modal__head">
+                <span className="label">{data.eyebrow}</span>
+                <h2 id="price-modal-title">{data.title}</h2>
+                <button
+                  type="button"
+                  className="price-modal__close"
+                  aria-label="Preisübersicht schließen"
+                  onClick={() => setPriceModalKey(null)}
+                >
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true" focusable="false">
+                    <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+                  </svg>
+                </button>
+              </div>
+              <div className="price-modal__body">
+                {data.sections.map((sec) => (
+                  <div className="price-section" key={sec.label}>
+                    <span className="price-section__label">{sec.label}</span>
+                    <ul className="price-list">
+                      {sec.rows.map(([name, price]) => (
+                        <li key={name}>
+                          <span>{name}</span>
+                          <strong>{price}</strong>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+                {data.note && <p className="price-modal__note">{data.note}</p>}
+                <button
+                  type="button"
+                  className="btn btn--accent btn--full"
+                  onClick={() => { setPriceModalKey(null); scroll('kontakt'); }}
+                >Jetzt anfragen</button>
+              </div>
+            </React.Fragment>
+          );
+        })()}
+      </div>
 
       <main id="main-content">
 
@@ -733,11 +869,11 @@ const App = () => {
           </div>
           <div className="preise__grid">
             {[
-              { format:'Reformer Pilates', prefix:'ab', price:'115 €', features:['Einsteigerkurs (mehrere Termine)','Maximal 9 Teilnehmer:innen','Studio Südviertel','Professionelle Anleitung'], featured:false },
-              { format:'Pilates Matte', prefix:'Kurse', price:'ab 99 €', features:['Laufende Kurse & Blöcke','Verschiedene Trainer:innen','Studio Rüttenscheid','Alle Levels willkommen'], featured:true, badge:'Empfohlen' },
-              { format:'Personal Training', prefix:'Individuell', price:'auf Anfrage', features:['1:1 oder 2:1 Sessions','Matte oder Reformer','Flexible Terminplanung','Maßgeschneidert für dich'], featured:false },
-            ].map((p, i) => (
-              <div className={`preis-card${p.featured ? ' preis-card--featured' : ''}`} key={i}>
+              { key:'matte',    format:'Pilates Matte & Barre', prefix:'ab', price:'15 €', features:['Probestunde, Drop-In oder Karte','Monatliche Pakete ab 50 €','Studio Rüttenscheid','Alle Levels willkommen'], featured:false },
+              { key:'reformer', format:'Reformer Pilates', prefix:'ab', price:'25 €', features:['Probestunde, Drop-In oder Karte','Monatliche Pakete ab 89 €','Studio Südviertel','Maximal 9 Teilnehmer:innen'], featured:true, badge:'Empfohlen' },
+              { key:'personal', format:'Personal Training', prefix:'ab', price:'40 €', features:['1:1 oder 2:1 Sessions','Matte oder Reformer','Flexible Terminplanung','Maßgeschneidert für dich'], featured:false },
+            ].map((p) => (
+              <div className={`preis-card${p.featured ? ' preis-card--featured' : ''}`} key={p.key}>
                 {p.badge && <span className="preis-card__badge">{p.badge}</span>}
                 <span className="preis-card__format">{p.format}</span>
                 <div className="preis-card__price">
@@ -747,12 +883,13 @@ const App = () => {
                 <button
                   type="button"
                   className={`btn btn--full${p.featured ? ' btn--accent' : ' btn--outline'}`}
-                  onClick={() => scroll('kontakt')}
-                >{i===2 ? 'Anfragen' : 'Jetzt anfragen'}</button>
+                  onClick={() => setPriceModalKey(p.key)}
+                  aria-haspopup="dialog"
+                >Preise ansehen</button>
               </div>
             ))}
           </div>
-          <p className="preise__note">Alle aktuellen Preise & Termine auf Anfrage oder direkt im Studio.</p>
+          <p className="preise__note">Alle Preise inkl. MwSt. Mitgliedschaften und Karten auf persönliche Anfrage.</p>
         </div>
       </section>
 
