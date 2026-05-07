@@ -488,6 +488,12 @@ a { color:inherit; text-decoration:none; }
 }
 .ausbildung__credential strong { color:#0d0d0d; font-weight:600; }
 
+/* Mobile-Variante des Credentials sitzt zwischen Lead und Button im
+   linken Block; auf Desktop unsichtbar. Die Desktop-Variante in der
+   rechten Spalte ist dort der Default — auf Mobile wird sie versteckt
+   (Override im Responsive-Block).                                     */
+.ausbildung__credential--mobile { display:none; }
+
 .ausbildung__features { list-style:none; }
 .ausbildung__features li {
   display:flex; gap:14px; align-items:flex-start;
@@ -1753,9 +1759,14 @@ body.popup-open { overflow:hidden; }
     text-align:right;
   }
 
-  /* Ausbildung */
+  /* Ausbildung — Credential rückt auf Mobile zwischen Lead und Button */
   .ausbildung { padding:64px 0; }
   .ausbildung__inner { grid-template-columns:1fr; gap:40px; }
+  .ausbildung__credential--desktop { display:none; }
+  .ausbildung__credential--mobile {
+    display:flex;
+    margin:8px 0 24px;
+  }
 
   /* Preise */
   .preise { padding:64px 0; }
