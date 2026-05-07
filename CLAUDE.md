@@ -18,6 +18,7 @@ Statisches Multi-Page-Setup. Kein Build-Step, kein npm.
 | `buchung.html`, `buchung-ruettenscheid.html`, `buchung-suedviertel.html` | Vanilla HTML | Buchungsseiten mit Eversports-Widget |
 | `ausbildung.html` | Vanilla HTML | Reformer-Lehrerausbildung (Landingpage mit Testimonial-Karussell) |
 | `galerie.html` | Vanilla HTML | Galerie mit Lightbox (Inline-Script, Tasten- & Swipe-Navigation) |
+| `videos.html` | Vanilla HTML | Trainings-Videos im Grid (autoplay, muted, loop) + Beschreibungs-Modal |
 | `faq.html`, `impressum.html`, `datenschutz.html`, `agb.html` | Vanilla HTML | Inhalts- und Rechtsseiten |
 | `css/site.css` | gemeinsames CSS für alle Seiten (inkl. `index.html`) | Design-System, Layout, Subpage-Styles |
 | `js/chrome.js` | gemeinsames JS für alle **statischen** Subpages | Nav, Mobile-Menu, Newsletter-Popup |
@@ -28,6 +29,7 @@ index.html             ← React-App
 buchung*.html          ← statisch, nutzen chrome.js
 ausbildung.html        ← statisch, nutzen chrome.js (Landingpage mit Testimonial-Karussell)
 galerie.html           ← statisch, nutzen chrome.js + eigene Lightbox (Inline-Script)
+videos.html            ← statisch, nutzen chrome.js + eigenes Video-Modal (Inline-Script, KEIN TON)
 faq.html               ← statisch, nutzen chrome.js
 impressum.html         ← statisch, nutzen chrome.js
 datenschutz.html       ← statisch, nutzen chrome.js
@@ -355,6 +357,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 | **Landingpage-Sektionen (Ausbildung & ähnliche Pages)** | siehe Sektionsliste unten | wechselnd weiß / creme / off-white / dunkel | ausbildung.html |
 | **Testimonial-Karussell** | `section.ausbildung-testimonials > .testimonial-carousel > article.testimonial-card` | dunkel `#0d0d0d` | ausbildung.html |
 | **Galerie-Grid + Lightbox** | `section.galerie > .container > .galerie-grid > button.galerie-tile` + `div#galerie-lightbox` | weiß | galerie.html |
+| **Video-Grid + Beschreibungs-Modal** | `section.videos > .container > .video-grid > button.video-tile` + `div#video-modal` | weiß | videos.html |
 
 ### 3. Pflichtregeln für jede neue Seite
 
@@ -420,9 +423,10 @@ Die Social-Icon-Zeile (`.nav__mobile-social` im Mobile-Menü, `.kontakt__social`
 1. **Instagram** → externer Link mit Vendor-Icon
 2. **Facebook** → externer Link
 3. **YouTube** → externer Link
-4. **Galerie** → `galerie.html` mit Bilderrahmen-SVG (rechts außen, optisch von den drei externen Plattformen abgesetzt)
+4. **Galerie** → `galerie.html` mit Bilderrahmen-SVG (interner Link, optisch von den drei externen Plattformen abgesetzt)
+5. **Videos** → `videos.html` mit Play-Square-SVG (interner Link, ganz rechts außen)
 
-Galerie-Icon-Markup (1:1 kopieren, **als letztes Element** in den Social-Container einfügen):
+Galerie- und Video-Icon-Markup (1:1 kopieren, **am Ende** des Social-Containers in dieser Reihenfolge):
 
 ```html
 <a href="galerie.html" aria-label="Galerie ansehen" tabindex="-1">
@@ -434,9 +438,18 @@ Galerie-Icon-Markup (1:1 kopieren, **als letztes Element** in den Social-Contain
     <path d="m21 15-4.5-4.5L6 21"/>
   </svg>
 </a>
+<a href="videos.html" aria-label="Videos ansehen" tabindex="-1">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+       aria-hidden="true" focusable="false">
+    <rect x="3" y="3" width="18" height="18"/>
+    <path d="m11 9 4 3-4 3z" fill="currentColor" stroke="currentColor"/>
+  </svg>
+</a>
 ```
 
-Das Icon (Rechteck + Sonne + Berg-Linie) ist universell als Galerie/Bilder lesbar; Eckenradius bleibt 0 (Brand-Regel).
+Galerie-Icon: Rechteck + Sonne + Berg-Linie — universell als Galerie/Bilder lesbar.
+Video-Icon: Rechteck + Play-Triangle — universell als Video/Play lesbar. Beide mit 0-Eckenradius (Brand-Regel) und im selben quadratischen Stilrahmen wie das Galerie-Icon, damit sie als Paar wirken.
 
 ### 6. Landingpage-Pattern (für umfangreiche Themenseiten — Vorlage: `ausbildung.html`)
 
@@ -512,6 +525,29 @@ Tile-Markup (für jede Kachel identisch, nur `data-galerie-index` und Bildpfad �
 ```
 
 Das Inline-Script unten in `galerie.html` ist die Quelle der Wahrheit — bei neuen Galerie-Seiten 1:1 kopieren oder die Daten-IDs konsistent durchnummerieren.
+
+### 8. Video-Pattern (Trainingsformat-Showcase — Vorlage: `videos.html`)
+
+Für kurze, vertikale Video-Loops (Studio-Eindrücke, Trainingsformate). Eigenständiges Markup, parallel zum Galerie-Pattern:
+
+- **Grid:** `.video-grid` mit 3 Spalten desktop / 2 tablet / 1 mobil. Aspect-Ratio `9/16` pro Kachel (vertikale Mobile-Format-Videos).
+- **Tile-Video:** `<video autoplay muted loop playsinline preload="metadata">`. **`muted` ist Pflicht** — die ganze Seite läuft tonlos. Ohne `muted` blockt der Browser das Autoplay.
+- **Tile-Hover (Desktop):** Video wird abgedunkelt + leicht weichgezeichnet (`filter:brightness(.5) blur(2px)`), Titel im Stacion-Italic faded am unteren Rand ein.
+- **Modal:** `<div id="video-modal">` außerhalb von `<main>`. Inline-Script setzt beim Tile-Click die Video-Quelle, Titel + Beschreibung neu und spielt das Video ab. Vor/Zurück-Pfeile, Esc, Backdrop-Klick und Touch-Swipe (40 px) navigieren.
+- **Modal-Layout:** zweispaltig auf Desktop (Video links, Beschreibung rechts), gestapelt auf Mobile.
+- **Body-Lock** beim Öffnen via `body.popup-open`.
+
+Tile-Markup (pro Kachel identisch, nur Quelle und Titel ändern):
+
+```html
+<button type="button" class="video-tile" data-video-index="0">
+  <video src="media/Matte Video.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+  <span class="video-tile__overlay" aria-hidden="true"></span>
+  <span class="video-tile__title">Matte</span>
+</button>
+```
+
+Beschreibungstexte stehen als JS-Datenstruktur (`VIDEOS`-Array) im Inline-Script unten in `videos.html`. Reihenfolge des Arrays muss der DOM-Reihenfolge der Tiles entsprechen (gleicher Index).
 
 ---
 
