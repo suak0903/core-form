@@ -61,7 +61,8 @@ Vollständige Spezifikation: `claude design/README.md` und `claude design/colors
 | Schwarz | `#0d0d0d` | Body-Text, Hero-BG, Footer |
 | Grau-dunkel | `#2a2a2a` | sekundärer Body-Text (Prosa, Karten-Beschreibungen) |
 | Grau-mittel | `#8c8c8c` | gedämpfte Captions / Labels |
-| Off-White | `#f6f9f7` | dezente Sektions-Alternative (Format-Cards, Booking-Widget-BG) |
+| Off-White | `#f6f9f7` | dezente Sektions-Alternative · **Studio-Süd-Tint** (Booking-Widget-BG Süd, Format-Cards) |
+| Rosa-Tint | `#fdf6fa` | **Studio-Rü-Tint** (Booking-Widget-BG Rü) — leicht himbeerig getönt |
 | Weiß | `#ffffff` | Default-BG |
 
 **Sektions-Rhythmus:** weiß → creme → dunkel/teal → weiß → creme. Hero-Bild ankert die Seite oben.
@@ -103,6 +104,14 @@ Vollständige Spezifikation: `claude design/README.md` und `claude design/colors
 - Eyebrows in Caps: „RECHTLICHES", „STUDIO 01 · RÜTTENSCHEID", „ONLINE BUCHEN".
 - Zahlen sind Held:innen: „2 Studios in Essen", „max. 9 Teilnehmer:innen".
 
+### Verbots-Wording (faktisch falsch)
+
+- **Niemals „zertifiziert" über die Reformer-Ausbildung oder die Trainer:innen** schreiben. Die Ausbildung ist ein **studiointernes Qualifizierungsformat**, keine verbandlich zertifizierte Ausbildung. Eva ist **Mitglied** im Deutschen Pilates Verband (DPV) — das ist eine Mitgliedschaft, keine Verbandszertifizierung der Lehrtätigkeit.
+- Statt „zertifizierte Programme" → **„durchdachte Programme"**, „strukturierte Programme", „fundierte Programme".
+- Statt „zertifizierte Trainer:innen" / „zertifizierte Ausbilder:innen" → **„erfahrene Trainer:innen"**, „gut ausgebildete Trainer:innen", „aktive Mitgliedschaft" (für DPV-Bezug).
+- Bei DPV-Badges (`DPV_PremiumSiegel2026.png`, `Zertifikat2026.png`): Beschriftung **„Premium-Mitglied"** oder **„Aktive Mitgliedschaft"** in Kombination mit „Deutscher Pilates Verband". Niemals als Lehr-Zertifikat ausgeben.
+- Korrekt formulierter Hinweis (in `ausbildung.html` bereits enthalten): „Die Ausbildung ist ein studiointernes Qualifizierungsformat und keine verbandlich zertifizierte Ausbildung."
+
 ---
 
 ## Asset-Mapping
@@ -133,6 +142,32 @@ Die Vorlage in `claude design/` nutzt Pfade wie `../../assets/` und `../../fonts
 | Studio-Panel Südviertel | `RZ_Logo_CoreForm_Moltke.png` |
 
 > **Regel aus `claude design/README.md`:** Gudula ist die primäre Nav-/Footer-Identität. Standortspezifische Logos nur in Studio-Panels/-Cards.
+
+### Studio-Farb-Konvention (Logo + Studio-Hintergrund hängen zusammen)
+
+Jedes Studio hat eine eigene Sub-Farbpalette, die sowohl im Logo wie auch im Hintergrund von studio-spezifischen Sektionen (z. B. Eversports-Widget) durchscheint. Diese Zuordnung ist verbindlich — wenn jemand eine neue studio-spezifische UI-Fläche baut, muss die richtige Variante gewählt werden:
+
+| Studio | Kürzel | Adresse | Logo (Akzentfarbe) | Hintergrund-Tint | CSS-Klasse |
+|---|---|---|---|---|---|
+| **Rüttenscheid** | Rü / rue | Gudulastraße 5 | `RZ_Logo_CoreForm_Gudula.png` (himbeere) | `#fdf6fa` (rosa) | `.booking-widget-rue` |
+| **Südviertel** | Süd / sued | Moltkestraße 16 | `RZ_Logo_CoreForm_Moltke.png` (salbeigrün) | `#f6f9f7` (off-white) | `.booking-widget-sued` |
+
+**Hintergrund:** Die Eversports-Widgets der jeweiligen Studios haben selbst diese Hintergrundtöne — die Sektion drumherum nimmt sie auf, damit das Widget nahtlos sitzt.
+
+**Folgeregel:** Wenn neue Studio-spezifische Elemente entstehen (Karten, Banner, Buchungs-Sektionen, Workshop-Promos), die Farbe entsprechend zum Studio wählen — nicht zufällig.
+
+Die generische `.booking-widget`-Klasse bleibt für die übergeordnete `buchung.html` reserviert (zeigt beide Studios + Workshops/Ausbildung).
+
+### Favicon
+
+Auf jeder Seite im `<head>` direkt nach `<title>` einbinden:
+
+```html
+<link rel="icon" type="image/jpeg" href="media/IMG-20251021-WA0011.jpg">
+<link rel="apple-touch-icon" href="media/IMG-20251021-WA0011.jpg">
+```
+
+Die Datei `media/IMG-20251021-WA0011.jpg` ist die kanonische Favicon-Quelle — bei Logo-Wechsel an dieser Stelle ersetzen, dann zieht es automatisch auf alle Seiten durch.
 
 ### Bilder pro Sektion (Startseite, aktueller Stand)
 

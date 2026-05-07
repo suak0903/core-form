@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>core:form — Pilates & Reformer Studio Essen</title>
+<link rel="icon" type="image/jpeg" href="media/IMG-20251021-WA0011.jpg">
+<link rel="apple-touch-icon" href="media/IMG-20251021-WA0011.jpg">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
 <style>
@@ -824,11 +826,11 @@ const App = () => {
                 ))}
               </div>
             </div>
+            <div className="section-head about__head">
+              <span className="label">Über uns</span>
+              <h2>Bewegung<br />mit Haltung.</h2>
+            </div>
             <div className="about__text">
-              <div className="section-head">
-                <span className="label">Über uns</span>
-                <h2>Bewegung<br />mit Haltung.</h2>
-              </div>
               <p>core:form wurde aus der Überzeugung gegründet, dass Pilates mehr ist als ein Workout – es ist eine Praxis. Eine, die Körper und Geist verbindet, präzises Arbeiten mit echter Freude am Bewegen vereint.</p>
               <p>Eva, Gründerin und leidenschaftliche Pilates-Trainerin, hat beide Studios in Essen aufgebaut. Mit einem Team erfahrener Trainer:innen bietet core:form ein Umfeld, in dem jede:r das Beste aus sich herausholen kann.</p>
               <div className="about__values">
@@ -851,14 +853,20 @@ const App = () => {
             <div className="ausbildung__text">
               <span className="label">Ausbildung</span>
               <h2>Werde<br /><em>Pilates-Trainer:in.</em></h2>
-              <p>core:form bietet strukturierte Ausbildungsprogramme für alle, die Pilates professionell unterrichten möchten. Fundiert, praxisnah und von erfahrenen Trainer:innen begleitet.</p>
+              <p>core:form bietet strukturierte Ausbildungsformate für alle, die Pilates professionell unterrichten möchten. Fundiert, praxisnah und von erfahrenen Trainer:innen begleitet.</p>
               <a href="ausbildung.html" className="btn btn--accent">Zur Ausbildung</a>
             </div>
-            <ul className="ausbildung__features">
-              {['Zertifizierte Programme für Matte & Reformer','Erfahrene Ausbilder:innen','Kleine Ausbildungsgruppen','Praxis & Theorie in zwei Studios'].map(f => (
-                <li key={f}><span className="check">✓</span><span>{f}</span></li>
-              ))}
-            </ul>
+            <div className="ausbildung__features-col">
+              <div className="ausbildung__credential">
+                <img src="media/DPV_PremiumSiegel2026.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+                <span>Premium-Mitglied im<br /><strong>Deutschen Pilates Verband</strong></span>
+              </div>
+              <ul className="ausbildung__features">
+                {['Durchdachte Programme für Matte & Reformer','Erfahrene Ausbilder:innen','Kleine Ausbildungsgruppen','Praxis & Theorie in zwei Studios'].map(f => (
+                  <li key={f}><span className="check">✓</span><span>{f}</span></li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
