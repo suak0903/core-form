@@ -18,7 +18,7 @@ Statisches Multi-Page-Setup. Kein Build-Step, kein npm.
 | `buchung.html`, `buchung-ruettenscheid.html`, `buchung-suedviertel.html` | Vanilla HTML | Buchungsseiten mit Eversports-Widget |
 | `ausbildung.html` | Vanilla HTML | Reformer-Lehrerausbildung (Landingpage mit Testimonial-Karussell) |
 | `galerie.html` | Vanilla HTML | Galerie mit Lightbox (Inline-Script, Tasten- & Swipe-Navigation) |
-| `videos.html` | Vanilla HTML | Trainings-Videos im Grid (autoplay, muted, loop) + Beschreibungs-Modal |
+| `videos.html` | Vanilla HTML | Trainings-Videos im Grid (autoplay, muted, loop) + Klick-Overlay mit scrollbarer Beschreibung direkt auf der Kachel |
 | `faq.html`, `impressum.html`, `datenschutz.html`, `agb.html` | Vanilla HTML | Inhalts- und Rechtsseiten |
 | `css/site.css` | gemeinsames CSS für alle Seiten (inkl. `index.html`) | Design-System, Layout, Subpage-Styles |
 | `js/chrome.js` | gemeinsames JS für alle **statischen** Subpages | Nav, Mobile-Menu, Newsletter-Popup |
@@ -29,7 +29,7 @@ index.html             ← React-App
 buchung*.html          ← statisch, nutzen chrome.js
 ausbildung.html        ← statisch, nutzen chrome.js (Landingpage mit Testimonial-Karussell)
 galerie.html           ← statisch, nutzen chrome.js + eigene Lightbox (Inline-Script)
-videos.html            ← statisch, nutzen chrome.js + eigenes Video-Modal (Inline-Script, KEIN TON)
+videos.html            ← statisch, nutzen chrome.js + Inline-Toggle für Bio-Overlay (KEIN TON)
 faq.html               ← statisch, nutzen chrome.js
 impressum.html         ← statisch, nutzen chrome.js
 datenschutz.html       ← statisch, nutzen chrome.js
@@ -357,7 +357,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 | **Landingpage-Sektionen (Ausbildung & ähnliche Pages)** | siehe Sektionsliste unten | wechselnd weiß / creme / off-white / dunkel | ausbildung.html |
 | **Testimonial-Karussell** | `section.ausbildung-testimonials > .testimonial-carousel > article.testimonial-card` | dunkel `#0d0d0d` | ausbildung.html |
 | **Galerie-Grid + Lightbox** | `section.galerie > .container > .galerie-grid > button.galerie-tile` + `div#galerie-lightbox` | weiß | galerie.html |
-| **Video-Grid + Beschreibungs-Modal** | `section.videos > .container > .video-grid > button.video-tile` + `div#video-modal` | weiß | videos.html |
+| **Video-Grid mit In-Tile-Bio-Overlay** | `section.videos > .container > .video-grid > div.video-tile` (mit `.video-tile__bio` als Overlay-Layer) | weiß | videos.html |
 
 ### 3. Pflichtregeln für jede neue Seite
 
@@ -528,26 +528,35 @@ Das Inline-Script unten in `galerie.html` ist die Quelle der Wahrheit — bei ne
 
 ### 8. Video-Pattern (Trainingsformat-Showcase — Vorlage: `videos.html`)
 
-Für kurze, vertikale Video-Loops (Studio-Eindrücke, Trainingsformate). Eigenständiges Markup, parallel zum Galerie-Pattern:
+Für kurze, vertikale Video-Loops (Studio-Eindrücke, Trainingsformate). Beschreibung erscheint **direkt auf der Kachel als Overlay**, nicht in einem externen Modal — analog zum Team-Karussell auf der Startseite.
 
 - **Grid:** `.video-grid` mit 3 Spalten desktop / 2 tablet / 1 mobil. Aspect-Ratio `9/16` pro Kachel (vertikale Mobile-Format-Videos).
 - **Tile-Video:** `<video autoplay muted loop playsinline preload="metadata">`. **`muted` ist Pflicht** — die ganze Seite läuft tonlos. Ohne `muted` blockt der Browser das Autoplay.
-- **Tile-Hover (Desktop):** Video wird abgedunkelt + leicht weichgezeichnet (`filter:brightness(.5) blur(2px)`), Titel im Stacion-Italic faded am unteren Rand ein.
-- **Modal:** `<div id="video-modal">` außerhalb von `<main>`. Inline-Script setzt beim Tile-Click die Video-Quelle, Titel + Beschreibung neu und spielt das Video ab. Vor/Zurück-Pfeile, Esc, Backdrop-Klick und Touch-Swipe (40 px) navigieren.
-- **Modal-Layout:** zweispaltig auf Desktop (Video links, Beschreibung rechts), gestapelt auf Mobile.
-- **Body-Lock** beim Öffnen via `body.popup-open`.
+- **Hover (Desktop):** Video wird abgedunkelt + leicht weichgezeichnet (`filter:brightness(.55) blur(1.5px)`), Titel im Stacion-Italic faded am unteren Rand ein.
+- **Klick / Enter / Space (alle Geräte):** Toggle der Klasse `.is-expanded` auf der Kachel. Das Video wird stark abgedunkelt + verschwommen, ein Bio-Overlay (`.video-tile__bio`) erscheint mit Eyebrow + Stacion-italic-Titel + scrollbarem Beschreibungs-Container. **Maximal eine Kachel gleichzeitig expandiert** — Klick auf eine andere collapsed die aktuelle.
+- **Schließen:** erneuter Klick auf dieselbe Kachel · Klick außerhalb der Kacheln · Esc-Taste.
+- **Scroll innerhalb der Kachel:** `.video-tile__bio-text` hat `overflow-y:auto` mit `flex:1; min-height:0`, damit lange Texte sauber innerhalb des fixen Tile-Frames scrollen — kein Bottom-Cutoff. Custom-Scrollbar in dezentem Weiß-Transparent.
 
-Tile-Markup (pro Kachel identisch, nur Quelle und Titel ändern):
+Tile-Markup (pro Kachel identisch, nur Quelle, Titel und Bio-Inhalt ändern):
 
 ```html
-<button type="button" class="video-tile" data-video-index="0">
+<div class="video-tile" role="button" tabindex="0" aria-expanded="false"
+     aria-label="Matte – Beschreibung einblenden">
   <video src="media/Matte Video.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
   <span class="video-tile__overlay" aria-hidden="true"></span>
   <span class="video-tile__title">Matte</span>
-</button>
+  <div class="video-tile__bio">
+    <span class="label">Pilates Matte</span>
+    <h3>Matte</h3>
+    <div class="video-tile__bio-text">
+      <p>…</p>
+      <p>…</p>
+    </div>
+  </div>
+</div>
 ```
 
-Beschreibungstexte stehen als JS-Datenstruktur (`VIDEOS`-Array) im Inline-Script unten in `videos.html`. Reihenfolge des Arrays muss der DOM-Reihenfolge der Tiles entsprechen (gleicher Index).
+Beschreibungstexte stehen direkt im HTML — keine JS-Datenstruktur mehr nötig (im Gegensatz zu früheren Modal-Versionen). Inline-Script unten in `videos.html` ist nur Toggle-Logik (~30 Zeilen).
 
 ---
 

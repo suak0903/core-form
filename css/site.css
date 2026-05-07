@@ -1201,8 +1201,9 @@ body.popup-open { overflow:hidden; }
 
 /* ── VIDEOS ──
    Portrait-Videos im 3-Spalten-Grid mit Auto-Loop ohne Ton.
-   Hover legt einen dunklen Slide-Up-Layer + Titel über das Video,
-   Klick öffnet das Modal mit voller Beschreibung.                 */
+   Hover blendet Titel über das abgedunkelte Video ein.
+   Klick aktiviert .is-expanded → Beschreibung als Overlay
+   direkt auf der Kachel, intern scrollbar.                    */
 .videos { background:#fff; padding:0 0 96px; }
 .video-grid {
   display:grid;
@@ -1214,10 +1215,9 @@ body.popup-open { overflow:hidden; }
   aspect-ratio:9/16;
   overflow:hidden;
   background:#0d0d0d;
-  border:none; padding:0; margin:0;
-  cursor:pointer;
   border-radius:0;
-  display:block;
+  cursor:pointer;
+  user-select:none;
 }
 .video-tile video {
   position:absolute; inset:0;
@@ -1230,7 +1230,7 @@ body.popup-open { overflow:hidden; }
   position:absolute; inset:0;
   background:linear-gradient(to top, rgba(13,13,13,.85) 0%, rgba(13,13,13,.35) 50%, rgba(13,13,13,.05) 100%);
   opacity:0;
-  transition:opacity 350ms ease-out;
+  transition:opacity 350ms ease-out, background 350ms ease-out;
   pointer-events:none;
 }
 .video-tile__title {
@@ -1246,7 +1246,7 @@ body.popup-open { overflow:hidden; }
 }
 @media (hover: hover) {
   .video-tile:hover video {
-    filter:brightness(.5) blur(2px);
+    filter:brightness(.55) blur(1.5px);
     transform:scale(1.02);
   }
   .video-tile:hover .video-tile__overlay { opacity:1; }
@@ -1254,79 +1254,54 @@ body.popup-open { overflow:hidden; }
     opacity:1; transform:none;
   }
 }
-.video-tile:focus-visible { outline:2px solid #b20e3b; outline-offset:3px; }
+.video-tile:focus-visible { outline:2px solid #b20e3b; outline-offset:-4px; }
 
-/* Video-Modal — Video links, Beschreibung rechts; auf Mobile gestapelt. */
-.video-modal {
-  position:fixed; inset:0; z-index:160;
-  background:rgba(13,13,13,.94);
-  display:flex; align-items:center; justify-content:center;
-  padding:48px 64px;
-  opacity:0; visibility:hidden;
-  transition:opacity .25s ease-out, visibility 0s linear .25s;
-}
-.video-modal.open {
-  opacity:1; visibility:visible;
-  transition:opacity .25s ease-out, visibility 0s linear 0s;
-}
-.video-modal__stage {
-  display:grid;
-  grid-template-columns:auto 1fr;
-  gap:48px;
-  max-width:1100px; width:100%;
-  max-height:calc(100vh - 96px);
-  align-items:start;
-}
-.video-modal__media {
-  position:relative;
-  width:min(360px, 38vw);
-  aspect-ratio:9/16;
-  background:#0d0d0d;
-  overflow:hidden;
-}
-.video-modal__video {
-  width:100%; height:100%; object-fit:cover; display:block;
-}
-.video-modal__text {
+/* Bio-Overlay — füllt die ganze Kachel, scrollt intern. */
+.video-tile__bio {
+  position:absolute; inset:0;
+  padding:24px 22px 22px;
+  background:rgba(13,13,13,.78);
   color:#fff;
-  max-height:calc(100vh - 96px);
-  overflow-y:auto;
-  padding-right:8px;
+  display:flex; flex-direction:column;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity 320ms ease-out, visibility 0s linear 320ms;
 }
-.video-modal__text .label { color:#b20e3b; }
-.video-modal__title {
+.video-tile__bio .label { color:#f2dac2; margin-bottom:4px; }
+.video-tile__bio h3 {
   font-family:'Stacion',Georgia,serif; font-weight:300; font-style:italic;
-  font-size:clamp(32px, 4vw, 48px); line-height:1.05;
+  font-size:clamp(20px, 2.2vw, 26px); line-height:1.05;
   letter-spacing:-.02em; color:#fff;
-  margin:6px 0 24px;
-}
-.video-modal__description p {
-  font-size:15px; line-height:1.75; color:rgba(255,255,255,.88);
   margin-bottom:14px;
+  flex-shrink:0;
 }
-.video-modal__description p:last-child { margin-bottom:0; }
+.video-tile__bio-text {
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  font-size:13px; line-height:1.65;
+  color:rgba(255,255,255,.92);
+  padding-right:6px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.35) transparent;
+}
+.video-tile__bio-text::-webkit-scrollbar { width:4px; }
+.video-tile__bio-text::-webkit-scrollbar-thumb { background:rgba(255,255,255,.35); }
+.video-tile__bio-text::-webkit-scrollbar-track { background:rgba(255,255,255,.08); }
+.video-tile__bio-text p { margin-bottom:12px; }
+.video-tile__bio-text p:last-child { margin-bottom:0; }
 
-.video-modal__close,
-.video-modal__nav {
-  position:absolute;
-  background:transparent; border:none; padding:0; cursor:pointer;
-  color:#fff; opacity:.7;
-  display:flex; align-items:center; justify-content:center;
-  transition:opacity .2s, color .2s;
-  border-radius:0;
-  z-index:2;
+/* Expanded-State — über JS gesetzt durch Klick / Enter / Space */
+.video-tile.is-expanded video {
+  filter:brightness(.25) blur(3px);
+  transform:none;
 }
-.video-modal__close:hover,
-.video-modal__nav:hover { opacity:1; color:#b20e3b; }
-.video-modal__close:focus-visible,
-.video-modal__nav:focus-visible { outline:2px solid #fff; outline-offset:3px; opacity:1; }
-.video-modal__close { top:24px; right:24px; width:44px; height:44px; }
-.video-modal__nav {
-  top:50%; transform:translateY(-50%);
-  width:48px; height:48px;
+.video-tile.is-expanded .video-tile__overlay { opacity:0; }
+.video-tile.is-expanded .video-tile__title { opacity:0; transform:translateY(0); }
+.video-tile.is-expanded .video-tile__bio {
+  opacity:1; visibility:visible; pointer-events:auto;
+  transition:opacity 320ms ease-out, visibility 0s linear 0s;
 }
-.video-modal__prev { left:16px; }
-.video-modal__next { right:16px; }
 
 /* ── AUSBILDUNGSSEITE ── */
 
@@ -1862,29 +1837,15 @@ body.popup-open { overflow:hidden; }
   .galerie-lightbox__next { right:6px; }
   .galerie-lightbox__img { max-height:calc(100vh - 100px); }
 
-  /* Videos */
+  /* Videos — auf Mobile einspaltig: jedes Video nimmt die volle Breite,
+     Beschreibung und Titel werden deutlich besser lesbar.              */
   .videos { padding:0 0 56px; }
-  .video-grid { grid-template-columns:repeat(2, 1fr); gap:8px; }
-  .video-tile__title { left:16px; right:16px; bottom:18px; }
-
-  /* Video-Modal — gestapelt: Video oben, Beschreibung darunter */
-  .video-modal { padding:64px 16px 24px; }
-  .video-modal__stage {
-    grid-template-columns:1fr;
-    gap:20px;
-    max-height:calc(100vh - 88px);
-  }
-  .video-modal__media {
-    width:min(220px, 50vw);
-    margin:0 auto;
-  }
-  .video-modal__text { max-height:none; padding-right:0; }
-  .video-modal__title { font-size:clamp(26px, 7vw, 36px); margin:6px 0 18px; }
-  .video-modal__description p { font-size:14px; line-height:1.7; }
-  .video-modal__close { top:12px; right:12px; }
-  .video-modal__nav { width:40px; height:40px; }
-  .video-modal__prev { left:6px; }
-  .video-modal__next { right:6px; }
+  .video-grid { grid-template-columns:1fr; gap:14px; }
+  .video-tile { aspect-ratio:9/14; }
+  .video-tile__title { left:20px; right:20px; bottom:24px; font-size:clamp(26px, 7vw, 34px); }
+  .video-tile__bio { padding:24px 22px 22px; }
+  .video-tile__bio h3 { font-size:clamp(22px, 6vw, 28px); }
+  .video-tile__bio-text { font-size:14px; line-height:1.7; }
 
   /* Ausbildungsseite */
   .ausbildung-hero__actions { flex-direction:column; align-items:stretch; }
@@ -1925,7 +1886,6 @@ body.popup-open { overflow:hidden; }
   .hero__actions .btn { width:100%; text-align:center; }
   .hero__stat strong { font-size:22px; }
   .galerie-grid { grid-template-columns:1fr; }
-  .video-grid { grid-template-columns:1fr; }
 }
 
 /* ── REDUCED MOTION ── */
