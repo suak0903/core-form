@@ -6,6 +6,7 @@
 <title>core:form — Pilates & Reformer Studio Essen</title>
 <link rel="icon" type="image/jpeg" href="media/IMG-20251021-WA0011.jpg">
 <link rel="apple-touch-icon" href="media/IMG-20251021-WA0011.jpg">
+<link rel="preload" as="image" href="media/COREFORM_web_015.jpg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
 <style>
@@ -17,7 +18,18 @@
 </head>
 <body>
 
-<div id="root"></div>
+<div id="root">
+  <!-- Statisches Hero-Skelett: wird sichtbar, bevor React/Babel transpiliert hat.
+       React ersetzt diesen Inhalt sobald die App rendert. -->
+  <section class="hero" aria-hidden="true">
+    <img class="hero__img" src="media/COREFORM_web_015.jpg" alt="" fetchpriority="high" decoding="async" />
+    <div class="hero__overlay"></div>
+    <div class="hero__content container">
+      <h1 class="hero__headline">Kraft.<br />Kontrolle.<br /><em>Bewegung.</em></h1>
+      <p class="hero__sub">Reformer Pilates &nbsp;·&nbsp; Pilates Matte &nbsp;·&nbsp; Barre Workout</p>
+    </div>
+  </section>
+</div>
 
 <script type="text/babel">
 const NAV_IDS = ['angebote','studios','ueber-uns','ausbildung','preise','kontakt'];
@@ -177,7 +189,9 @@ const App = () => {
   const [submitted, setSubmitted] = React.useState(false);
   const [teamIndex, setTeamIndex] = React.useState(0);
   const [teamHovered, setTeamHovered] = React.useState(false);
-  const [teamExpanded, setTeamExpanded] = React.useState(false);
+  // Team-Karussell-Stufe: 0 = nur Bild, 1 = Name+Rolle, 2 = Name+Rolle+Bio.
+  // Klick zykelt 0 → 1 → 2 → 0.
+  const [teamStage, setTeamStage] = React.useState(0);
   const [priceModalKey, setPriceModalKey] = React.useState(null);
   const formRef = React.useRef(null);
   const popupCloseRef = React.useRef(null);
@@ -186,7 +200,7 @@ const App = () => {
 
   const goTeam = (delta) => {
     setTeamIndex(i => (i + delta + TEAM.length) % TEAM.length);
-    setTeamExpanded(false);
+    setTeamStage(0);
   };
 
   React.useEffect(() => {
@@ -351,15 +365,30 @@ const App = () => {
   }, []);
 
   // Team-Karussell: alle 4.5 s rotieren. Pausiert bei Hover (Desktop) und
-  // wenn die Bio aufgeklappt ist. Bei prefers-reduced-motion komplett aus.
+  // sobald eine Klick-Stufe aktiv ist. Bei prefers-reduced-motion komplett aus.
   React.useEffect(() => {
-    if (teamHovered || teamExpanded) return;
+    if (teamHovered || teamStage > 0) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const id = setInterval(() => {
       setTeamIndex(i => (i + 1) % TEAM.length);
     }, 4500);
     return () => clearInterval(id);
-  }, [teamHovered, teamExpanded]);
+  }, [teamHovered, teamStage]);
+
+  // Klick außerhalb der Team-Stage / Esc schließt die Klick-Stufe.
+  React.useEffect(() => {
+    if (teamStage === 0) return;
+    const onDocClick = (e) => {
+      if (!e.target.closest('.team-stage')) setTeamStage(0);
+    };
+    const onKey = (e) => { if (e.key === 'Escape') setTeamStage(0); };
+    document.addEventListener('click', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('click', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [teamStage]);
 
   const scroll = (id) => {
     setMobileOpen(false);
@@ -738,7 +767,7 @@ const App = () => {
         <div className="container">
           <div className="about__inner">
             <div
-              className={`about__media team-stage${teamExpanded ? ' team-stage--expanded' : ''}`}
+              className={`about__media team-stage${teamStage === 1 ? ' team-stage--preview' : ''}${teamStage === 2 ? ' team-stage--expanded' : ''}`}
               onMouseEnter={() => setTeamHovered(true)}
               onMouseLeave={() => setTeamHovered(false)}
               onTouchStart={(e) => {
@@ -765,14 +794,14 @@ const App = () => {
                     aria-hidden={!isActive}
                     role="button"
                     tabIndex={isActive ? 0 : -1}
-                    aria-expanded={isActive ? teamExpanded : undefined}
-                    aria-label={`${m.name} – ${m.role}. ${teamExpanded && isActive ? 'Bio ausblenden' : 'Bio einblenden'}`}
-                    onClick={() => { if (isActive) setTeamExpanded(e => !e); }}
+                    aria-expanded={isActive ? teamStage === 2 : undefined}
+                    aria-label={`${m.name} – ${m.role}.`}
+                    onClick={() => { if (isActive) setTeamStage(s => (s + 1) % 3); }}
                     onKeyDown={(e) => {
                       if (!isActive) return;
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        setTeamExpanded(v => !v);
+                        setTeamStage(s => (s + 1) % 3);
                       } else if (e.key === 'ArrowLeft') {
                         e.preventDefault();
                         goTeam(-1);
@@ -823,7 +852,7 @@ const App = () => {
                     onClick={(e) => {
                       e.stopPropagation();
                       setTeamIndex(i);
-                      setTeamExpanded(false);
+                      setTeamStage(0);
                     }}
                   />
                 ))}
@@ -857,17 +886,29 @@ const App = () => {
               <span className="label">Ausbildung</span>
               <h2>Werde<br /><em>Pilates-Trainer:in.</em></h2>
               <p>core:form bietet strukturierte Ausbildungsformate für alle, die Pilates professionell unterrichten möchten. Fundiert, praxisnah und von erfahrenen Trainer:innen begleitet.</p>
-              <div className="ausbildung__credential ausbildung__credential--mobile">
+              <a
+                className="ausbildung__credential ausbildung__credential--mobile"
+                href="https://pilates-verband.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Deutscher Pilates Verband — Website öffnen (neuer Tab)"
+              >
                 <img src="media/DPV_PremiumSiegel2026.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
                 <span>Premium-Mitglied im<br /><strong>Deutschen Pilates Verband</strong></span>
-              </div>
+              </a>
               <a href="ausbildung.html" className="btn btn--accent">Zur Ausbildung</a>
             </div>
             <div className="ausbildung__features-col">
-              <div className="ausbildung__credential ausbildung__credential--desktop">
+              <a
+                className="ausbildung__credential ausbildung__credential--desktop"
+                href="https://pilates-verband.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Deutscher Pilates Verband — Website öffnen (neuer Tab)"
+              >
                 <img src="media/DPV_PremiumSiegel2026.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
                 <span>Premium-Mitglied im<br /><strong>Deutschen Pilates Verband</strong></span>
-              </div>
+              </a>
               <ul className="ausbildung__features">
                 {['Durchdachte Programme für Matte & Reformer','Erfahrene Ausbilder:innen','Kleine Ausbildungsgruppen','Praxis & Theorie in zwei Studios'].map(f => (
                   <li key={f}><span className="check">✓</span><span>{f}</span></li>
@@ -921,15 +962,21 @@ const App = () => {
           <div className="kontakt__grid">
             <div className="kontakt__info">
               <div className="kontakt__studios">
-                <div className="kontakt__studio">
-                  <strong>Studio Rüttenscheid</strong>
-                  <p>Gudulastraße 5 (Innenhof)<br />45131 Essen</p>
-                  <p className="kontakt__studio-kurse">Pilates Matte · Barre Workout</p>
+                <div className="kontakt__studio kontakt__studio--rue">
+                  <img className="kontakt__studio-logo" src="media/RZ_Logo_CoreForm_Gudula.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+                  <div className="kontakt__studio-body">
+                    <strong>Studio Rüttenscheid</strong>
+                    <p>Gudulastraße 5 (Innenhof)<br />45131 Essen</p>
+                    <p className="kontakt__studio-kurse">Pilates Matte · Barre Workout</p>
+                  </div>
                 </div>
-                <div className="kontakt__studio">
-                  <strong>Studio Südviertel</strong>
-                  <p>Moltkestraße 16<br />45128 Essen</p>
-                  <p className="kontakt__studio-kurse">Reformer Pilates · Raumvermietung</p>
+                <div className="kontakt__studio kontakt__studio--sued">
+                  <img className="kontakt__studio-logo" src="media/RZ_Logo_CoreForm_Moltke.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+                  <div className="kontakt__studio-body">
+                    <strong>Studio Südviertel</strong>
+                    <p>Moltkestraße 16<br />45128 Essen</p>
+                    <p className="kontakt__studio-kurse">Reformer Pilates · Raumvermietung</p>
+                  </div>
                 </div>
               </div>
               <div className="kontakt__reach">
@@ -974,13 +1021,15 @@ const App = () => {
               <div className="form-group">
                 <label htmlFor="interesse">Interesse</label>
                 <select id="interesse" name="interesse" defaultValue="" required>
-                  <option value="" disabled>Kurs wählen …</option>
+                  <option value="" disabled>Worum geht&apos;s? …</option>
                   <option>Reformer Pilates</option>
                   <option>Pilates Matte</option>
                   <option>Barre Workout</option>
                   <option>Personal Training</option>
                   <option>Raumvermietung</option>
                   <option>Ausbildung</option>
+                  <option>Telefonischer Rückruf</option>
+                  <option>Allgemeine Anfrage</option>
                 </select>
               </div>
               <div className="form-group">

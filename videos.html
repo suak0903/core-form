@@ -100,8 +100,8 @@
     <div class="container">
       <div class="video-grid">
 
-        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Matte – Beschreibung einblenden">
-          <video src="media/Matte Video.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Matte">
+          <video src="media/Matte Video.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Matte</span>
           <div class="video-tile__bio">
@@ -114,8 +114,8 @@
           </div>
         </div>
 
-        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Reformer Boom Bang – Beschreibung einblenden">
-          <video src="media/Reformer Boom Bang.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Reformer Boom Bang">
+          <video src="media/Reformer Boom Bang.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Reformer<br />Boom Bang</span>
           <div class="video-tile__bio">
@@ -129,8 +129,8 @@
           </div>
         </div>
 
-        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Reformer Harder – Beschreibung einblenden">
-          <video src="media/Reformer Harder.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Reformer Harder">
+          <video src="media/Reformer Harder.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Reformer<br />Harder</span>
           <div class="video-tile__bio">
@@ -143,8 +143,8 @@
           </div>
         </div>
 
-        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Barre Harmony – Beschreibung einblenden">
-          <video src="media/Barre Harmony.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Barre Harmony">
+          <video src="media/Barre Harmony.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Barre<br />Harmony</span>
           <div class="video-tile__bio">
@@ -158,8 +158,8 @@
           </div>
         </div>
 
-        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Barre Burn – Beschreibung einblenden">
-          <video src="media/Barre Burn.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Barre Burn">
+          <video src="media/Barre Burn.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Barre<br />Burn</span>
           <div class="video-tile__bio">
@@ -201,52 +201,92 @@
     el.textContent = new Date().getFullYear();
   });
 
-  // Video-Tile-Toggle. Klick auf Kachel klappt die Beschreibung als Overlay
-  // direkt auf der Kachel auf — kein Modal. Maximal eine Kachel gleichzeitig
-  // expandiert. Esc, Klick außerhalb oder erneuter Klick auf dieselbe Kachel
-  // schließt. Beschreibungs-Container scrollt intern, falls Text länger als
-  // die Kachelhöhe ist.
+  // Video-Tile State-Machine.
+  // 1. Klick (idle → playing): Video startet. Andere Videos werden pausiert.
+  // 2. Klick (playing → expanded): Bio-Overlay mit Titel & Beschreibung.
+  //    Video läuft im Hintergrund weiter, ist abgedunkelt + leicht weichgezeichnet.
+  // 3. Klick (expanded → idle): zurück zum Standbild, Video pausiert.
+  // Klick außerhalb / Esc / Start eines anderen Videos: alles schließen.
+  // Maximal ein Video aktiv (playing oder expanded).
   (function () {
     var tiles = Array.prototype.slice.call(document.querySelectorAll('.video-tile'));
-    var expandedTile = null;
+    var activeTile = null;
 
-    function collapse() {
-      if (!expandedTile) return;
-      var tile = expandedTile;
-      tile.classList.remove('is-expanded');
+    // Play-Icon-Overlay in jede Kachel injizieren (vor das Title-Span).
+    var playSvg = '<span class="video-tile__play" aria-hidden="true">'
+      + '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">'
+      + '<path d="M8 5v14l11-7z"/></svg></span>';
+    tiles.forEach(function (tile) {
+      var title = tile.querySelector('.video-tile__title');
+      if (title) title.insertAdjacentHTML('beforebegin', playSvg);
+    });
+
+    function reset(tile) {
+      if (!tile) return;
+      tile.classList.remove('is-playing', 'is-expanded');
       tile.setAttribute('aria-expanded', 'false');
+      var video = tile.querySelector('video');
+      if (video) {
+        try { video.pause(); video.currentTime = 0; } catch (e) {}
+      }
       var bioText = tile.querySelector('.video-tile__bio-text');
       if (bioText) bioText.scrollTop = 0;
-      expandedTile = null;
     }
-    function expand(tile) {
-      if (expandedTile === tile) { collapse(); return; }
-      collapse();
-      tile.classList.add('is-expanded');
-      tile.setAttribute('aria-expanded', 'true');
-      expandedTile = tile;
+    function closeAll() {
+      if (!activeTile) return;
+      reset(activeTile);
+      activeTile = null;
+    }
+    function advance(tile) {
+      // Wenn eine andere Kachel aktiv ist: erst die schließen.
+      if (activeTile && activeTile !== tile) {
+        reset(activeTile);
+        activeTile = null;
+      }
+      if (tile.classList.contains('is-expanded')) {
+        // Stufe 3 → Text/Bio ausblenden, Video läuft weiter (zurück auf is-playing)
+        tile.classList.remove('is-expanded');
+        tile.setAttribute('aria-expanded', 'false');
+        var bioText = tile.querySelector('.video-tile__bio-text');
+        if (bioText) bioText.scrollTop = 0;
+        return;
+      }
+      if (tile.classList.contains('is-playing')) {
+        // Stufe 2 → Bio einblenden, Video läuft weiter
+        tile.classList.add('is-expanded');
+        tile.setAttribute('aria-expanded', 'true');
+        return;
+      }
+      // Stufe 1 → Video starten
+      tile.classList.add('is-playing');
+      var video = tile.querySelector('video');
+      if (video) {
+        var p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(function () {});
+      }
+      activeTile = tile;
     }
 
     tiles.forEach(function (tile) {
       tile.addEventListener('click', function (e) {
         e.stopPropagation();
-        expand(tile);
+        advance(tile);
       });
       tile.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          expand(tile);
+          advance(tile);
         }
       });
     });
 
-    // Klick außerhalb schließt
+    // Klick außerhalb einer Kachel schließt alles
     document.addEventListener('click', function () {
-      collapse();
+      closeAll();
     });
     // Esc schließt
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') collapse();
+      if (e.key === 'Escape') closeAll();
     });
   })();
 </script>

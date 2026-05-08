@@ -103,7 +103,17 @@ a { color:inherit; text-decoration:none; }
   display:flex; align-items:center; height:72px; gap:0;
 }
 .nav__logo { display:inline-flex; align-items:center; }
-.nav__logo img { display:block; height:36px; width:108px; object-fit:contain; object-position:left center; }
+.nav__logo img {
+  display:block; height:36px; width:108px;
+  object-fit:contain; object-position:left center;
+  /* Logo-PNG hat 9,56 % transparente Fläche links — ausgleichen, damit
+     die sichtbare „c" mit der Container-Kante (und damit dem Footer-
+     Text) flush sitzt. */
+  margin-left:-10px;
+  transition:transform .25s cubic-bezier(.22,1,.36,1);
+  transform-origin:center center;
+}
+.nav__logo:hover img { transform:scale(1.06); }
 .nav__links {
   display:flex; gap:28px; flex:1; justify-content:center;
 }
@@ -379,20 +389,22 @@ a { color:inherit; text-decoration:none; }
   transition:opacity 320ms ease-out, max-height 450ms cubic-bezier(.22,1,.36,1);
 }
 
-/* Hover (nur Mauszeiger): zeigt Rolle + Name + leichtes Heranzoomen */
-@media (hover: hover) {
-  .team-stage:hover .team-slide.active .team-slide__overlay { opacity:1; }
-  .team-stage:hover .team-slide.active img {
-    filter:brightness(.82);
-    transform:scale(1.05);
-  }
-  .team-stage:hover .team-slide.active .team-slide__role,
-  .team-stage:hover .team-slide.active .team-slide__name {
-    opacity:1; transform:none;
-  }
+/* Bewusst kein Hover-Preview mehr: das Karussell folgt strikt dem 3-Stufen-
+   Klick-Modell. Sonst würde Hover auf Desktop die Stufe 0 visuell wieder
+   wie Stufe 1 aussehen lassen. */
+
+/* Preview (1. Klick) — Name + Rolle einblenden, Bild leicht abgedunkelt */
+.team-stage--preview .team-slide.active .team-slide__overlay { opacity:1; }
+.team-stage--preview .team-slide.active img {
+  filter:brightness(.82);
+  transform:scale(1.05);
+}
+.team-stage--preview .team-slide.active .team-slide__role,
+.team-stage--preview .team-slide.active .team-slide__name {
+  opacity:1; transform:none;
 }
 
-/* Expanded (geklickt) — Zoom bleibt, Bild stärker abgedunkelt */
+/* Expanded (2. Klick) — Bio aufklappen, Bild stärker abgedunkelt */
 .team-stage--expanded .team-slide.active .team-slide__overlay { opacity:1; }
 .team-stage--expanded .team-slide.active img {
   filter:brightness(.55);
@@ -479,7 +491,11 @@ a { color:inherit; text-decoration:none; }
 .ausbildung__credential {
   display:flex; align-items:center; gap:14px;
   margin-bottom:24px;
+  text-decoration:none; color:inherit;
+  transition:opacity .2s ease-out;
 }
+a.ausbildung__credential:hover { opacity:.75; }
+a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offset:4px; }
 .ausbildung__credential img {
   width:64px; height:64px; object-fit:contain; flex-shrink:0;
 }
@@ -547,8 +563,19 @@ a { color:inherit; text-decoration:none; }
 .kontakt { background:#fff; padding:96px 0; }
 .kontakt__grid { display:grid; grid-template-columns:1fr 1.4fr; gap:80px; }
 .kontakt__studios { display:flex; flex-direction:column; gap:0; margin-bottom:28px; }
-.kontakt__studio { padding:20px 0; border-bottom:1px solid rgba(0,0,0,.08); }
+.kontakt__studio {
+  padding:20px 0; border-bottom:1px solid rgba(0,0,0,.08);
+  display:flex; align-items:flex-start; gap:18px;
+}
+.kontakt__studio-logo {
+  flex-shrink:0;
+  width:64px; height:auto;
+  object-fit:contain; object-position:left center;
+  margin-top:2px;
+}
+.kontakt__studio-body { flex:1; min-width:0; }
 .kontakt__studio strong { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#b20e3b; display:block; margin-bottom:6px; }
+.kontakt__studio--sued strong { color:#5a8a62; }
 .kontakt__studio p { font-size:14px; line-height:1.6; color:#2a2a2a; }
 .kontakt__studio-kurse { font-size:12px; color:#6b6b6b; margin-top:4px; }
 .kontakt__reach { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
@@ -604,7 +631,12 @@ a { color:inherit; text-decoration:none; }
   display:flex; align-items:center; justify-content:space-between;
   flex-wrap:wrap; gap:16px;
 }
-.footer__logo img { height:26px; opacity:.7; }
+.footer__logo { display:inline-flex; align-items:center; }
+.footer__logo img {
+  display:block; height:36px; width:108px;
+  object-fit:contain; object-position:left center;
+  margin-left:-10px;
+}
 .footer__copy { font-size:11px; color:#8c8c8c; }
 .footer__links { display:flex; gap:20px; }
 .footer__links a { font-size:11px; color:#8c8c8c; transition:color .15s; }
@@ -1181,29 +1213,39 @@ body.popup-open { overflow:hidden; }
 .galerie-lightbox__close,
 .galerie-lightbox__nav {
   position:absolute;
-  background:transparent; border:none; padding:0; cursor:pointer;
-  color:#fff; opacity:.7;
+  border:none; padding:0; cursor:pointer;
+  color:#fff;
   display:flex; align-items:center; justify-content:center;
-  transition:opacity .2s, color .2s;
+  transition:background .2s ease-out, opacity .25s ease-out, color .2s;
   border-radius:0;
   /* Über das Bild legen — sonst überdeckt das Bild den Prev-Button,
      der im Quelltext vor der figure steht.                        */
   z-index:2;
 }
-.galerie-lightbox__close:hover,
-.galerie-lightbox__nav:hover { opacity:1; color:#b20e3b; }
-.galerie-lightbox__close:focus-visible,
-.galerie-lightbox__nav:focus-visible { outline:2px solid #fff; outline-offset:3px; opacity:1; }
 .galerie-lightbox__close {
   top:24px; right:24px;
   width:44px; height:44px;
+  background:transparent;
+  opacity:.7;
 }
+.galerie-lightbox__close:hover { opacity:1; color:#b20e3b; background:transparent; }
+.galerie-lightbox__close:focus-visible { outline:2px solid #fff; outline-offset:3px; opacity:1; }
 .galerie-lightbox__nav {
   top:50%; transform:translateY(-50%);
-  width:48px; height:48px;
+  width:44px; height:44px;
+  background:rgba(13,13,13,.4);
+  opacity:.55;
 }
-.galerie-lightbox__prev { left:16px; }
-.galerie-lightbox__next { right:16px; }
+.galerie-lightbox__nav:hover { background:rgba(13,13,13,.7); opacity:1; color:#fff; }
+.galerie-lightbox__nav:focus-visible { outline:2px solid #fff; outline-offset:2px; opacity:1; }
+.galerie-lightbox__nav svg { width:18px; height:18px; }
+.galerie-lightbox__prev { left:12px; }
+.galerie-lightbox__next { right:12px; }
+@media (hover: hover) {
+  .galerie-lightbox__nav { opacity:0; }
+  .galerie-lightbox.open:hover .galerie-lightbox__nav { opacity:.7; }
+  .galerie-lightbox.open:hover .galerie-lightbox__nav:hover { opacity:1; }
+}
 
 /* ── VIDEOS ──
    Portrait-Videos im 3-Spalten-Grid mit Auto-Loop ohne Ton.
@@ -1234,11 +1276,25 @@ body.popup-open { overflow:hidden; }
 }
 .video-tile__overlay {
   position:absolute; inset:0;
-  background:linear-gradient(to top, rgba(13,13,13,.85) 0%, rgba(13,13,13,.35) 50%, rgba(13,13,13,.05) 100%);
+  background:linear-gradient(to top, rgba(13,13,13,.55) 0%, rgba(13,13,13,.2) 50%, rgba(13,13,13,.02) 100%);
   opacity:0;
   transition:opacity 350ms ease-out, background 350ms ease-out;
   pointer-events:none;
 }
+/* Play-Button-Overlay — sichtbar im Idle-State, signalisiert "Klick zum Abspielen" */
+.video-tile__play {
+  position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
+  width:64px; height:64px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(13,13,13,.45);
+  color:#fff;
+  pointer-events:none;
+  transition:opacity 250ms ease-out, transform 250ms ease-out, background 250ms ease-out;
+  border-radius:0;
+}
+.video-tile__play svg { width:28px; height:28px; }
+.video-tile.is-playing .video-tile__play,
+.video-tile.is-expanded .video-tile__play { opacity:0; transform:translate(-50%, -50%) scale(.8); }
 .video-tile__title {
   position:absolute; left:24px; right:24px; bottom:28px;
   font-family:'Stacion',Georgia,serif; font-style:italic; font-weight:300;
@@ -1251,22 +1307,30 @@ body.popup-open { overflow:hidden; }
   text-align:left;
 }
 @media (hover: hover) {
-  .video-tile:hover video {
-    filter:brightness(.55) blur(1.5px);
+  .video-tile:not(.is-playing):not(.is-expanded):hover video {
+    filter:brightness(.7);
     transform:scale(1.02);
   }
-  .video-tile:hover .video-tile__overlay { opacity:1; }
-  .video-tile:hover .video-tile__title {
+  .video-tile:not(.is-playing):not(.is-expanded):hover .video-tile__overlay { opacity:1; }
+  .video-tile:not(.is-playing):not(.is-expanded):hover .video-tile__title {
     opacity:1; transform:none;
+  }
+  .video-tile:not(.is-playing):not(.is-expanded):hover .video-tile__play {
+    background:rgba(178,14,59,.85);
   }
 }
 .video-tile:focus-visible { outline:2px solid #b20e3b; outline-offset:-4px; }
+
+/* Playing-State — Video läuft, kein Overlay/Bio sichtbar */
+.video-tile.is-playing video { filter:none; transform:none; }
+.video-tile.is-playing .video-tile__overlay { opacity:0; }
+.video-tile.is-playing .video-tile__title { opacity:0; }
 
 /* Bio-Overlay — füllt die ganze Kachel, scrollt intern. */
 .video-tile__bio {
   position:absolute; inset:0;
   padding:24px 22px 22px;
-  background:rgba(13,13,13,.78);
+  background:rgba(13,13,13,.55);
   color:#fff;
   display:flex; flex-direction:column;
   opacity:0; visibility:hidden; pointer-events:none;
@@ -1297,9 +1361,9 @@ body.popup-open { overflow:hidden; }
 .video-tile__bio-text p { margin-bottom:12px; }
 .video-tile__bio-text p:last-child { margin-bottom:0; }
 
-/* Expanded-State — über JS gesetzt durch Klick / Enter / Space */
+/* Expanded-State — über JS gesetzt durch zweiten Klick (nach is-playing) */
 .video-tile.is-expanded video {
-  filter:brightness(.25) blur(3px);
+  filter:brightness(.5) blur(2px);
   transform:none;
 }
 .video-tile.is-expanded .video-tile__overlay { opacity:0; }
@@ -1510,7 +1574,11 @@ body.popup-open { overflow:hidden; }
 }
 .team-credentials__item {
   display:flex; align-items:center; gap:18px;
+  text-decoration:none; color:inherit;
+  transition:opacity .2s ease-out;
 }
+a.team-credentials__item:hover { opacity:.75; }
+a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offset:4px; }
 .team-credentials__item img {
   height:80px; width:auto; object-fit:contain;
 }
@@ -1703,7 +1771,7 @@ body.popup-open { overflow:hidden; }
   .nav__links { display:none; }
   /* Keep just the booking CTA visible at top on mobile; hide News */
   .container { padding:0 18px; }
-  .nav__logo img { height:30px; width:90px; }
+  .nav__logo img { height:30px; width:90px; margin-left:-9px; }
   .nav .nav__cta-group { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-left:auto; }
   .nav .nav__cta-group .nav__cta {
     padding:8px 10px; font-size:10px; letter-spacing:.04em;
@@ -1781,6 +1849,7 @@ body.popup-open { overflow:hidden; }
   /* Footer */
   .footer { padding:40px 0; }
   .footer__inner { flex-direction:column; align-items:flex-start; gap:24px; }
+  .footer__logo img { height:30px; width:90px; margin-left:-9px; }
   .footer__links { gap:16px; flex-wrap:wrap; }
 
   /* Preis-Modal — auf Mobile fullscreen ohne Schatten */
