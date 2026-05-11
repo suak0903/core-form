@@ -137,10 +137,7 @@
     else if (mobileMenu && mobileMenu.classList.contains('open')) setMobileOpen(false);
   });
 
-  // Eversports-Platzhalter: zeigt einen Lade-Hinweis, solange das externe
-  // Widget noch nicht gerendert hat. Bleibt das Widget nach 8 s leer, wird
-  // ein "Seite neu laden"-Button eingeblendet.
-  document.querySelectorAll('[data-eversports-widget-id]').forEach(function (widgetEl) {
+  function startEversportsWidget(widgetEl) {
     const wrap = document.createElement('div');
     wrap.className = 'booking-widget__embed-wrap';
     widgetEl.parentNode.insertBefore(wrap, widgetEl);
@@ -155,13 +152,18 @@
     wrap.appendChild(placeholder);
     wrap.appendChild(widgetEl);
 
-    const reloadBtn = placeholder.querySelector('.ev-placeholder__reload');
-    reloadBtn.addEventListener('click', function () { window.location.reload(); });
+    placeholder.querySelector('.ev-placeholder__reload').addEventListener('click', function () {
+      window.location.reload();
+    });
 
-    let stuckTimer = setTimeout(function () {
-      if (!placeholder.classList.contains('is-hidden')) {
-        placeholder.classList.add('is-stuck');
-      }
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = 'https://widget-static.eversports.io/loader.js';
+    script.async = true;
+    wrap.appendChild(script);
+
+    const stuckTimer = setTimeout(function () {
+      if (!placeholder.classList.contains('is-hidden')) placeholder.classList.add('is-stuck');
     }, 8000);
 
     const pollId = setInterval(function () {
@@ -171,5 +173,39 @@
         clearTimeout(stuckTimer);
       }
     }, 400);
+  }
+
+  document.querySelectorAll('[data-eversports-widget-id]').forEach(function (widgetEl) {
+    const consent = window.cfConsent && window.cfConsent.get();
+
+    if (consent === 'accepted') {
+      startEversportsWidget(widgetEl);
+      return;
+    }
+
+    const notice = document.createElement('div');
+    notice.className = 'consent-notice';
+    notice.innerHTML =
+      '<p>Für die Online-Buchung ist das <b>Eversports</b>-Widget erforderlich.' +
+      ' Es überträgt Daten an die Eversports GmbH (Österreich).</p>' +
+      '<button type="button" class="btn btn--accent consent-notice__btn">Externe Dienste akzeptieren</button>';
+    widgetEl.parentNode.insertBefore(notice, widgetEl);
+
+    function activate() {
+      if (!notice.parentNode) return;
+      localStorage.setItem('cf_consent', 'accepted');
+      const banner = document.getElementById('cookie-banner');
+      if (banner) { banner.classList.remove('is-visible'); banner.setAttribute('aria-hidden', 'true'); }
+      notice.remove();
+      document.dispatchEvent(new CustomEvent('cf:consent'));
+      startEversportsWidget(widgetEl);
+    }
+
+    notice.querySelector('button').addEventListener('click', activate);
+
+    document.addEventListener('cf:consent', function onGrant() {
+      document.removeEventListener('cf:consent', onGrant);
+      if (notice.parentNode) { notice.remove(); startEversportsWidget(widgetEl); }
+    });
   });
 })();

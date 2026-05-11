@@ -21,28 +21,51 @@ Statisches Multi-Page-Setup. Kein Build-Step, kein npm.
 | `videos.html` | Vanilla HTML | Trainings-Videos im Grid (autoplay, muted, loop) + Klick-Overlay mit scrollbarer Beschreibung direkt auf der Kachel |
 | `faq.html`, `impressum.html`, `datenschutz.html`, `agb.html` | Vanilla HTML | Inhalts- und Rechtsseiten |
 | `css/site.css` | gemeinsames CSS für alle Seiten (inkl. `index.html`) | Design-System, Layout, Subpage-Styles |
-| `js/chrome.js` | gemeinsames JS für alle **statischen** Subpages | Nav, Mobile-Menu, Newsletter-Popup |
+| `js/chrome.js` | gemeinsames JS für alle **statischen** Subpages | Nav, Mobile-Menu, Newsletter-Popup, Eversports-Widget (consent-gated) |
+| `js/consent.js` | gemeinsames JS, **auf jeder Seite vor `chrome.js`** | DSGVO-Cookie-Banner, lädt reCAPTCHA dynamisch, gibt `cf:consent` Event frei |
 | `data/newsletter.html` | per `fetch` geladenes Popup-Markup | wird auf allen Seiten dynamisch eingebunden |
+| `mail.php` | PHP 8.x | Kontaktformular-Endpoint mit reCAPTCHA-v3-Verify, Honeypot, JSON-Response |
+| `config.php` | PHP, **nicht** im Repo (`.gitignore`) | Secrets: `RECAPTCHA_SECRET`, `MAIL_TO`. Liegt nur auf dem Server, via `.htaccess` vor HTTP-Zugriff geschützt |
+| `config.sample.php` | PHP-Template | Vorlage ohne echte Werte — als Basis für die echte `config.php` auf dem Server |
+| `.htaccess` | Apache | HTTPS-Redirect, Security-Headers (HSTS, X-Frame-Options, etc.), Blockt `config.php` und sensible Endungen |
+| `robots.txt` | Plain Text | Allow/Disallow-Regeln für Crawler · Sitemap-Verweis |
+| `sitemap.xml` | XML | Sitemap mit den **drei indexierten** Seiten (Startseite, Buchung, Ausbildung) inkl. Image-Sitemap |
 
 ```
 index.html             ← React-App
-buchung*.html          ← statisch, nutzen chrome.js
-ausbildung.html        ← statisch, nutzen chrome.js (Landingpage mit Testimonial-Karussell)
-galerie.html           ← statisch, nutzen chrome.js + eigene Lightbox (Inline-Script)
-videos.html            ← statisch, nutzen chrome.js + Inline-Toggle für Bio-Overlay (KEIN TON)
-faq.html               ← statisch, nutzen chrome.js
-impressum.html         ← statisch, nutzen chrome.js
-datenschutz.html       ← statisch, nutzen chrome.js
-agb.html               ← statisch, nutzen chrome.js
+buchung*.html          ← statisch, nutzen chrome.js + consent.js
+ausbildung.html        ← statisch, nutzen chrome.js + consent.js (Landingpage)
+galerie.html           ← statisch, nutzen chrome.js + consent.js + eigene Lightbox
+videos.html            ← statisch, nutzen chrome.js + consent.js + Inline-Toggle für Bio (KEIN TON)
+faq.html               ← statisch, nutzen chrome.js + consent.js
+impressum.html         ← statisch, nutzen chrome.js + consent.js
+datenschutz.html       ← statisch, nutzen chrome.js + consent.js
+agb.html               ← statisch, nutzen chrome.js + consent.js
 css/site.css           ← gemeinsames Stylesheet (Pflicht für alle Seiten)
-js/chrome.js           ← gemeinsame Nav-/Popup-Logik (Pflicht für statische Seiten)
+js/chrome.js           ← Nav, Mobile-Menu, Newsletter-Popup, Eversports-Widget
+js/consent.js          ← Cookie-Banner, reCAPTCHA-Loader, Privacy-Trigger
 data/newsletter.html   ← Newsletter-Popup-Inhalt (per fetch)
-font/                  ← Stacion OTF (regular, light, italic, light-italic)
+mail.php               ← Kontaktformular-Endpoint (reCAPTCHA + Honeypot)
+config.php             ← Secrets (NUR auf dem Server!)
+config.sample.php      ← Template ohne echte Werte
+.htaccess              ← HTTPS, Security-Headers, Datei-Blocker
+robots.txt             ← Crawler-Regeln
+sitemap.xml            ← Sitemap der 3 SEO-Seiten
+font/                  ← Stacion OTF + DM Sans WOFF2 (lokal, kein Google-Fonts-CDN mehr)
 media/                 ← Bilder & Logos
 claude design/         ← kanonische Design-System-Quelle (README.md, colors_and_type.css)
 ```
 
 `css/styles.css`, `js/main.js`, `index_old.html`, `index_v1.html`, `index_v2.html`, `index_v3.html` sind **alte Stände** — nicht aktiv, nicht editieren.
+
+### Hosting
+
+- **Provider:** udmedia.de (Shared Hosting, PHP 8.x)
+- **Webroot Produktion:** `/html/staging/` (nach Go-Live)
+- **WordPress-Altbestand:** `/html/wordpress/` (wird nach Go-Live archiviert)
+- **Go-Live-Schalter:** `startverzeichnis` der Domain im udmedia-Panel von `/wordpress` auf `/staging` ändern — 1 Klick, sofort wirksam, jederzeit rückgängig.
+- **FTP:** SFTP auf Port 33, Zugangsdaten im udmedia-Panel.
+- **E-Mail-Konto:** `info@core-form.de` existiert auf demselben Server (von Eva genutzt); `noreply@core-form.de` wird als technische Absenderadresse verwendet — muss kein echtes Postfach sein, aber **muss zur Domain core-form.de gehören** (sonst SPF-Fehler und `mail()` schlägt fehl).
 
 ---
 
@@ -72,7 +95,7 @@ Vollständige Spezifikation: `claude design/README.md` und `claude design/colors
 ### Typografie
 
 - **Stacion** (lokal, OTF) — Headlines (H1, H2, H3, Preiszahlen). Light-Italic (300 italic) für Emphase-Wörter in Headlines.
-- **DM Sans** (Google Fonts) — Body, Nav, Labels, Buttons.
+- **DM Sans** (**lokal**, WOFF2 in `font/dm-sans-v17-latin_latin-ext-*.woff2`) — Body, Nav, Labels, Buttons. **Kein** Google-Fonts-CDN mehr (DSGVO + Performance). `@font-face`-Deklarationen für die Schnitte 300, 300i, 400, 400i, 500, 600, 700 stehen am Anfang von `css/site.css`.
 - Nav-Links: 12 px, `font-weight:500`, `letter-spacing:.08em`, uppercase.
 - Eyebrows/Labels: 11 px, `font-weight:600`, `letter-spacing:.15em`, uppercase, Himbeere.
 - H1 Subpage-Hero: `clamp(40px, 6vw, 72px)`, Stacion light, `letter-spacing:-.02em`.
@@ -256,8 +279,11 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Standard: noindex für alle Subpages. Nur Startseite, ausbildung.html und buchung.html bekommen "index, follow". -->
+<meta name="robots" content="noindex, follow">
 <title>SEITEN-TITEL — core:form</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="icon" type="image/jpeg" href="media/IMG-20251021-WA0011.jpg">
+<link rel="apple-touch-icon" href="media/IMG-20251021-WA0011.jpg">
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
@@ -348,6 +374,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
         <a href="datenschutz.html">Datenschutz</a>
         <a href="agb.html">AGB</a>
         <a href="faq.html">FAQ</a>
+        <a href="#" data-privacy-trigger>Privacy</a>
       </div>
     </div>
   </div>
@@ -358,6 +385,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
     el.textContent = new Date().getFullYear();
   });
 </script>
+<script src="js/consent.js"></script>
 <script src="js/chrome.js"></script>
 </body>
 </html>
@@ -394,8 +422,9 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 - Mobile-Menu-`<nav id="mobile-menu">` **außerhalb** des Headers platzieren.
 - Newsletter-Popup-Markup (`backdrop` + `aside.newsletter-pop`) auf jeder Seite einfügen — `chrome.js` lädt den Inhalt aus `data/newsletter.html` per `fetch`.
 - Footer-Logo **immer** `RZ_Logo_CoreForm_Gudula_weiss.png`.
-- Footer-Links genau in der Reihenfolge: Impressum · Datenschutz · AGB · FAQ.
-- `<script src="js/chrome.js"></script>` als letztes Script vor `</body>`.
+- Footer-Links genau in der Reihenfolge: Impressum · Datenschutz · AGB · FAQ · **Privacy** (Privacy-Link triggert via `data-privacy-trigger` den Cookie-Banner — siehe Cookie-/Consent-Sektion).
+- **Script-Reihenfolge am Ende von `<body>`:** zuerst `<script src="js/consent.js">`, dann `<script src="js/chrome.js">`. consent.js muss zuerst laufen, damit `window.cfConsent` steht, bevor chrome.js die Eversports-Widgets initialisiert.
+- **Robots-Meta:** Standardmäßig `noindex, follow` für jede neue Subpage. Nur `index.html`, `ausbildung.html` und `buchung.html` bekommen `index, follow` plus den vollen SEO-Header (siehe SEO-Sektion).
 
 **Sprache & Inhalt:**
 - Deutsch, „du", keine Ausrufezeichen, keine Emojis.
@@ -426,11 +455,14 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
         <p>Kontextualisierender Lead.</p>
       </div>
       <div data-eversports-widget-id="WIDGET-UUID-HIER"></div>
-      <script type="module" src="https://widget-static.eversports.io/loader.js" async defer></script>
     </div>
   </section>
   ```
-- **Lade-Platzhalter (automatisch via `chrome.js`):** Jedes Element mit `[data-eversports-widget-id]` wird beim DOM-Ready automatisch in ein `.booking-widget__embed-wrap` mit einer Overlay-`.ev-placeholder`-Box gepackt („Buchungstool wird geladen …"). Sobald das Widget Inhalt rendert (Polling alle 400 ms), wird der Platzhalter ausgeblendet. Bleibt nach **8 s** Inhalt aus, klappt der Hinweis auf „Seite neu laden" mit Himbeere-Button, der `location.reload()` auslöst. Markup im HTML wird dafür **nicht** verändert — das passiert nur in `chrome.js`. Funktioniert auf allen Buchungsseiten ohne weitere Schritte.
+- **WICHTIG:** **Kein** statischer `<script src="…eversports.io/loader.js">`-Tag mehr im HTML — `chrome.js` injiziert das Script erst **nach** Consent. Sonst lädt das Widget vor Cookie-Akzeptanz und das ist DSGVO-widrig.
+- **Lade-Platzhalter (automatisch via `chrome.js`):** Jedes Element mit `[data-eversports-widget-id]` wird beim DOM-Ready behandelt:
+  - **Mit Consent (`localStorage.cf_consent === 'accepted'`):** `chrome.js` injiziert den Eversports-Loader, packt das Widget in ein `.booking-widget__embed-wrap` mit `.ev-placeholder`-Overlay („Buchungstool wird geladen …"). Pollt alle 400 ms; sobald das Widget Inhalt rendert, wird der Platzhalter ausgeblendet. Bleibt nach 8 s Inhalt aus → „Seite neu laden"-Button.
+  - **Ohne Consent:** Statt Widget erscheint eine `.consent-notice`-Box (creme-farbener Block mit Text + „Externe Dienste akzeptieren"-Button). Ein Klick dort gibt Consent frei → Banner schließt → Widget wird geladen.
+- Markup im HTML wird dafür **nicht** verändert — die Consent-Logik passiert komplett in `chrome.js` + `js/consent.js`.
 
 ### 5. Cross-Page-Anker-Links
 
@@ -578,6 +610,162 @@ Tile-Markup (pro Kachel identisch, nur Quelle, Titel und Bio-Inhalt ändern):
 ```
 
 Beschreibungstexte stehen direkt im HTML — keine JS-Datenstruktur mehr nötig (im Gegensatz zu früheren Modal-Versionen). Inline-Script unten in `videos.html` ist nur Toggle-Logik (~30 Zeilen).
+
+---
+
+## Kontaktformular & Mail-Versand
+
+Das Kontaktformular auf der Startseite postet als `multipart/form-data` an `mail.php` und erwartet eine JSON-Antwort `{ ok: boolean, error?: string }`.
+
+### Bestandteile
+
+| Datei | Zweck |
+|---|---|
+| `index.html` (React) | Formular + clientseitige Validierung + reCAPTCHA-Token holen + POST an mail.php |
+| `mail.php` | Empfängt POST, validiert reCAPTCHA, sendet Mail per PHP `mail()` |
+| `config.php` (Server) | Hält die Secrets — **nicht** im Repo |
+| `config.sample.php` | Template ohne echte Werte (gehört ins Repo) |
+| `.htaccess` | Schützt `config.php` vor HTTP-Zugriff |
+
+### Spam-Schutz
+
+1. **reCAPTCHA v3** (Site Key `6LdzUv4rAAAAALCbTO8PTcUkjt89G1DhYE3RIF8l`, Score-Threshold `>= 0.5`). Wird **dynamisch über `consent.js`** geladen — nicht im `<head>`, sondern erst nach Cookie-Consent.
+2. **Honeypot:** Ein verstecktes `<input name="website">` (off-screen positioniert). Wenn ein Bot dort etwas einträgt, antwortet der Server mit `{ok:true}` ohne Mail zu senden.
+
+### Stolperfallen mit `mail()` auf udmedia (PHP 8.x)
+
+Aus der ersten Inbetriebnahme — diese Punkte **nicht erneut anfassen**, sie sind Erfahrungswerte:
+
+1. **Doppelpunkte in Display Names sind PHP-8-tödlich.** `From: core:form <...>` (unquotiert) lässt `mail()` lautlos `false` zurückgeben. Lösung: Display Name in Anführungszeichen → `From: "core:form" <noreply@core-form.de>\r\n`.
+2. **Absender-Domain muss zum Server gehören.** Externe Adressen (GMX, Gmail) als `From` → SPF-Fail → `mail()` schlägt fehl. Daher fix `noreply@core-form.de` als Absender; `Reply-To` trägt die Adresse des Kontaktierenden.
+3. **5. Parameter (`-f sender`) ist nicht überall erlaubt.** Auf udmedia geht es ohne — wieder einfügen nur wenn `mail()` aus anderen Gründen scheitert.
+4. **`mail()` verschluckt Fehler.** Wenn etwas nicht klappt: `error_get_last()` ist meist `null`. Zur Diagnose: `$sentSimple = mail($to, 'test', 'test', 'From: noreply@core-form.de');` ohne Headers/Subject-Encoding nebenher laufen lassen und vergleichen — wenn der einfache geht und der echte nicht, sind die Headers schuld.
+5. **`ob_start()` + Custom Error Handler oben in `mail.php`** sind Pflicht. PHP-Warnings würden sonst HTML in den JSON-Stream schreiben und die Response zerschießen (`SyntaxError: Failed to parse JSON` im Browser).
+6. **`config.php` Upload-Glitch:** FileZilla hat den Dateinamen mal als `config..php` (doppelter Punkt) hochgeladen — wenn `file_exists()` `false` zurückgibt, **erst die exakte Dateinamen-Liste über ein Diagnose-Script anschauen**, bevor man andere Ursachen sucht.
+
+### `config.php` (auf dem Server)
+
+```php
+<?php
+define('RECAPTCHA_SECRET', '...');     // Geheimer Server-Key aus Google reCAPTCHA Admin
+define('MAIL_TO',          'info@core-form.de');  // Produktiv-Empfänger
+```
+
+In `.gitignore` eingetragen. `.htaccess` blockt HTTP-Zugriff zusätzlich (`<Files "config.php"> Deny from all`).
+
+### Betreff-Format
+
+Subject wird base64-UTF-8-kodiert, Inhalt: `Kontakt: {Interesse} – {Name}` (oder `Kontakt: {Name}` wenn kein Interesse gewählt wurde). Geändert von „Kontaktanfrage: {Name}" — Eva findet so im Posteingang schneller, worum es geht.
+
+### Erfolgs-/Fehlermeldung
+
+Nach Submit (siehe `index.html`):
+- **Erfolg:** `<p class="form-success">` (kleiner grüner Text, gleiches Styling wie `.form-error` aber in `#2a7a3b`).
+- **Fehler:** `<p class="form-error">` (Himbeere).
+- **Kein Consent:** `<p class="form-consent-note">` mit Inline-Button „Externe Dienste akzeptieren".
+
+Niemals auf den großen Box-Stil mit `border` + `padding:18px` zurückgehen — Eva findet den hässlich.
+
+---
+
+## Cookie-Banner & Consent-Management
+
+DSGVO-konformes Opt-In für externe Dienste. Quelle: `js/consent.js`.
+
+### Welche Dienste sind betroffen
+
+| Dienst | Wo geladen | Was passiert ohne Consent |
+|---|---|---|
+| **reCAPTCHA v3** (Google) | dynamisch über `consent.js` (kein Static-Tag im `<head>` mehr) | Wird nicht geladen. Kontaktformular zeigt `.form-consent-note` mit „Externe Dienste akzeptieren"-Button. Submit ruft `cfConsent.show()` und blockt. |
+| **Eversports-Widget** | dynamisch über `chrome.js` (keinen `<script>`-Tag mehr im HTML hardcoden) | Widget-Container wird durch eine `.consent-notice`-Box ersetzt mit „Externe Dienste akzeptieren"-Button. |
+
+### Wie `consent.js` funktioniert
+
+1. **Auf jeder Seite eingebunden** (vor `chrome.js`).
+2. Schreibt/liest `localStorage.cf_consent` (`'accepted'` | `'declined'` | nicht gesetzt).
+3. Beim DOM-Ready: erzeugt das Banner als unsichtbares `<div id="cookie-banner">` am `<body>`.
+4. Wenn **kein** Consent gesetzt: zeigt Banner nach 700 ms an.
+5. Wenn `'accepted'`: ruft `grantConsent()` → lädt reCAPTCHA dynamisch + dispatcht `document` → `CustomEvent('cf:consent')`.
+6. `[data-privacy-trigger]`-Elemente (Privacy-Link im Footer) öffnen das Banner erneut.
+
+### Öffentliche API (`window.cfConsent`)
+
+```js
+window.cfConsent.get()   // → 'accepted' | 'declined' | null
+window.cfConsent.show()  // Banner einblenden (z. B. vom Privacy-Footer-Link)
+```
+
+### Event
+
+`document.addEventListener('cf:consent', handler)` — feuert genau einmal beim Akzeptieren. `chrome.js` und der React-Form-State hören darauf, um sich on-the-fly umzuschalten.
+
+### CSS-Klassen
+
+| Klasse | Zweck |
+|---|---|
+| `.cookie-banner` | Fixiertes Bottom-Bar (schwarz, weißer Text, Himbeere-CTA) |
+| `.cookie-banner.is-visible` | Schiebt das Banner über `transform:translateY(0)` rein |
+| `.consent-notice` | Creme-farbene Block-Ersatzfläche für gesperrte Widgets |
+| `.form-consent-note` / `.form-consent-btn` | Inline-Hinweis unter dem Kontaktformular |
+
+### reCAPTCHA-Badge-Position
+
+`.grecaptcha-badge` hat `opacity:.5` (Google-ToS-konform sichtbar). Auf Tablet (`@media (max-width:1023px)`) wird die Badge um 72 px hochgesetzt, damit sie die Footer-Links nicht überdeckt.
+
+### Verboten
+
+- Externe Scripts (reCAPTCHA, Eversports, Analytics, Maps, …) **niemals** statisch im `<head>` oder vor dem Consent laden.
+- Banner-Markup nicht in HTML hardcoden — `consent.js` injiziert es dynamisch, damit Layout/Texte zentral änderbar bleiben.
+
+---
+
+## SEO
+
+Nur **drei Seiten** sind indexierungsrelevant. Alles andere bekommt `noindex, follow`.
+
+### Indexierte Seiten
+
+| Datei | Title-Tag (Beispiel) | Strukturierte Daten |
+|---|---|---|
+| `index.html` | `core:form — Pilates & Reformer Studio Essen \| Rüttenscheid & Südviertel` | JSON-LD `Organization` mit beiden Studios als `HealthClub`-Locations (Adressen, Telefon, sameAs auf Insta/FB/YT) + `WebSite` |
+| `ausbildung.html` | `Reformer-Lehrerausbildung 2026 in Essen — core:form` | JSON-LD `Course` mit `provider`, `inLanguage:"de-DE"`, `locationCreated` (Studio Südviertel) |
+| `buchung.html` | `Online buchen — Pilates, Reformer & Barre in Essen \| core:form` | Nur Meta/OG/Twitter — kein eigenes JSON-LD nötig |
+
+Jede dieser Seiten enthält im `<head>`:
+- `<meta name="description">` (140–160 Zeichen)
+- `<meta name="keywords">` (defensiv, niedriger SEO-Effekt heute, schadet aber nicht)
+- `<meta name="robots" content="index, follow, max-image-preview:large">`
+- `<link rel="canonical" href="https://core-form.de/…">` — **immer Produktions-Domain**, nicht Staging
+- Open Graph (`og:type`, `og:locale=de_DE`, `og:title`, `og:description`, `og:url`, `og:image`)
+- Twitter Card (`summary_large_image`)
+
+### Noindex-Seiten (Pflicht für alles andere)
+
+`buchung-ruettenscheid.html`, `buchung-suedviertel.html`, `galerie.html`, `videos.html`, `impressum.html`, `datenschutz.html`, `agb.html`, `faq.html` → alle haben:
+
+```html
+<meta name="robots" content="noindex, follow">
+```
+
+`follow` ist bewusst — wir wollen, dass interne Links auf Authority-Seiten zur Startseite vererbt werden.
+
+### `robots.txt` & `sitemap.xml`
+
+Beide liegen im Webroot (`/html/staging/`).
+
+- `robots.txt` blockiert via `Disallow` zusätzlich `mail.php`, `config.php`, `config.sample.php`, `test.php`, `data/`, `claude%20design/`.
+- `sitemap.xml` listet nur die drei indexierten URLs. Image-Sitemap für Hero (`COREFORM_web_015.jpg`) und Ausbildungs-Bild.
+
+### Nach Go-Live
+
+1. Domain in Google Search Console verifizieren (`https://core-form.de`).
+2. Sitemap einreichen: `https://core-form.de/sitemap.xml`.
+3. Rich-Results-Test laufen lassen: <https://search.google.com/test/rich-results> → JSON-LD verifizieren.
+
+### Eingestellte (technische) Entscheidungen
+
+- **Keine Geo-Koordinaten in JSON-LD.** Google geocodiert die Adresse selbst, exakte Lat/Lon-Werte sind fehleranfällig.
+- **Footer-Links sind absichtlich `noindex`.** Impressum, Datenschutz, AGB, FAQ haben für SEO keinen Wert — sie sind rechtliche Pflichtseiten, keine Landingpages. Galerie & Videos sind Atmosphäre-Seiten, die Google-Bilder-Suche kann die einzelnen Medien trotzdem indexieren (die `<img>`-Tags selbst sind nicht `noindex`).
 
 ---
 

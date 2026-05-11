@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /$
+Allow: /index.html
+Allow: /ausbildung.html
+Allow: /buchung.html
+Allow: /css/
+Allow: /js/
+Allow: /font/
+Allow: /media/
+
+Disallow: /buchung-ruettenscheid.html
+Disallow: /buchung-suedviertel.html
+Disallow: /galerie.html
+Disallow: /videos.html
+Disallow: /impressum.html
+Disallow: /datenschutz.html
+Disallow: /agb.html
+Disallow: /faq.html
+Disallow: /mail.php
+Disallow: /config.php
+Disallow: /config.sample.php
+Disallow: /test.php
+Disallow: /data/
+Disallow: /claude%20design/
+
+Sitemap: https://core-form.de/sitemap.xml

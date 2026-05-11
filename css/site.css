@@ -638,7 +638,51 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 /* reCAPTCHA-Badge: dezenter, aber sichtbar (Google ToS erlaubt das) */
 .grecaptcha-badge { opacity:.5 !important; transition:opacity .25s; }
 .grecaptcha-badge:hover { opacity:1 !important; }
+@media (max-width:1023px) { .grecaptcha-badge { bottom:72px !important; } }
 .form-success { font-size:13px; color:#2a7a3b; text-align:center; margin-top:10px; }
+.form-consent-note { font-size:12px; color:#6b6b6b; text-align:center; margin-top:10px; line-height:1.55; }
+.form-consent-btn {
+  background:none; border:none; padding:0; cursor:pointer;
+  font-size:12px; color:#b20e3b; text-decoration:underline;
+  font-family:inherit;
+}
+
+/* ── COOKIE BANNER ── */
+.cookie-banner {
+  position:fixed; bottom:0; left:0; right:0; z-index:9800;
+  background:#0d0d0d; color:#f6f9f7;
+  padding:20px 0;
+  transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+}
+.cookie-banner.is-visible { transform:translateY(0); }
+.cookie-banner__inner {
+  max-width:1160px; margin:0 auto; padding:0 40px;
+  display:flex; align-items:center; gap:32px;
+}
+.cookie-banner__title {
+  display:block;
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:15px; letter-spacing:-.01em; margin-bottom:4px;
+}
+.cookie-banner__text p { font-size:12px; line-height:1.6; color:#8c8c8c; margin:0; }
+.cookie-banner__text a { color:#b20e3b; text-decoration:underline; }
+.cookie-banner__text { flex:1; }
+.cookie-banner__actions { display:flex; gap:12px; flex-shrink:0; }
+.cookie-banner .btn--outline { border-color:rgba(255,255,255,.35); color:#f6f9f7; }
+.cookie-banner .btn--outline:hover { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.6); }
+@media (max-width:768px) {
+  .cookie-banner__inner { flex-direction:column; align-items:flex-start; padding:0 18px; gap:14px; }
+  .cookie-banner__actions { width:100%; }
+  .cookie-banner__actions .btn { flex:1; text-align:center; }
+}
+
+/* ── CONSENT NOTICE (Eversports / gesperrte Elemente) ── */
+.consent-notice {
+  background:#f2dac2; padding:40px 32px; text-align:center;
+}
+.consent-notice p { font-size:14px; line-height:1.65; color:#2a2a2a; margin-bottom:20px; }
+.consent-notice__btn { display:inline-block; }
 
 /* ── FOOTER ── */
 .footer { background:#0d0d0d; padding:32px 0; }
