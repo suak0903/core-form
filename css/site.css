@@ -293,22 +293,22 @@ a { color:inherit; text-decoration:none; }
 /* ── ABOUT ── */
 .about { background:#f2dac2; padding:96px 0; }
 /* Drei Grid-Items (head, media, text) mit Template-Areas — auf Desktop
-   Image links über die volle Höhe, Headline + Text gestapelt rechts.
-   Auf Mobile (siehe Responsive-Block) wird umgestellt: Headline → Bild
-   → Text, damit die Eyebrow-Headline-Kombi oben über dem Karussell sitzt. */
+   Headline links über dem Bild-Karussell, Text + Bullets stehen rechts
+   über die volle Höhe. Auf Mobile (siehe Responsive-Block) wird umgestellt:
+   Headline → Bild → Text. */
 .about__inner {
   display:grid;
   grid-template-columns:1fr 1fr;
   grid-template-areas:
-    "media head"
+    "head  ."
     "media text";
   grid-template-rows:auto 1fr;
   column-gap:80px; row-gap:0;
   align-items:start;
 }
-.about__media { grid-area:media; align-self:center; }
+.about__media { grid-area:media; align-self:start; margin-top:28px; }
 .about__head  { grid-area:head; }
-.about__text  { grid-area:text; }
+.about__text  { grid-area:text; align-self:start; margin-top:-38px; }
 
 /* ── TEAM-KARUSSELL (im "Über uns"-Abschnitt) ──
    Single-Card-Slideshow mit Cross-Fade. Default zeigt nur das Foto, Hover
@@ -519,8 +519,13 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 
 /* ── PREISE ── */
 .preise { background:#f6f9f7; padding:96px 0; }
-.preise__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start; }
-.preis-card { background:#fff; padding:28px 28px 32px; box-shadow:0 2px 12px rgba(0,0,0,.06); position:relative; }
+.preise__grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:stretch; }
+.preis-card {
+  background:#fff; padding:28px 28px 32px;
+  box-shadow:0 2px 12px rgba(0,0,0,.06); position:relative;
+  display:flex; flex-direction:column;
+}
+.preis-card > .btn { margin-top:auto; }
 .preis-card--featured { background:#59071d; }
 .preis-card__badge {
   position:absolute; top:-12px; left:50%; transform:translateX(-50%);
@@ -565,17 +570,16 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 .kontakt__studios { display:flex; flex-direction:column; gap:0; margin-bottom:28px; }
 .kontakt__studio {
   padding:20px 0; border-bottom:1px solid rgba(0,0,0,.08);
-  display:flex; align-items:flex-start; gap:18px;
+  display:flex; flex-direction:column; align-items:flex-start; gap:12px;
 }
 .kontakt__studio-logo {
-  flex-shrink:0;
-  width:64px; height:auto;
+  height:34px; width:auto; display:block;
   object-fit:contain; object-position:left center;
-  margin-top:2px;
+  /* Logo-PNG hat ~9,5% transparente Fläche links — gleicht aus, damit die sichtbare „c" mit dem Text flush sitzt. */
+  margin-left:-9px;
 }
-.kontakt__studio-body { flex:1; min-width:0; }
-.kontakt__studio strong { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#b20e3b; display:block; margin-bottom:6px; }
-.kontakt__studio--sued strong { color:#5a8a62; }
+.kontakt__studio-body { width:100%; min-width:0; }
+.kontakt__studio strong { font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#0d0d0d; display:block; margin-bottom:6px; }
 .kontakt__studio p { font-size:14px; line-height:1.6; color:#2a2a2a; }
 .kontakt__studio-kurse { font-size:12px; color:#6b6b6b; margin-top:4px; }
 .kontakt__reach { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
@@ -593,6 +597,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 .kontakt__social a:hover { color:#b20e3b; }
 
 /* form */
+.kontakt__form { padding-top:32px; }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
 .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
 .form-group label { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:#6b6b6b; }
@@ -609,8 +614,14 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
   border-color:#b20e3b; box-shadow:0 0 0 3px rgba(178,14,59,.18);
   outline:none;
 }
-.form-group input:invalid:not(:placeholder-shown),
-.form-group select:invalid:not([data-touched="false"]) {
+.form-group input::placeholder,
+.form-group textarea::placeholder { color:#9a9a9a; opacity:1; }
+.form-group select:required:invalid { color:#9a9a9a; }
+.form-group select option { color:#0d0d0d; }
+.form-group select option[value=""] { color:#9a9a9a; }
+.form-group input:user-invalid,
+.form-group select:user-invalid,
+.form-group textarea:user-invalid {
   border-color:rgba(178,14,59,.55);
 }
 .form-group textarea { resize:vertical; min-height:96px; }
@@ -767,7 +778,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 .newsletter-pop__backdrop.open { opacity:1; pointer-events:auto; }
 .newsletter-pop__head {
   display:flex; align-items:center; justify-content:space-between;
-  padding:22px 28px; border-bottom:1px solid rgba(0,0,0,.07);
+  padding:22px 28px; background:#f2dac2;
   flex-shrink:0;
 }
 .newsletter-pop__head .label { margin-bottom:0; }
@@ -1122,6 +1133,32 @@ body.popup-open { overflow:hidden; }
   background:rgba(0,0,0,.06); padding:6px 10px;
   font-family:Menlo,Consolas,monospace; font-size:11px; color:#3a3a3a;
 }
+
+/* Eversports loading placeholder — sichtbar bis das Widget rendert,
+   bietet nach 8 s Timeout einen "Seite neu laden"-Button an. */
+.booking-widget__embed-wrap { position:relative; min-height:520px; }
+.ev-placeholder {
+  position:absolute; inset:0; z-index:1;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:48px 24px;
+  background:#fff;
+  border:1px dashed rgba(178,14,59,.35);
+}
+.ev-placeholder strong {
+  display:block; font-family:'Stacion',Georgia,serif;
+  font-weight:300; font-size:22px; color:#0d0d0d; margin-bottom:12px;
+}
+.ev-placeholder p {
+  font-size:14px; color:#6b6b6b; line-height:1.6;
+  max-width:420px; margin:0 auto;
+}
+.ev-placeholder__stuck,
+.ev-placeholder__reload { display:none; }
+.ev-placeholder.is-stuck .ev-placeholder__loading { display:none; }
+.ev-placeholder.is-stuck .ev-placeholder__stuck { display:block; }
+.ev-placeholder.is-stuck .ev-placeholder__reload { display:inline-block; margin-top:20px; }
+.ev-placeholder.is-hidden { display:none; }
 
 /* FAQ accordion */
 .faq-list { list-style:none; padding:0; margin:0; }
@@ -1764,21 +1801,24 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
 }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  .container { padding:0 24px; }
-
-  /* Nav */
+/* Nav-Breakpoint: Tablets bekommen das Mobile-Menü, damit die Links nicht
+   gedrungen wirken. Logo behält volle Größe — erst auf Phone schrumpfen. */
+@media (max-width: 1023px) {
   .nav__links { display:none; }
-  /* Keep just the booking CTA visible at top on mobile; hide News */
+  .nav .nav__cta-group { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-left:auto; }
+  .nav.menu-open .nav__cta-group { visibility:hidden; pointer-events:none; }
+  .nav__hamburger { display:flex; margin-left:8px; align-items:flex-end; padding-right:0; }
+}
+
+@media (max-width: 768px) {
   .container { padding:0 18px; }
+
+  /* Nav — engerer Mobile-Variante (Container-Padding, Logo & CTA-Breite) */
   .nav__logo img { height:30px; width:90px; margin-left:-9px; }
-  .nav .nav__cta-group { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-left:auto; }
+  .nav .nav__cta-group { gap:5px; }
   .nav .nav__cta-group .nav__cta {
     padding:8px 10px; font-size:10px; letter-spacing:.04em;
   }
-  /* Auf mobil bleibt der Buchen+News-Block sichtbar — beim Menü offen wird er verborgen, behält aber seinen Platz */
-  .nav.menu-open .nav__cta-group { visibility:hidden; pointer-events:none; }
-  .nav__hamburger { display:flex; margin-left:4px; align-items:flex-end; padding-right:0; }
 
   /* Hero */
   .hero__headline { font-size:clamp(40px,12vw,64px); }
@@ -1815,6 +1855,8 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   }
   .about__head .section-head,
   .about__head { margin-bottom:0; }
+  .about__media { margin-top:0; }
+  .about__text { margin-top:0; }
   .team-stage { aspect-ratio:3/4; }
   .team-slide__caption { left:22px; right:22px; bottom:54px; }
   .team-slide__bio { font-size:13px; }
@@ -1862,33 +1904,23 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   .price-modal__head { padding:24px 24px 20px; }
   .price-modal__body { padding:24px; }
 
-  /* Newsletter popup — fullscreen + frosted on mobile (covers nav too) */
+  /* Newsletter popup — fullscreen auf Mobile, Header creme, Body weiß */
   .newsletter-pop {
     top:0; max-width:none; width:100%;
     box-shadow:none;
-    background:rgba(242,218,194,.72);
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
+    background:#fff;
     transform:translateX(100%);
     z-index:130;
   }
   .newsletter-pop.open { transform:none; }
   .newsletter-pop__backdrop { display:none; }
   .newsletter-pop__head {
-    background:transparent;
+    background:#f2dac2;
     padding:22px 28px;
-    border-bottom:1px solid rgba(89,7,29,.18);
   }
   .newsletter-pop__body {
-    background:transparent;
-    color:#3a2020;
+    background:#fff;
     padding:28px;
-  }
-  .newsletter-pop__body p { color:#3a2020; }
-  .newsletter-pop__body ul li { border-bottom-color:rgba(89,7,29,.15); }
-  .newsletter-pop__form input {
-    background:rgba(255,255,255,.7);
-    border-color:rgba(89,7,29,.25);
   }
 
   /* Subpage hero */
@@ -1906,6 +1938,8 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   .format-card { flex:0 0 80%; }
   .booking-widget { padding:48px 0 64px; }
   .booking-widget__embed { min-height:440px; padding:36px 18px; }
+  .booking-widget__embed-wrap { min-height:440px; }
+  .ev-placeholder { padding:36px 18px; }
 
   /* Galerie */
   .galerie { padding:0 0 56px; }

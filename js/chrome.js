@@ -136,4 +136,40 @@
     if (popup && popup.classList.contains('open')) closeNewsletter();
     else if (mobileMenu && mobileMenu.classList.contains('open')) setMobileOpen(false);
   });
+
+  // Eversports-Platzhalter: zeigt einen Lade-Hinweis, solange das externe
+  // Widget noch nicht gerendert hat. Bleibt das Widget nach 8 s leer, wird
+  // ein "Seite neu laden"-Button eingeblendet.
+  document.querySelectorAll('[data-eversports-widget-id]').forEach(function (widgetEl) {
+    const wrap = document.createElement('div');
+    wrap.className = 'booking-widget__embed-wrap';
+    widgetEl.parentNode.insertBefore(wrap, widgetEl);
+
+    const placeholder = document.createElement('div');
+    placeholder.className = 'ev-placeholder';
+    placeholder.innerHTML =
+      '<strong>Buchungstool wird geladen …</strong>' +
+      '<p class="ev-placeholder__loading">Einen Moment bitte — das Tool wird von unserem Buchungspartner geladen.</p>' +
+      '<p class="ev-placeholder__stuck">Das Buchungstool ist noch nicht erschienen. Bitte lade die Seite neu — meist hilft das.</p>' +
+      '<button type="button" class="btn btn--accent ev-placeholder__reload">Seite neu laden</button>';
+    wrap.appendChild(placeholder);
+    wrap.appendChild(widgetEl);
+
+    const reloadBtn = placeholder.querySelector('.ev-placeholder__reload');
+    reloadBtn.addEventListener('click', function () { window.location.reload(); });
+
+    let stuckTimer = setTimeout(function () {
+      if (!placeholder.classList.contains('is-hidden')) {
+        placeholder.classList.add('is-stuck');
+      }
+    }, 8000);
+
+    const pollId = setInterval(function () {
+      if (widgetEl.children.length > 0) {
+        placeholder.classList.add('is-hidden');
+        clearInterval(pollId);
+        clearTimeout(stuckTimer);
+      }
+    }, 400);
+  });
 })();
