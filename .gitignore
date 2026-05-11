@@ -5,6 +5,9 @@
 # Font-Archiv (OTF-Dateien bereits einzeln vorhanden)
 font/*.zip
 
+# Secrets — niemals ins Repository!
+config.php
+
 # System
 .DS_Store
 Thumbs.db

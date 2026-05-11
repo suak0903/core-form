@@ -1,0 +1,31 @@
+# core:form — Apache-Konfiguration
+# Gilt für das Webroot-Verzeichnis (/html/staging/ bzw. nach Go-Live /html/staging/)
+
+# HTTPS erzwingen
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Security Headers
+<IfModule mod_headers.c>
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# config.php sperren, falls sie versehentlich im Webroot landet
+<Files "config.php">
+  Order allow,deny
+  Deny from all
+</Files>
+
+# Sensible Dateitypen sperren
+<FilesMatch "\.(htpasswd|ini|log|sh|sql|bak|env|sample\.php)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Verzeichnis-Listing deaktivieren
+Options -Indexes

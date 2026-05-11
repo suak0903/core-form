@@ -633,15 +633,12 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 }
 .form-group textarea { resize:vertical; min-height:96px; }
 .form-note { font-size:12px; color:#6b6b6b; text-align:center; margin-top:10px; }
-.form-success {
-  border:1px solid #aed9b3; background:#f6fbf7;
-  padding:18px 20px; margin-top:8px;
-  font-size:14px; line-height:1.55; color:#0d0d0d;
-}
-.form-success strong {
-  display:block; font-family:'Stacion',Georgia,serif;
-  font-weight:300; font-size:20px; margin-bottom:4px; color:#0d0d0d;
-}
+.form-error { font-size:13px; color:#b20e3b; text-align:center; margin-top:10px; }
+
+/* reCAPTCHA-Badge: dezenter, aber sichtbar (Google ToS erlaubt das) */
+.grecaptcha-badge { opacity:.5 !important; transition:opacity .25s; }
+.grecaptcha-badge:hover { opacity:1 !important; }
+.form-success { font-size:13px; color:#2a7a3b; text-align:center; margin-top:10px; }
 
 /* ── FOOTER ── */
 .footer { background:#0d0d0d; padding:32px 0; }
