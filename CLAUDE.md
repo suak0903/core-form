@@ -160,6 +160,8 @@ Jedes Studio hat eine eigene Sub-Farbpalette, die sowohl im Logo wie auch im Hin
 
 Die generische `.booking-widget`-Klasse bleibt für die übergeordnete `buchung.html` reserviert (zeigt beide Studios + Workshops/Ausbildung).
 
+**Ausnahme — Kontaktblock (Startseite):** Im `.kontakt__studios`-Block stehen die Studio-Logos **über** dem Adresstext (linksbündig, Logo `height:34px`, `margin-left:-9px` zum Ausgleich der transparenten PNG-Fläche), und der Studio-Name (`STUDIO RÜTTENSCHEID` / `STUDIO SÜDVIERTEL`) ist **plain `#0d0d0d`** — keine himbeere/salbei-Hervorhebung. Das Logo trägt die Studio-Identität, der Text muss das nicht doppeln.
+
 ### Favicon
 
 Auf jeder Seite im `<head>` direkt nach `<title>` einbinden:
@@ -197,13 +199,20 @@ Die Datei `media/IMG-20251021-WA0011.jpg` ist die kanonische Favicon-Quelle — 
 - Logo-Image-Tausch wird auf der Startseite via React-State gesteuert, auf Subpages via `chrome.js` (anhand `data-logo-dark` / `data-logo-light` Attributen).
 - Aktive Sektion auf der Startseite per `IntersectionObserver` → Himbeere-Unterstrich (`::after`).
 
-### Mobile-Nav (< 768 px)
+### Mobile-Nav (≤ 1023 px — Tablet & Phone)
 
-- Nav-Links und CTA-Group werden ausgeblendet, Hamburger-Icon erscheint.
+- **Breakpoint:** Hamburger-Modus greift ab `max-width:1023px` (nicht 768!). Grund: Auf Tablets wirkten die sieben Desktop-Nav-Links zu gedrungen, und das Logo verhielt sich relativ zur Container-Breite zu groß. Tablets bekommen daher dieselbe Mobile-Nav wie Phones.
+- Nav-Links werden ausgeblendet, Hamburger-Icon erscheint, CTA-Group (buchen + News) bleibt sichtbar.
 - Hamburger: 3 Balken, Himbeere `#b20e3b` auf hellem Hintergrund, Weiß auf dunklem Hintergrund.
 - **Wichtig:** Das Mobile-Menü-`<nav id="mobile-menu">` ist ein **Geschwister außerhalb des `<header>`** — nicht darin verschachtelt. Grund: `backdrop-filter` auf `.nav.scrolled`/`.nav.solid` erzeugt einen Stacking-Context, der `position:fixed` von Kindelementen bricht.
 - Menü-Overlay: `rgba(13,13,13,.67)` + `blur(20px)` (Frosted Glass).
 - Bei offenem Menü: Nav bekommt `.menu-open` Klasse + Logo wechselt auf weiß-pink + CTA-Group wird visuell verborgen.
+
+### Phone-spezifische Verfeinerungen (≤ 768 px)
+
+- Logo schrumpft auf `30px × 90px` (statt Desktop/Tablet `36px × 108px`).
+- Container-Padding reduziert auf `0 18px` (statt `0 40px`).
+- CTA-Buttons enger (`padding:8px 10px`, kleinere Letter-Spacing) — beide passen so neben das Hamburger-Icon.
 
 ---
 
@@ -216,9 +225,20 @@ mobileOpen     // boolean — mobiles Menü auf/zu
 popupOpen      // boolean — Newsletter-Popup auf/zu
 newsletterHtml // string  — per fetch geladener Popup-Inhalt
 submitted      // boolean — Kontaktformular abgesendet
+teamIndex      // number  — aktive Person im Team-Karussell
+teamStage      // 0|1|2   — Overlay-Stufe (0 = nur Bild, 1 = Name+Rolle, 2 = Name+Rolle+Bio)
+priceModalKey  // string|null — geöffnetes Preis-Modal ('matte'|'reformer'|'personal')
 ```
 
 `scroll(id)` schließt das mobile Menü automatisch.
+
+### Team-Karussell — Bedienung & Stage-Verhalten
+
+Die `teamStage`-Stufe zykelt **per Klick auf die aktive Karte** durch `0 → 1 → 2 → 0`. **Navigation (links/rechts-Pfeile, Pfeiltasten ←/→, Swipe, Dot-Pagination) ändert nur `teamIndex` und behält die aktuelle Stufe** — d. h. wenn man bei Stufe 1 (Name) ist und nach rechts navigiert, sieht man die nächste Person ebenfalls in Stufe 1. Geschlossen wird das Overlay nur durch Outside-Click oder Escape (→ Stufe 0). Auto-Rotate pausiert, sobald `teamStage > 0`.
+
+### Performance — Pre-Render-Skelett & Preloads
+
+Im `<head>` von `index.html` stehen `preconnect`-Hints auf `fonts.googleapis.com`, `fonts.gstatic.com` und `unpkg.com`, sowie `preload`-Tags für das Hero-Bild und das Nav-Logo (weiß-pink-Variante). Das `<div id="root">` enthält ein **statisches Hero-Skelett** mit einem minimalen Nav-Header (nur Logo) und dem Hero-Bild — dieses Skelett wird sichtbar, bevor React + Babel-Standalone das JSX transpiliert haben, und nahtlos durch die React-App ersetzt. **Beim Anpassen des Hero-Bildes oder Logos diese Stellen im Skelett mitziehen**, sonst zeigt der erste Frame veralteten Content. Mittelfristig wäre ein Build-Step oder Migration auf Vanilla-JS (wie Subpages) der nachhaltige Performance-Pfad — Babel-Standalone ist der eigentliche Bremsklotz.
 
 ---
 
@@ -410,6 +430,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
     </div>
   </section>
   ```
+- **Lade-Platzhalter (automatisch via `chrome.js`):** Jedes Element mit `[data-eversports-widget-id]` wird beim DOM-Ready automatisch in ein `.booking-widget__embed-wrap` mit einer Overlay-`.ev-placeholder`-Box gepackt („Buchungstool wird geladen …"). Sobald das Widget Inhalt rendert (Polling alle 400 ms), wird der Platzhalter ausgeblendet. Bleibt nach **8 s** Inhalt aus, klappt der Hinweis auf „Seite neu laden" mit Himbeere-Button, der `location.reload()` auslöst. Markup im HTML wird dafür **nicht** verändert — das passiert nur in `chrome.js`. Funktioniert auf allen Buchungsseiten ohne weitere Schritte.
 
 ### 5. Cross-Page-Anker-Links
 
