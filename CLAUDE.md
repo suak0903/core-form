@@ -627,10 +627,18 @@ Das Kontaktformular auf der Startseite postet als `multipart/form-data` an `mail
 | `config.sample.php` | Template ohne echte Werte (gehört ins Repo) |
 | `.htaccess` | Schützt `config.php` vor HTTP-Zugriff |
 
-### Spam-Schutz
+### Spam-/Abuse-Schutz (gestaffelt in mail.php)
 
-1. **reCAPTCHA v3** (Site Key `6LdzUv4rAAAAALCbTO8PTcUkjt89G1DhYE3RIF8l`, Score-Threshold `>= 0.5`). Wird **dynamisch über `consent.js`** geladen — nicht im `<head>`, sondern erst nach Cookie-Consent.
-2. **Honeypot:** Ein verstecktes `<input name="website">` (off-screen positioniert). Wenn ein Bot dort etwas einträgt, antwortet der Server mit `{ok:true}` ohne Mail zu senden.
+In dieser Reihenfolge greift jede Stufe — Request wird verworfen, sobald eine fehlschlägt:
+
+1. **Method-Check** — nur POST erlaubt (sonst HTTP 405).
+2. **Origin-/Referer-Check** — `HTTP_ORIGIN` (oder `HTTP_REFERER`) muss `HTTP_HOST` enthalten. Wenn Origin und Referer beide leer sind (manche Privacy-Modi), lassen wir durch — reCAPTCHA fängt den Rest. Fehlschlag → HTTP 403.
+3. **Honeypot** — verstecktes `<input name="website">` im Formular. Falls befüllt: stiller Erfolg (`{ok:true}`), aber keine Mail gesendet. Bots merken den Trick nicht.
+4. **Rate-Limit** — max. 5 Submissions pro IP pro 15 Minuten, file-based in `.rate-limit.json` (per `.htaccess` vor HTTP-Zugriff geschützt). Einträge älter als 24 h werden bei jeder Prüfung verworfen. Fehlschlag → HTTP 429.
+5. **reCAPTCHA v3** (Site Key `6LdzUv4rAAAAALCbTO8PTcUkjt89G1DhYE3RIF8l`, Score-Threshold `>= 0.5`, **Action muss `'contact'` sein**). Wird **dynamisch über `consent.js`** geladen — nicht im `<head>`, sondern erst nach Cookie-Consent. Fehlschlag → HTTP 400.
+6. **Längen-Limits** (Schutz vor Riesen-Payloads): Name 100, Email 200, Telefon 50, Interesse 100, Nachricht 5000 Zeichen (jeweils `mb_strlen`). Fehlschlag → HTTP 400.
+7. **Pflichtfeld-/Format-Check** — Name nicht leer, Email gültig, Nachricht nicht leer. Fehlschlag → HTTP 400.
+8. **Header-Injection-Schutz** — Reply-To-Email wird vor dem Einsetzen in den Header durch `str_replace(["\r","\n"], '', $email)` von Newlines befreit. So kann niemand über das Email-Feld weitere SMTP-Header injizieren.
 
 ### Stolperfallen mit `mail()` auf udmedia (PHP 8.x)
 
@@ -739,6 +747,28 @@ Jede dieser Seiten enthält im `<head>`:
 - Open Graph (`og:type`, `og:locale=de_DE`, `og:title`, `og:description`, `og:url`, `og:image`)
 - Twitter Card (`summary_large_image`)
 
+### Wo stehen die SEO-Texte (Editiergrundlage)
+
+Alle SEO-Texte liegen **direkt im `<head>`-Block der jeweiligen HTML-Datei** — kein separates CMS, kein YAML, kein Build-Step. Wer Texte ändern will, editiert die HTML direkt.
+
+| Was | Wo (in `<head>`) | Wie es überall wirkt |
+|---|---|---|
+| **Browser-Tab-Title** | `<title>…</title>` | Auch der Title in Google-Suchergebnissen (Standard ~55-60 Zeichen) |
+| **Suchergebnis-Beschreibung** | `<meta name="description" content="…">` | Snippet unter dem Title in Google (140–160 Zeichen) |
+| **Suchbegriffe** | `<meta name="keywords" content="…">` | Wird heute kaum noch gewichtet — defensiv mitgenommen |
+| **Title beim Teilen** (WhatsApp, LinkedIn, Slack…) | `<meta property="og:title" content="…">` | Großer Title über dem Vorschaubild |
+| **Beschreibung beim Teilen** | `<meta property="og:description" content="…">` | Kurze Zeile unter dem Title |
+| **Vorschaubild beim Teilen** | `<meta property="og:image" content="https://core-form.de/media/…">` | Großes Bild im Preview-Card. **Absoluter URL nötig**, kein relativer Pfad. |
+| **Twitter / X-spezifischer Title** | `<meta name="twitter:title" content="…">` | Falls Twitter eine andere Variante braucht (sonst Fallback auf `og:`) |
+| **Strukturierte Daten** (Google Knowledge Graph) | `<script type="application/ld+json">…</script>` | Steuert wie Google die Marke versteht (Adressen, Telefon, Öffnungszeiten, Trainer:innen-Liste etc.). Auf `index.html` steht eine **Organization** mit zwei `HealthClub`-Locations; auf `ausbildung.html` eine **Course**-Beschreibung. |
+
+**Pro Editiertyp:**
+- **Title/Description anpassen:** Suche im Editor nach `<title>` bzw. `<meta name="description"` — die Texte stehen direkt darin, in Anführungszeichen.
+- **Open-Graph-Bild ändern:** Lade das neue Bild in `media/`, dann den Pfad in `og:image` und `twitter:image` ersetzen. Empfohlene Größe 1200×800.
+- **Studio-Adresse oder Telefon ändern:** Im JSON-LD-Block auf `index.html`, jeweils unter den beiden `HealthClub`-Einträgen. Aber Achtung: Adressen stehen **auch** in der Kontakt-Sektion auf der Startseite (React-JSX), in `impressum.html` und in der Boilerplate aus `claude design/README.md`. Diese drei Stellen müssen synchron bleiben.
+- **Ausbildungs-Kursbeschreibung ändern:** JSON-LD-Block in `ausbildung.html`, Feld `description`.
+- **Komplett neue Seite indexieren lassen:** In der neuen HTML im `<head>` `<meta name="robots" content="index, follow, max-image-preview:large">` setzen (statt `noindex`), `<link rel="canonical">` ergänzen, dann den Eintrag in `sitemap.xml` hinzufügen + in `robots.txt` aus dem `Disallow`-Block entfernen.
+
 ### Noindex-Seiten (Pflicht für alles andere)
 
 `buchung-ruettenscheid.html`, `buchung-suedviertel.html`, `galerie.html`, `videos.html`, `impressum.html`, `datenschutz.html`, `agb.html`, `faq.html` → alle haben:
@@ -766,6 +796,90 @@ Beide liegen im Webroot (`/html/staging/`).
 
 - **Keine Geo-Koordinaten in JSON-LD.** Google geocodiert die Adresse selbst, exakte Lat/Lon-Werte sind fehleranfällig.
 - **Footer-Links sind absichtlich `noindex`.** Impressum, Datenschutz, AGB, FAQ haben für SEO keinen Wert — sie sind rechtliche Pflichtseiten, keine Landingpages. Galerie & Videos sind Atmosphäre-Seiten, die Google-Bilder-Suche kann die einzelnen Medien trotzdem indexieren (die `<img>`-Tags selbst sind nicht `noindex`).
+
+---
+
+## Security & Hardening
+
+Mehrschichtig: Transport (HTTPS), Browser-Hardening (Security-Header + CSP), Server-Hardening (Datei-Sperren), Endpoint-Hardening (mail.php).
+
+### `.htaccess` — Apache-Ebene
+
+Liegt im Webroot. Steuert:
+
+1. **HTTPS-Zwang** via Rewrite — HTTP-Requests werden 301 auf HTTPS umgeleitet.
+2. **Security-Header** (alle via `mod_headers`, `Header always set`):
+   - `Strict-Transport-Security: max-age=31536000; includeSubDomains` — HSTS, ein Jahr gültig
+   - `X-Frame-Options: SAMEORIGIN` — Schutz gegen Clickjacking
+   - `X-Content-Type-Options: nosniff` — kein MIME-Sniffing
+   - `Referrer-Policy: strict-origin-when-cross-origin` — keine Pfad-Leaks an externe Sites
+   - `Permissions-Policy: camera=(), microphone=(), geolocation=()` — explizit alle Sensoren-APIs abschalten
+   - `Content-Security-Policy: …` (siehe unten)
+3. **PHP-/Server-Signaturen** ausgeblendet: `Header unset X-Powered-By` + `ServerSignature Off`.
+4. **Datei-Sperren** via `<Files>` / `<FilesMatch>`:
+   - `config.php` — komplett HTTP-blockiert
+   - `.rate-limit.json` — komplett HTTP-blockiert
+   - Endungen `.htpasswd, .ini, .log, .sh, .sql, .bak, .env, sample.php` — komplett HTTP-blockiert
+5. **Directory-Listing** via `Options -Indexes` deaktiviert.
+
+### Content Security Policy (CSP)
+
+Steht in `.htaccess` als ein langer Header. Whitelistet **exakt** die externen Domains die wir nutzen:
+
+| Direktive | Erlaubt |
+|---|---|
+| `default-src` | `'self'` |
+| `script-src` | `'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://www.google.com https://www.gstatic.com https://www.recaptcha.net https://*.eversports.io https://*.eversports.com https://*.eversports.cloud` |
+| `style-src` | `'self' 'unsafe-inline' https://*.eversports.*` |
+| `img-src` | `'self' data: https:` |
+| `font-src` | `'self' data: https://*.eversports.*` |
+| `connect-src` | `'self' data: https://www.google.com https://*.eversports.*` |
+| `frame-src` | `https://www.google.com https://www.recaptcha.net https://*.eversports.*` |
+| `object-src` | `'none'` |
+| `base-uri` | `'self'` |
+| `form-action` | `'self'` |
+
+**Warum `'unsafe-eval'`:** Babel-Standalone transpiliert JSX im Browser → braucht `eval`. Bis ein Build-Step eingeführt wird, ist das unvermeidbar.
+
+**Warum `'unsafe-inline'`:** React setzt manche Styles als Inline-Attribute, und `galerie.html` / `videos.html` haben Inline-Scripts. Mit Build-Step + Nonces wäre das eliminierbar.
+
+**Warum `data:` in `connect-src`:** Eversports lädt SVG-Icons als `data:` URIs per `fetch()` — ohne diese Direktive bricht das Widget.
+
+**Wie man CSP-Verletzungen findet:** F12 → **Issues**-Tab (rechts neben Console). Wenn eine externe Quelle blockiert wird, steht die Domain + Direktive direkt im Eintrag. Domain in `.htaccess` an die passende Direktive ergänzen, hochladen, Hard-Reload.
+
+### mail.php Endpoint-Hardening
+
+Siehe „Kontaktformular & Mail-Versand → Spam-/Abuse-Schutz" oben. Die acht Stufen kurz zusammengefasst:
+
+1. POST-only
+2. Origin/Referer muss Host enthalten
+3. Honeypot (`website`-Feld)
+4. Rate-Limit (5 / 15 Min / IP, file-based)
+5. reCAPTCHA v3 (Score ≥ 0.5, Action `'contact'`)
+6. Längen-Limits (`mb_strlen`)
+7. Pflichtfeld-/Format-Validierung
+8. Newline-Strip im Reply-To-Email (Header-Injection-Schutz)
+
+**Wichtig:** Debug-Felder (`debug`, `last_error`, `mail_to`) sind in **Fehler-Responses entfernt** — kein Information-Disclosure mehr in 4xx/5xx-JSONs. Nur die generische `error`-Message bleibt.
+
+### React in Produktion
+
+`index.html` lädt `react.production.min.js` + `react-dom.production.min.js` (nicht die Dev-Builds). Wichtig für: schnellere Auslieferung, kleinere Payloads, keine PropTypes-/Dev-Warnings im Console-Stream.
+
+SRI-Integrity-Hashes wurden im Security-Pass entfernt, weil die Production-Builds andere Hashes haben als die zuvor genutzten Dev-Builds. Wer SRI wieder will, bekommt die Hashes über:
+
+```bash
+curl -sL https://unpkg.com/react@18.3.1/umd/react.production.min.js | openssl dgst -sha384 -binary | openssl base64 -A
+```
+
+und fügt das Ergebnis als `integrity="sha384-…"` an die `<script>`-Tags.
+
+### Was bewusst NICHT gemacht wurde
+
+- **Keine CSRF-Token** für mail.php — anonymes Formular ohne Session, Origin-Check + reCAPTCHA reichen.
+- **Keine SubResource-Integrity für Babel-Standalone** belassen wie sie ist (hat noch alten Hash, Production-Variante existiert nicht).
+- **Kein strict-CSP mit Nonces** — würde Babel-Standalone brechen.
+- **Keine WAF / Cloudflare** davor — udmedia Shared-Hosting hat keine sinnvolle Integration dafür.
 
 ---
 
