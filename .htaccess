@@ -13,10 +13,30 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # Content Security Policy
+  # - 'unsafe-eval' nötig wegen Babel-Standalone (transpiliert JSX im Browser)
+  # - 'unsafe-inline' für Style-Attribute und Inline-Scripts (Galerie, Videos, etc.)
+  # - unpkg.com → React + Babel
+  # - google.com / gstatic.com / recaptcha.net → reCAPTCHA v3
+  # - *.eversports.io / .com → Buchungs-Widget
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://www.google.com https://www.gstatic.com https://www.recaptcha.net https://*.eversports.io https://*.eversports.com https://*.eversports.cloud; style-src 'self' 'unsafe-inline' https://*.eversports.io https://*.eversports.com https://*.eversports.cloud; img-src 'self' data: https:; font-src 'self' data: https://*.eversports.io https://*.eversports.com https://*.eversports.cloud; connect-src 'self' data: https://www.google.com https://*.eversports.io https://*.eversports.com https://*.eversports.cloud; frame-src https://www.google.com https://www.recaptcha.net https://*.eversports.io https://*.eversports.com https://*.eversports.cloud; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+
+  # PHP-/Server-Signaturen ausblenden
+  Header unset X-Powered-By
+  Header always unset X-Powered-By
 </IfModule>
+
+ServerSignature Off
 
 # config.php sperren, falls sie versehentlich im Webroot landet
 <Files "config.php">
+  Order allow,deny
+  Deny from all
+</Files>
+
+# Rate-Limit-State sperren (nur PHP-intern lesbar)
+<Files ".rate-limit.json">
   Order allow,deny
   Deny from all
 </Files>
