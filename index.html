@@ -1244,5 +1244,33 @@ const App = () => {
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
+<script>
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  function parallax(){
+    var img = document.querySelector('.hero__img');
+    if (img) img.style.transform = 'translateY(' + (window.scrollY * 0.3) + 'px)';
+  }
+  window.addEventListener('scroll', parallax, {passive:true});
+  parallax();
+})();
+</script>
+<script>
+(function(){
+  function check(){
+    var s=document.getElementById('kontakt');
+    if(!s) return;
+    var r=s.getBoundingClientRect();
+    document.body.classList.toggle('rcv', r.top < window.innerHeight - 240 && r.bottom > 0);
+  }
+  function init(){
+    if(!document.getElementById('kontakt')){setTimeout(init,200);return;}
+    check();
+    window.addEventListener('scroll',check,{passive:true});
+  }
+  setTimeout(init,400);
+  document.addEventListener('cf:consent',function(){setTimeout(check,500);});
+})();
+</script>
 </body>
 </html>

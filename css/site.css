@@ -27,7 +27,7 @@
 ::selection { background:rgba(178,14,59,.08); }
 ::-moz-selection { background:rgba(178,14,59,.08); }
 html { scroll-behavior:smooth; scrollbar-gutter:stable; }
-section[id] { scroll-margin-top:88px; }
+section[id] { scroll-margin-top:72px; }
 body { font-family:'DM Sans','Helvetica Neue',Arial,sans-serif; background:#fff; color:#0d0d0d; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
 input,select,textarea,button { font-family:inherit; }
 img { display:block; max-width:100%; }
@@ -159,6 +159,7 @@ a { color:inherit; text-decoration:none; }
 .hero__img {
   position:absolute; inset:0; width:100%; height:100%;
   object-fit:cover; opacity:.55;
+  will-change:transform;
 }
 .hero__overlay {
   position:absolute; inset:0;
@@ -635,9 +636,10 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 .form-note { font-size:12px; color:#6b6b6b; text-align:center; margin-top:10px; }
 .form-error { font-size:13px; color:#b20e3b; text-align:center; margin-top:10px; }
 
-/* reCAPTCHA-Badge: dezenter, aber sichtbar (Google ToS erlaubt das) */
-.grecaptcha-badge { opacity:.5 !important; transition:opacity .25s; }
-.grecaptcha-badge:hover { opacity:1 !important; }
+/* reCAPTCHA-Badge: nur im Kontaktbereich einblenden, 30% kleiner */
+.grecaptcha-badge { opacity:0 !important; pointer-events:none; zoom:.7; transition:opacity 1.2s ease !important; }
+.rcv .grecaptcha-badge { opacity:.5 !important; pointer-events:auto; }
+.rcv .grecaptcha-badge:hover { opacity:1 !important; }
 @media (max-width:1023px) { .grecaptcha-badge { bottom:72px !important; } }
 .form-success { font-size:13px; color:#2a7a3b; text-align:center; margin-top:10px; }
 .form-consent-note { font-size:12px; color:#6b6b6b; text-align:center; margin-top:10px; line-height:1.55; }
@@ -872,7 +874,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 .newsletter-pop__body .signature {
   margin-top:26px; padding-top:20px;
   border-top:1px solid rgba(0,0,0,.07);
-  font-style:italic; color:#59071d;
+  font-style:italic; color:#b20e3b;
 }
 .newsletter-pop__form { margin-top:28px; }
 .newsletter-pop__form label {
@@ -1610,7 +1612,7 @@ body.popup-open { overflow:hidden; }
 .zielgruppe-list li:last-child { border-bottom:none; }
 .zielgruppe-list li::before {
   content:''; position:absolute; left:0; top:26px;
-  width:18px; height:1px; background:#b20e3b;
+  width:18px; height:2px; background:#b20e3b;
 }
 .zielgruppe-list strong { color:#0d0d0d; font-weight:600; }
 .ausbildung-voraussetzung {
@@ -1761,7 +1763,7 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
 .bewerbung-list li:last-child { border-bottom:none; }
 .bewerbung-list li::before {
   content:''; position:absolute; left:0; top:22px;
-  width:18px; height:1px; background:#b20e3b;
+  width:18px; height:2px; background:#b20e3b;
 }
 .bewerbung-cta {
   display:flex; flex-wrap:wrap; gap:14px; margin-top:8px;
@@ -1777,15 +1779,17 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   overflow-x:auto; overflow-y:hidden;
   scroll-snap-type:x mandatory;
   padding:8px 40px 32px;
+  padding-left: max(40px, calc((100vw - 1080px) / 2));
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;
-  scrollbar-color:rgba(178,14,59,.4) rgba(255,255,255,.08);
+  scrollbar-width:none;
+  cursor:grab;
+  user-select:none;
 }
-.testimonial-carousel::-webkit-scrollbar { height:6px; }
-.testimonial-carousel::-webkit-scrollbar-thumb { background:rgba(178,14,59,.4); }
-.testimonial-carousel::-webkit-scrollbar-track { background:rgba(255,255,255,.08); }
+.testimonial-carousel:active { cursor:grabbing; }
+.testimonial-carousel::-webkit-scrollbar { display:none; }
 .testimonial-card {
   flex:0 0 460px;
+  height:550px;
   scroll-snap-align:start;
   background:#1a1a1a;
   padding:40px 36px 32px;
@@ -1819,8 +1823,14 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
 }
 .testimonial-card p {
   font-size:15px; line-height:1.7; color:rgba(255,255,255,.88);
-  flex:1; margin:0;
+  flex:1; min-height:0; margin:0;
+  overflow-y:auto;
+  padding-right:6px;
 }
+.testimonial-card p { scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.35) transparent; }
+.testimonial-card p::-webkit-scrollbar { width:4px; }
+.testimonial-card p::-webkit-scrollbar-thumb { background:rgba(255,255,255,.35); }
+.testimonial-card p::-webkit-scrollbar-track { background:rgba(255,255,255,.08); }
 
 /* Final CTA — dunkler Banner-Abschluss */
 .ausbildung-final-cta {
@@ -2036,8 +2046,8 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   .bewerbung-cta { flex-direction:column; align-items:stretch; }
   .bewerbung-cta .btn { width:100%; text-align:center; }
   .ausbildung-testimonials { padding:48px 0; }
-  .testimonial-carousel { padding:8px 24px 24px; gap:18px; }
-  .testimonial-card { flex:0 0 86%; padding:32px 28px 28px; }
+  .testimonial-carousel { padding:8px 18px 24px; gap:18px; }
+  .testimonial-card { flex:0 0 86%; height:500px; padding:32px 28px 28px; }
   .ausbildung-final-cta { padding:48px 0; }
   .final-cta-actions { flex-direction:column; align-items:stretch; width:100%; }
   .final-cta-actions .btn { width:100%; text-align:center; }
