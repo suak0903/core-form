@@ -14,6 +14,12 @@
     s.src = RECAPTCHA_SRC;
     s.async = true;
     document.head.appendChild(s);
+    // Badge is injected asynchronously — make it inert as soon as it appears
+    var mo = new MutationObserver(function () {
+      var badge = document.querySelector('.grecaptcha-badge');
+      if (badge) { badge.setAttribute('inert', ''); mo.disconnect(); }
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
   }
 
   function grantConsent() {
@@ -28,6 +34,7 @@
     el.setAttribute('role', 'dialog');
     el.setAttribute('aria-label', 'Cookie-Einstellungen');
     el.setAttribute('aria-hidden', 'true');
+    el.setAttribute('inert', '');
     el.innerHTML =
       '<div class="cookie-banner__inner">' +
         '<div class="cookie-banner__text">' +
@@ -57,6 +64,7 @@
   function showBanner() {
     var b = document.getElementById('cookie-banner');
     if (!b) return;
+    b.removeAttribute('inert');
     b.classList.add('is-visible');
     b.setAttribute('aria-hidden', 'false');
   }
@@ -66,6 +74,7 @@
     if (!b) return;
     b.classList.remove('is-visible');
     b.setAttribute('aria-hidden', 'true');
+    b.setAttribute('inert', '');
   }
 
   window.cfConsent = { get: getConsent, show: showBanner };

@@ -33,6 +33,8 @@
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="preload" as="image" href="media/COREFORM_web_015.jpg" fetchpriority="high">
 <link rel="preload" as="image" href="media/RZ_Logo_CoreForm_Gudula_weiss_pink.png" fetchpriority="high">
+<link rel="preload" href="font/stacion-light.otf" as="font" type="font/otf" crossorigin>
+<link rel="preload" href="font/stacion-light-italic.otf" as="font" type="font/otf" crossorigin>
 <link rel="stylesheet" href="css/site.css">
 
 <!-- JSON-LD: Organization mit zwei Studio-Standorten -->
@@ -103,7 +105,9 @@
 }
 </script>
 <style>
-/* page-specific overrides for index.html (chrome lives in css/site.css) */
+/* Hide skeleton hero text so font-flash is invisible before React renders */
+#root .hero[aria-hidden="true"] .hero__headline,
+#root .hero[aria-hidden="true"] .hero__sub { opacity:0; }
 </style>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
@@ -306,6 +310,15 @@ const App = () => {
   // Klick zykelt 0 → 1 → 2 → 0.
   const [teamStage, setTeamStage] = React.useState(0);
   const [priceModalKey, setPriceModalKey] = React.useState(null);
+  const isInternalNav = React.useMemo(() => {
+    try {
+      const navType = window.performance?.getEntriesByType?.('navigation')?.[0]?.type;
+      if (navType === 'reload' || navType === 'back_forward') return false;
+      return !!document.referrer && new URL(document.referrer).origin === window.location.origin;
+    } catch(e) { return false; }
+  }, []);
+  const [heroAnimated, setHeroAnimated] = React.useState(false);
+  const heroRef = React.useRef(null);
   const formRef = React.useRef(null);
   const popupCloseRef = React.useRef(null);
   const lastFocusRef = React.useRef(null);
@@ -314,6 +327,11 @@ const App = () => {
   const goTeam = (delta) => {
     setTeamIndex(i => (i + delta + TEAM.length) % TEAM.length);
   };
+
+  React.useEffect(() => {
+    const t = setTimeout(() => setHeroAnimated(true), 80);
+    return () => clearTimeout(t);
+  }, []);
 
   React.useEffect(() => {
     const onScroll = () => {
@@ -590,7 +608,7 @@ const App = () => {
       <a href="#main-content" className="skip-link">Zum Inhalt springen</a>
 
       {/* NAV */}
-      <header className={`nav${scrolled ? ' scrolled' : ''}${mobileOpen ? ' menu-open' : ''}`}>
+      <header className={`nav${isInternalNav ? '' : ' nav--ready'}${scrolled ? ' scrolled' : ''}${mobileOpen ? ' menu-open' : ''}`}>
         <div className="nav__inner container">
           <a
             href="#hero"
@@ -600,7 +618,7 @@ const App = () => {
           >
             <img src={scrolled && !mobileOpen ? 'media/RZ_Logo_CoreForm_Gudula.png' : 'media/RZ_Logo_CoreForm_Gudula_weiss_pink.png'} alt="core:form" />
           </a>
-          <nav className="nav__links" aria-label="Hauptnavigation">
+          <nav className={`nav__links${heroAnimated && !isInternalNav ? ' nav__links--in' : ''}`} style={heroAnimated && !isInternalNav ? {animationDelay:'820ms'} : undefined} aria-label="Hauptnavigation">
             {NAV_IDS.map((id, i) => (
               <a
                 key={id}
@@ -613,13 +631,14 @@ const App = () => {
               </a>
             ))}
           </nav>
-          <div className="nav__cta-group">
+          <div className={`nav__cta-group${heroAnimated && !isInternalNav ? ' nav__cta-group--in' : ''}`} style={heroAnimated && !isInternalNav ? {animationDelay:'660ms'} : undefined}>
             <a href="buchung.html" className="btn btn--accent nav__cta">buchen</a>
             <button type="button" className="btn btn--accent nav__cta nav__cta--news" onClick={openPopup}>News</button>
           </div>
           <button
             type="button"
-            className={`nav__hamburger${mobileOpen ? ' open' : ''}`}
+            className={`nav__hamburger${mobileOpen ? ' open' : ''}${heroAnimated && !isInternalNav ? ' nav__hamburger--in' : ''}`}
+            style={heroAnimated && !isInternalNav ? {animationDelay:'660ms'} : undefined}
             aria-label={mobileOpen ? 'Menü schließen' : 'Menü öffnen'}
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
@@ -636,6 +655,7 @@ const App = () => {
         className={`nav__mobile${mobileOpen ? ' open' : ''}`}
         aria-label="Mobile Navigation"
         aria-hidden={!mobileOpen}
+        {...(!mobileOpen ? {inert:''} : {})}
       >
         {NAV_IDS.map((id, i) => (
           <a
@@ -682,6 +702,7 @@ const App = () => {
         aria-modal="true"
         aria-label="Newsletter"
         aria-hidden={!popupOpen}
+        {...(!popupOpen ? {inert:''} : {})}
       >
         <div className="newsletter-pop__head">
           <span className="label">Newsletter</span>
@@ -779,7 +800,7 @@ const App = () => {
       <main id="main-content">
 
       {/* HERO */}
-      <section className="hero" id="hero" aria-labelledby="hero-headline">
+      <section className="hero hero--ready" id="hero" aria-labelledby="hero-headline" ref={heroRef}>
         <img
           className="hero__img"
           src="media/COREFORM_web_015.jpg"
@@ -791,10 +812,12 @@ const App = () => {
         <div className="hero__overlay" aria-hidden="true" />
         <div className="hero__content container">
           <h1 className="hero__headline" id="hero-headline">
-            Kraft.<br />Kontrolle.<br /><em>Bewegung.</em>
+            <span className={`hero__line${heroAnimated ? ' hero__line--in' : ''}`} style={heroAnimated ? {animationDelay:'0ms'} : undefined}>Kraft.</span>
+            <span className={`hero__line${heroAnimated ? ' hero__line--in' : ''}`} style={heroAnimated ? {animationDelay:'160ms'} : undefined}>Kontrolle.</span>
+            <span className={`hero__line${heroAnimated ? ' hero__line--in' : ''}`} style={heroAnimated ? {animationDelay:'320ms'} : undefined}><em>Bewegung.</em></span>
           </h1>
-          <p className="hero__sub">Reformer Pilates &nbsp;·&nbsp; Pilates Matte &nbsp;·&nbsp; Barre Workout</p>
-          <div className="hero__actions">
+          <p className={`hero__sub${heroAnimated ? ' hero__sub--in' : ''}`} style={heroAnimated ? {animationDelay:'500ms'} : undefined}>Reformer Pilates &nbsp;·&nbsp; Pilates Matte &nbsp;·&nbsp; Barre Workout</p>
+          <div className={`hero__actions${heroAnimated ? ' hero__actions--in' : ''}`} style={heroAnimated ? {animationDelay:'660ms'} : undefined}>
             <button type="button" className="btn btn--accent" onClick={() => scroll('angebote')}>Kursangebote entdecken</button>
             <button type="button" className="btn btn--ghost" onClick={() => scroll('studios')}>Unsere Studios</button>
           </div>

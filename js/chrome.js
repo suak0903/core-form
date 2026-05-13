@@ -29,6 +29,10 @@
 
   if (!nav) return;
 
+  // Versteckte Panels sofort inert setzen, damit sie nicht per Tab erreichbar sind
+  if (mobileMenu) mobileMenu.setAttribute('inert', '');
+  if (popup)      popup.setAttribute('inert', '');
+
   const isSolid = nav.classList.contains('solid');
 
   function updateLogo() {
@@ -56,6 +60,8 @@
     nav.classList.toggle('menu-open', open);
     mobileMenu.classList.toggle('open', open);
     mobileMenu.setAttribute('aria-hidden', String(!open));
+    if (open) mobileMenu.removeAttribute('inert');
+    else      mobileMenu.setAttribute('inert', '');
     mobileMenu.querySelectorAll('a, button').forEach((el) => {
       el.setAttribute('tabindex', open ? '0' : '-1');
     });
@@ -107,6 +113,7 @@
     lastFocus = document.activeElement;
     setMobileOpen(false);
     await loadNewsletter();
+    popup.removeAttribute('inert');
     popup.classList.add('open');
     if (backdrop) backdrop.classList.add('open');
     popup.setAttribute('aria-hidden', 'false');
@@ -117,6 +124,7 @@
   function closeNewsletter() {
     if (!popup) return;
     popup.classList.remove('open');
+    popup.setAttribute('inert', '');
     if (backdrop) backdrop.classList.remove('open');
     popup.setAttribute('aria-hidden', 'true');
     if (!nav.classList.contains('menu-open')) {

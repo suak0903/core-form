@@ -18,7 +18,7 @@ Statisches Multi-Page-Setup. Kein Build-Step, kein npm.
 | `buchung.html`, `buchung-ruettenscheid.html`, `buchung-suedviertel.html` | Vanilla HTML | Buchungsseiten mit Eversports-Widget |
 | `ausbildung.html` | Vanilla HTML | Reformer-Lehrerausbildung (Landingpage mit Testimonial-Karussell) |
 | `galerie.html` | Vanilla HTML | Galerie mit Lightbox (Inline-Script, Tasten- & Swipe-Navigation) |
-| `videos.html` | Vanilla HTML | Trainings-Videos im Grid (autoplay, muted, loop) + Klick-Overlay mit scrollbarer Beschreibung direkt auf der Kachel |
+| `videos.html` | Vanilla HTML | Trainings-Videos + Istanbul-Reise-Videos im Grid (autoplay, muted, loop) + Klick-Overlay mit scrollbarer Beschreibung direkt auf der Kachel |
 | `faq.html`, `impressum.html`, `datenschutz.html`, `agb.html` | Vanilla HTML | Inhalts- und Rechtsseiten |
 | `css/site.css` | gemeinsames CSS für alle Seiten (inkl. `index.html`) | Design-System, Layout, Subpage-Styles |
 | `js/chrome.js` | gemeinsames JS für alle **statischen** Subpages | Nav, Mobile-Menu, Newsletter-Popup, Eversports-Widget (consent-gated) |
@@ -220,13 +220,15 @@ Die Datei `media/IMG-20251021-WA0011.jpg` ist die kanonische Favicon-Quelle — 
 - Auf `index.html`: transparent über dem Hero, wechselt bei `scrollY > 40px` auf `rgba(255,255,255,.97)` + Blur (Klasse `.nav.scrolled`).
 - Auf **allen Subpages**: bekommt von Anfang an Klasse `.nav.solid` (immer hell, kein Scroll-Wechsel).
 - Logo-Image-Tausch wird auf der Startseite via React-State gesteuert, auf Subpages via `chrome.js` (anhand `data-logo-dark` / `data-logo-light` Attributen).
+- **Logo-Ausgleich:** Das Logo-PNG hat ~9 % transparente Fläche links. Der Ausgleich (`margin-left:-10px`) sitzt auf `.nav__logo` (dem `<a>`-Element), **nicht** auf `.nav__logo img`. Grund: der Fokusrahmen des Browsers zeichnet sich um das `<a>`-Element — liegt der Versatz auf dem `img`, ist der Rahmen links asymmetrisch.
 - Aktive Sektion auf der Startseite per `IntersectionObserver` → Himbeere-Unterstrich (`::after`).
 
 ### Mobile-Nav (≤ 1023 px — Tablet & Phone)
 
 - **Breakpoint:** Hamburger-Modus greift ab `max-width:1023px` (nicht 768!). Grund: Auf Tablets wirkten die sieben Desktop-Nav-Links zu gedrungen, und das Logo verhielt sich relativ zur Container-Breite zu groß. Tablets bekommen daher dieselbe Mobile-Nav wie Phones.
 - Nav-Links werden ausgeblendet, Hamburger-Icon erscheint, CTA-Group (buchen + News) bleibt sichtbar.
-- Hamburger: 3 Balken, Himbeere `#b20e3b` auf hellem Hintergrund, Weiß auf dunklem Hintergrund.
+- Hamburger: 3 Balken, Himbeere `#b20e3b` auf hellem Hintergrund, Weiß auf dunklem Hintergrund. Das `<button>`-Element ist 44×44 px; im Mobile-Override gilt `align-items:center` (zentriert die Spans horizontal im Button-Box) — **nicht** `flex-end`, das die Spans nach rechts verschiebt und den Fokusrahmen asymmetrisch macht.
+- **Versteckte Panels (Mobile-Menü + Newsletter-Popup) müssen `inert=""` tragen**, solange sie geschlossen sind — `aria-hidden` allein verhindert keine Tastaturfokus. `chrome.js` setzt `inert` beim Initialisieren und togglet es in `setMobileOpen()` / `openNewsletter()` / `closeNewsletter()`. In `index.html` (React) wird `inert` via `{...(!open ? {inert:''} : {})}` auf das jeweilige Element gespreadet.
 - **Wichtig:** Das Mobile-Menü-`<nav id="mobile-menu">` ist ein **Geschwister außerhalb des `<header>`** — nicht darin verschachtelt. Grund: `backdrop-filter` auf `.nav.scrolled`/`.nav.solid` erzeugt einen Stacking-Context, der `position:fixed` von Kindelementen bricht.
 - Menü-Overlay: `rgba(13,13,13,.67)` + `blur(20px)` (Frosted Glass).
 - Bei offenem Menü: Nav bekommt `.menu-open` Klasse + Logo wechselt auf weiß-pink + CTA-Group wird visuell verborgen.
@@ -251,6 +253,8 @@ submitted      // boolean — Kontaktformular abgesendet
 teamIndex      // number  — aktive Person im Team-Karussell
 teamStage      // 0|1|2   — Overlay-Stufe (0 = nur Bild, 1 = Name+Rolle, 2 = Name+Rolle+Bio)
 priceModalKey  // string|null — geöffnetes Preis-Modal ('matte'|'reformer'|'personal')
+heroAnimated   // boolean — steuert Hero- & Nav-Eingangsanimation (true nach 80 ms)
+isInternalNav  // boolean (useMemo) — true wenn Navigation von gleicher Domain (≠ Reload/Back)
 ```
 
 `scroll(id)` schließt das mobile Menü automatisch.
@@ -261,7 +265,34 @@ Die `teamStage`-Stufe zykelt **per Klick auf die aktive Karte** durch `0 → 1 �
 
 ### Performance — Pre-Render-Skelett & Preloads
 
-Im `<head>` von `index.html` stehen `preconnect`-Hints auf `fonts.googleapis.com`, `fonts.gstatic.com` und `unpkg.com`, sowie `preload`-Tags für das Hero-Bild und das Nav-Logo (weiß-pink-Variante). Das `<div id="root">` enthält ein **statisches Hero-Skelett** mit einem minimalen Nav-Header (nur Logo) und dem Hero-Bild — dieses Skelett wird sichtbar, bevor React + Babel-Standalone das JSX transpiliert haben, und nahtlos durch die React-App ersetzt. **Beim Anpassen des Hero-Bildes oder Logos diese Stellen im Skelett mitziehen**, sonst zeigt der erste Frame veralteten Content. Mittelfristig wäre ein Build-Step oder Migration auf Vanilla-JS (wie Subpages) der nachhaltige Performance-Pfad — Babel-Standalone ist der eigentliche Bremsklotz.
+Im `<head>` von `index.html` stehen `preconnect`-Hints auf `fonts.googleapis.com`, `fonts.gstatic.com` und `unpkg.com`, sowie `preload`-Tags für das Hero-Bild, das Nav-Logo (weiß-pink-Variante) und die **beiden Stacion-OTF-Dateien** (`stacion-light.otf`, `stacion-light-italic.otf`). Das `<div id="root">` enthält ein **statisches Hero-Skelett** mit einem minimalen Nav-Header (nur Logo) und dem Hero-Bild — dieses Skelett wird sichtbar, bevor React + Babel-Standalone das JSX transpiliert haben, und nahtlos durch die React-App ersetzt. **Beim Anpassen des Hero-Bildes oder Logos diese Stellen im Skelett mitziehen**, sonst zeigt der erste Frame veralteten Content. Mittelfristig wäre ein Build-Step oder Migration auf Vanilla-JS (wie Subpages) der nachhaltige Performance-Pfad — Babel-Standalone ist der eigentliche Bremsklotz.
+
+Das Skelett-HTML versteckt Headline und Sub via `#root .hero[aria-hidden="true"] .hero__headline, ... { opacity:0 }` in einem `<style>`-Tag im `<head>`, damit kein FOUT sichtbar ist bevor React die Animationsklassen setzt.
+
+### Eingangsanimationen (Startseite `index.html`)
+
+Hero-Text und Nav animieren beim ersten Laden der Seite ein. Gesteuert über `heroAnimated` (State, wird nach 80 ms auf `true` gesetzt) und CSS-Klassen in `css/site.css`.
+
+| Element | Klasse wenn aktiv | Delay |
+|---|---|---|
+| Hero-Zeile 1 „Kraft." | `hero__line--in` | 0 ms |
+| Hero-Zeile 2 „Kontrolle." | `hero__line--in` | 160 ms |
+| Hero-Zeile 3 „Bewegung." | `hero__line--in` | 320 ms |
+| Subtitle | `hero__sub--in` | 500 ms |
+| Hero-Buttons | `hero__actions--in` | 660 ms |
+| Nav CTA-Gruppe + Hamburger | `nav__cta-group--in` / `nav__hamburger--in` | 660 ms |
+| Nav-Links | `nav__links--in` | 820 ms |
+
+**`isInternalNav`-Logik:** Wird die Startseite von einer anderen Seite der gleichen Domain aus aufgerufen (z. B. Logo-Klick von Unterseite), animieren **nur** Hero-Text und Buttons — Nav-Elemente sind sofort sichtbar. Das verhindert, dass die Nav bei internen Seitenwechseln jedes Mal neu „reinfadet" und wirkt navigationskontinuierlich.
+
+Erkennungsmechanismus in `useMemo`:
+1. `performance.getEntriesByType('navigation')[0].type === 'reload'` → immer volle Animation (auch wenn `document.referrer` gesetzt, weil Chrome den Referer-Header beim Reload mitschickt).
+2. `navType === 'back_forward'` → volle Animation.
+3. `document.referrer` gesetzt und gleiche Origin → `isInternalNav = true` → Nav nicht animieren.
+
+**Logo** ist von der Logik ausgenommen — es ist immer sofort sichtbar (kein `opacity:0` initial).
+
+Parallax auf dem Hero-Bild: `translateY(+scrollY * 0.3)` via passivem Scroll-Listener am Ende von `<body>`. Positives Vorzeichen = Bild scrollt langsamer als die Seite (klassischer Parallax-Effekt). `will-change:transform` auf `.hero__img` für GPU-Compositing.
 
 ---
 
@@ -416,6 +447,12 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 - Emphase-Wörter im H1 in `<em>…</em>` (rendert als Stacion-light-italic in Himbeere).
 - Sektions-Padding: `96px` desktop / `48px` mobile (bereits in `css/site.css` für `.subpage__*`-Klassen gesetzt — **nicht** überschreiben).
 - Hintergrund-Rhythmus alternieren: weiß → creme → off-white. Niemals zwei gleichfarbige Sektionen direkt hintereinander.
+- **Eingangsanimationen sind automatisch aktiv** — keine zusätzlichen Klassen oder JS nötig:
+  - `.subpage__hero .label` → scale+fade-in, 0.4 s, kein Delay.
+  - `.subpage__hero h1` → scale+fade-in, 0.55 s, Delay 70 ms.
+  - `.subpage__hero > .container > p` → scale+fade-in, 0.5 s, Delay 160 ms.
+  - `.subpage > *:not(.subpage__hero)` (alle Sektionen unterhalb des Hero) → fade-up, 0.4 s, Delay 300 ms.
+  - `prefers-reduced-motion: reduce` deaktiviert alle Animationen automatisch.
 
 **Chrome (Nav, Mobile, Footer):**
 - Nav bekommt `class="nav solid"` — niemals nur `nav`.
@@ -611,6 +648,8 @@ Tile-Markup (pro Kachel identisch, nur Quelle, Titel und Bio-Inhalt ändern):
 
 Beschreibungstexte stehen direkt im HTML — keine JS-Datenstruktur mehr nötig (im Gegensatz zu früheren Modal-Versionen). Inline-Script unten in `videos.html` ist nur Toggle-Logik (~30 Zeilen).
 
+**Nicht-Format-Kacheln** (z. B. Reise-/Inspirations-Videos) verwenden dasselbe Markup. Label und h3 beschreiben Kontext statt Format (Beispiel: `label="Pilates & Lebensgefühl"`, `h3="Cihangir, Istanbul"`). Aktuelle Nicht-Format-Kacheln in `videos.html`: „Cihangir, Istanbul" (`Cihangir Pilates.mp4`) und „Reformer, Istanbul" (`Pilates Istanbul.mp4`).
+
 ---
 
 ## Kontaktformular & Mail-Versand
@@ -691,9 +730,9 @@ DSGVO-konformes Opt-In für externe Dienste. Quelle: `js/consent.js`.
 
 1. **Auf jeder Seite eingebunden** (vor `chrome.js`).
 2. Schreibt/liest `localStorage.cf_consent` (`'accepted'` | `'declined'` | nicht gesetzt).
-3. Beim DOM-Ready: erzeugt das Banner als unsichtbares `<div id="cookie-banner">` am `<body>`.
+3. Beim DOM-Ready: erzeugt das Banner als unsichtbares `<div id="cookie-banner">` am `<body>` — **direkt mit `inert=""`**, damit die enthaltenen Links (u. a. „Datenschutzhinweise") nicht per Tab erreichbar sind wenn das Banner versteckt ist. `showBanner()` entfernt `inert`, `hideBanner()` setzt es zurück.
 4. Wenn **kein** Consent gesetzt: zeigt Banner nach 700 ms an.
-5. Wenn `'accepted'`: ruft `grantConsent()` → lädt reCAPTCHA dynamisch + dispatcht `document` → `CustomEvent('cf:consent')`.
+5. Wenn `'accepted'`: ruft `grantConsent()` → lädt reCAPTCHA dynamisch + dispatcht `document` → `CustomEvent('cf:consent')`. Nach dem Laden beobachtet ein `MutationObserver` das DOM und setzt auf `.grecaptcha-badge` sofort `inert=""`, sobald Google die Badge injiziert — sonst sind die internen Badge-Links (Datenschutz / AGB) per Tab erreichbar.
 6. `[data-privacy-trigger]`-Elemente (Privacy-Link im Footer) öffnen das Banner erneut.
 
 ### Öffentliche API (`window.cfConsent`)
@@ -718,7 +757,7 @@ window.cfConsent.show()  // Banner einblenden (z. B. vom Privacy-Footer-Link)
 
 ### reCAPTCHA-Badge-Position
 
-`.grecaptcha-badge` hat `opacity:.5` (Google-ToS-konform sichtbar). Auf Tablet (`@media (max-width:1023px)`) wird die Badge um 72 px hochgesetzt, damit sie die Footer-Links nicht überdeckt.
+`.grecaptcha-badge` hat `opacity:.5` (Google-ToS-konform sichtbar). Auf Tablet (`@media (max-width:1023px)`) wird die Badge um 72 px hochgesetzt, damit sie die Footer-Links nicht überdeckt. Die Badge wird außerdem mit `inert=""` belegt (via `MutationObserver` in `consent.js` → `loadRecaptcha()`), damit die internen Google-Links (Datenschutz / AGB) nicht in die Tab-Reihenfolge fallen.
 
 ### Verboten
 
