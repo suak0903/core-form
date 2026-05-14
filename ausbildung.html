@@ -505,7 +505,7 @@
         <p>Plätze sind begrenzt. Schreib uns für ein unverbindliches Erstgespräch oder ruf direkt im Studio an.</p>
         <div class="final-cta-actions">
           <a href="index.html#kontakt" class="btn btn--accent">Erstgespräch anfragen</a>
-          <a href="tel:020185772137" class="btn btn--ghost">0201 857 721 37</a>
+          <a href="tel:020185772137" class="btn btn--outline">0201 857 721 37</a>
         </div>
       </div>
     </div>
@@ -624,12 +624,25 @@
     tapX = e.touches[0].clientX; tapY = e.touches[0].clientY;
   }, {passive:true});
   c.addEventListener('touchend', function(e){
-    var dx = Math.abs(e.changedTouches[0].clientX - tapX);
+    var rawDx = e.changedTouches[0].clientX - tapX;
+    var dx = Math.abs(rawDx);
     var dy = Math.abs(e.changedTouches[0].clientY - tapY);
     var card = e.target.closest('.testimonial-card');
     if (dx < 20 && dy < 20 && card) { scrollToCard(card); resume(900); return; }
+    if (dx > 30) {
+      e.preventDefault();
+      var all = Array.from(c.querySelectorAll('.testimonial-card'));
+      var currentCard = null, bestDist = Infinity;
+      all.forEach(function(cd){
+        var dist = Math.abs(targetForCard(cd) - c.scrollLeft);
+        if (dist < bestDist){ bestDist = dist; currentCard = cd; }
+      });
+      var idx = all.indexOf(currentCard);
+      var target = rawDx < 0 ? all[idx + 1] : all[idx - 1];
+      if (target) { scrollToCard(target); resume(900); return; }
+    }
     setTimeout(snapToNearest, 50); resume(900);
-  }, {passive:true});
+  });
   c.addEventListener('scroll', function(){
     if (Date.now() - lastAuto < 100) return;
     pause(false); clearTimeout(snapTimer);
