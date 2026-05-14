@@ -286,7 +286,7 @@ const TEAM = [
     name: 'Elle',
     role: 'Trainerin',
     img: 'media/image00001.jpg',
-    bio: 'Beschreibung folgt bald.'
+    bio: 'Yogalehrerin und Pilatestrainerin, geprägt durch Ausbildungen in Dubai und Abu Dhabi. Elle unterrichtet mit hohem Fokus auf Technik und Körperbewusstsein — und schafft dabei einen Raum, in dem Kraft, Ruhe und innere Balance zusammenfinden.'
   },
   {
     name: 'Katja',
@@ -1122,7 +1122,7 @@ const App = () => {
           <div className="preise__grid">
             {[
               { key:'matte',    format:'Pilates Matte & Barre', prefix:'ab', price:'15 €', features:['Probestunde, Drop-In oder Karte','Monatliche Pakete ab 50 €','Studio Rüttenscheid','Alle Levels willkommen'], featured:false },
-              { key:'reformer', format:'Reformer Pilates', prefix:'ab', price:'25 €', features:['Probestunde, Drop-In oder Karte','Monatliche Pakete ab 89 €','Studio Südviertel','Maximal 9 Teilnehmer:innen'], featured:true, badge:'Empfohlen' },
+              { key:'reformer', format:'Reformer Pilates', prefix:'ab', price:'25 €', features:['Probestunde, Drop-In oder Karte','Monatliche Pakete ab 89 €','Studio Südviertel','Maximal 9 Teilnehmer:innen'], featured:true, badge:'Beliebt' },
               { key:'personal', format:'Personal Training', prefix:'ab', price:'40 €', features:['1:1 oder 2:1 Sessions','Matte oder Reformer','Flexible Terminplanung','Maßgeschneidert für dich'], featured:false },
             ].map((p) => (
               <div className={`preis-card${p.featured ? ' preis-card--featured' : ''}`} key={p.key}>
