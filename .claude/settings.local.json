@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import bs4; print\\('bs4 ok'\\)\")",
+      "Bash(python create_word.py)",
+      "Bash(python -c ' *)"
+    ]
+  }
+}

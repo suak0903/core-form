@@ -80,7 +80,8 @@ Vollständige Spezifikation: `claude design/README.md` und `claude design/colors
 | Himbeere | `#b20e3b` | CTAs, Links, Akzente, Labels, Hamburger-Icon, Hover-Underline in Nav |
 | Brombeere | `#59071d` | Hover auf Primary, Featured-Card-BG, Text auf Creme (semantic `--fg-on-creme`) |
 | Creme | `#f2dac2` | Warme Sektionshintergründe, Subpage-Hero |
-| Pistazie | `#aed9b3` | Logo-Akzent (Moltke), dezente Akzente |
+| Pistazie | `#aed9b3` | Heller Grün-Akzent (Logofarbe Moltke hell) |
+| Salbei | `#91baa3` | Gedecktes Salbeigrün — tatsächliche core:form-Markenfarbe (Moltke/Südviertel); dunkler und stumpfer als Pistazie |
 | Blau | `#095873` | Education-/Highlight-Sektionen (in Subpages bislang nicht verwendet) |
 | Pink | `#fc2cb8` | **Nur** der Doppelpunkt im Logo |
 | Schwarz | `#0d0d0d` | Body-Text, Hero-BG, Footer |

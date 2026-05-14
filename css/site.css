@@ -889,10 +889,26 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 .newsletter-pop__body h2 em { font-style:italic; color:#b20e3b; }
 .newsletter-pop__body h3 {
   font-family:'Stacion',Georgia,serif; font-weight:300;
-  font-size:20px; color:#0d0d0d;
-  margin:24px 0 8px;
+  font-size:18px; color:#0d0d0d;
+  margin:32px 0 12px;
+  padding-top:24px;
+  border-top:1px solid rgba(0,0,0,.08);
 }
+.newsletter-pop__body h3:first-of-type { border-top:none; padding-top:0; margin-top:16px; }
 .newsletter-pop__body p { margin-bottom:14px; }
+
+/* Terminblöcke: <p> die mit <strong> beginnen */
+.newsletter-pop__body p:has(> strong:first-child) {
+  border-top:1px solid rgba(0,0,0,.07);
+  padding-top:10px;
+  margin-bottom:10px;
+  line-height:1.5;
+}
+.newsletter-pop__body p:has(> strong:first-child) strong {
+  display:block;
+  color:#0d0d0d;
+  margin-bottom:2px;
+}
 .newsletter-pop__body ul {
   list-style:none; padding:0; margin:8px 0 18px;
 }
@@ -1748,13 +1764,13 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   background:#fff; padding:36px 36px 40px;
   display:flex; flex-direction:column;
 }
-.investition-card--main { background:#0d0d0d; color:#fff; }
+.investition-card--main { background:#095873; color:#fff; }
 .investition-card__tag {
   display:block; font-size:11px; font-weight:600;
   letter-spacing:.15em; text-transform:uppercase;
   color:#b20e3b; margin-bottom:18px;
 }
-.investition-card--main .investition-card__tag { color:#b20e3b; }
+.investition-card--main .investition-card__tag { color:#f2dac2; }
 .investition-card__price {
   display:flex; align-items:baseline; gap:10px;
   margin-bottom:28px;
@@ -1832,8 +1848,8 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
 }
 
 /* Testimonial-Karussell — wichtigster Block. Horizontal scroll-snap. */
-.ausbildung-testimonials { background:#0d0d0d; color:#fff; padding:96px 0; }
-.ausbildung-testimonials .label { color:#b20e3b; }
+.ausbildung-testimonials { background:#095873; color:#fff; padding:96px 0; }
+.ausbildung-testimonials .label { color:rgba(255,255,255,.65); }
 .ausbildung-testimonials .section-head h2 { color:#fff; }
 .ausbildung-testimonials .section-head h2 em { font-style:italic; color:#f2dac2; }
 .testimonial-carousel {
@@ -1853,16 +1869,16 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   flex:0 0 460px;
   height:550px;
   scroll-snap-align:start;
-  background:#1a1a1a;
+  background:#fff;
   padding:40px 36px 32px;
   display:flex; flex-direction:column; gap:22px;
   position:relative;
-  border:1px solid rgba(255,255,255,.08);
+  border:1px solid rgba(0,0,0,.08);
 }
 .testimonial-card__head {
   display:flex; align-items:center; gap:14px;
   padding-bottom:20px;
-  border-bottom:1px solid rgba(255,255,255,.12);
+  border-bottom:1px solid rgba(0,0,0,.12);
 }
 .testimonial-card__head img {
   width:56px; height:56px; object-fit:cover;
@@ -1873,30 +1889,30 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
 }
 .testimonial-card__head strong {
   font-family:'Stacion',Georgia,serif; font-weight:300;
-  font-size:22px; color:#fff; letter-spacing:-.01em;
+  font-size:22px; color:#0d0d0d; letter-spacing:-.01em;
 }
 .testimonial-card__head span {
   font-size:11px; font-weight:600; letter-spacing:.15em;
-  text-transform:uppercase; color:#b20e3b;
+  text-transform:uppercase; color:#095873;
 }
 .testimonial-card__quote {
-  width:32px; height:32px; fill:#b20e3b;
+  width:32px; height:32px; fill:#095873;
   flex-shrink:0; opacity:.85;
 }
 .testimonial-card p {
-  font-size:15px; line-height:1.7; color:rgba(255,255,255,.88);
+  font-size:15px; line-height:1.7; color:#2a2a2a;
   flex:1; min-height:0; margin:0;
   overflow-y:auto;
   padding-right:6px;
 }
-.testimonial-card p { scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.35) transparent; }
+.testimonial-card p { scrollbar-width:thin; scrollbar-color:rgba(0,0,0,.25) transparent; }
 .testimonial-card p::-webkit-scrollbar { width:4px; }
-.testimonial-card p::-webkit-scrollbar-thumb { background:rgba(255,255,255,.35); }
-.testimonial-card p::-webkit-scrollbar-track { background:rgba(255,255,255,.08); }
+.testimonial-card p::-webkit-scrollbar-thumb { background:rgba(0,0,0,.25); }
+.testimonial-card p::-webkit-scrollbar-track { background:rgba(0,0,0,.06); }
 
-/* Final CTA — dunkler Banner-Abschluss */
+/* Final CTA — heller Abschluss */
 .ausbildung-final-cta {
-  background:#59071d; color:#fff;
+  background:#fff; color:#0d0d0d;
   padding:96px 0;
 }
 .final-cta-inner {
@@ -1904,15 +1920,15 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   text-align:center;
   display:flex; flex-direction:column; gap:18px; align-items:center;
 }
-.final-cta-inner .label { color:rgba(255,255,255,.55); margin-bottom:0; }
+.final-cta-inner .label { color:#b20e3b; margin-bottom:0; }
 .final-cta-inner h2 {
   font-family:'Stacion',Georgia,serif; font-weight:300;
   font-size:clamp(32px,4vw,52px); line-height:1.08;
-  letter-spacing:-.02em; color:#fff;
+  letter-spacing:-.02em; color:#0d0d0d;
 }
-.final-cta-inner h2 em { font-style:italic; color:#f2dac2; }
+.final-cta-inner h2 em { font-style:italic; color:#b20e3b; }
 .final-cta-inner p {
-  font-size:16px; line-height:1.7; color:rgba(255,255,255,.8);
+  font-size:16px; line-height:1.7; color:#2a2a2a;
   max-width:520px;
 }
 .final-cta-actions {

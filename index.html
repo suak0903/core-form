@@ -35,7 +35,7 @@
 <link rel="preload" as="image" href="media/RZ_Logo_CoreForm_Gudula_weiss_pink.png" fetchpriority="high">
 <link rel="preload" href="font/stacion-light.otf" as="font" type="font/otf" crossorigin>
 <link rel="preload" href="font/stacion-light-italic.otf" as="font" type="font/otf" crossorigin>
-<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/site.css?v=2">
 
 <!-- JSON-LD: Organization mit zwei Studio-Standorten -->
 <script type="application/ld+json">
@@ -823,7 +823,7 @@ const App = () => {
           </div>
         </div>
         <div className="hero__stats" role="list" aria-label="core:form auf einen Blick">
-          {[['2','Studios in Essen'],['max. 9','Teilnehmer:innen'],['3','Kursformate']].map(([n,l]) => (
+          {[['2','Studios in Essen'],['3','Kursformate'],['35','Kurse / Woche']].map(([n,l]) => (
             <div className="hero__stat" key={l} role="listitem">
               <strong>{n}</strong><span>{l}</span>
             </div>
