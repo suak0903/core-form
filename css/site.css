@@ -738,7 +738,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid var(--himbeere); outl
 
 /* ── CONSENT NOTICE (Eversports / gesperrte Elemente) ── */
 .consent-notice {
-  background:var(--rosa-tint); padding:40px 32px; text-align:center;
+  padding:40px 32px; text-align:center;
 }
 .consent-notice p { font-size:14px; line-height:1.65; color:var(--grau-dunkel); margin-bottom:20px; }
 .consent-notice__btn { display:inline-block; }
@@ -791,6 +791,8 @@ a.ausbildung__credential:focus-visible { outline:2px solid var(--himbeere); outl
   background:transparent;
   backdrop-filter:none;
   -webkit-backdrop-filter:none;
+  box-shadow:none;
+  border-bottom:none;
 }
 /* Layout bleibt stehen, damit der Hamburger/X nicht nach links springt */
 .nav.menu-open .nav__cta-group { visibility:hidden; pointer-events:none; }
