@@ -208,7 +208,7 @@ a { color:inherit; text-decoration:none; }
   letter-spacing:-.025em; color:#fff; margin-bottom:24px;
   display:flex; flex-direction:column; align-items:flex-start;
 }
-.hero__headline em { font-style:italic; color:#f2dac2; }
+.hero__headline em { font-style:italic; color:#fdf6fa; }
 .hero__sub {
   font-size:12px; font-weight:500; letter-spacing:.14em;
   text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:36px;
@@ -237,7 +237,7 @@ a { color:inherit; text-decoration:none; }
 }
 
 /* ── MANIFESTO ── */
-.manifesto { background:#f2dac2; padding:80px 0; }
+.manifesto { background:#fdf6fa; padding:80px 0; }
 .manifesto__inner { max-width:760px; }
 .manifesto__quote {
   font-family:'Stacion',Georgia,serif; font-weight:300;
@@ -293,7 +293,7 @@ a { color:inherit; text-decoration:none; }
   font-size:clamp(28px,4vw,48px); line-height:1.15;
   letter-spacing:-.02em; color:#fff; margin-bottom:16px;
 }
-.feature-banner__content blockquote em { font-style:italic; color:#f2dac2; }
+.feature-banner__content blockquote em { font-style:italic; color:#fdf6fa; }
 .feature-banner__content p {
   font-size:11px; font-weight:600; letter-spacing:.14em;
   text-transform:uppercase; color:rgba(255,255,255,.45);
@@ -334,7 +334,7 @@ a { color:inherit; text-decoration:none; }
 }
 
 /* ── ABOUT ── */
-.about { background:#f2dac2; padding:96px 0; }
+.about { background:#fdf6fa; padding:96px 0; }
 /* Drei Grid-Items (head, media, text) mit Template-Areas — auf Desktop
    Headline links über dem Bild-Karussell, Text + Bullets stehen rechts
    über die volle Höhe. Auf Mobile (siehe Responsive-Block) wird umgestellt:
@@ -410,7 +410,7 @@ a { color:inherit; text-decoration:none; }
   display:block;
   font-size:11px; font-weight:600;
   letter-spacing:.15em; text-transform:uppercase;
-  color:#f2dac2;
+  color:#fdf6fa;
   margin-bottom:8px;
   opacity:0; transform:translateY(8px);
   transition:opacity 320ms ease-out 80ms, transform 320ms ease-out 80ms;
@@ -717,7 +717,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 
 /* ── CONSENT NOTICE (Eversports / gesperrte Elemente) ── */
 .consent-notice {
-  background:#f2dac2; padding:40px 32px; text-align:center;
+  background:#fdf6fa; padding:40px 32px; text-align:center;
 }
 .consent-notice p { font-size:14px; line-height:1.65; color:#2a2a2a; margin-bottom:20px; }
 .consent-notice__btn { display:inline-block; }
@@ -805,8 +805,8 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
   transform:translateY(-50%);
   transition:height .25s ease;
 }
-.nav__mobile > a:not(.btn):hover { color:#f2dac2; padding-left:24px; }
-.nav__mobile > a:not(.btn).active { color:#f2dac2; }
+.nav__mobile > a:not(.btn):hover { color:#fdf6fa; padding-left:24px; }
+.nav__mobile > a:not(.btn).active { color:#fdf6fa; }
 .nav__mobile > a:not(.btn).active::before { height:24px; }
 .nav__mobile .nav__mobile-actions {
   display:flex; gap:10px; margin-top:36px;
@@ -821,7 +821,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
   color:rgba(242,218,194,.7);
   /* Hintergrund/Border kommen aus .btn--accent — kein Override, damit Hover korrekt greift */
 }
-.nav__mobile .nav__mobile-actions .btn:hover { color:#f2dac2; }
+.nav__mobile .nav__mobile-actions .btn:hover { color:#fdf6fa; }
 
 /* Social icons inside mobile menu */
 .nav__mobile-social {
@@ -837,7 +837,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 }
 .nav__mobile-social a::before { display:none; }
 .nav__mobile-social a:hover {
-  color:#f2dac2;
+  color:#fdf6fa;
   transform:scale(1.12);
   padding-left:6px;
 }
@@ -864,7 +864,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid #b20e3b; outline-offs
 .newsletter-pop__backdrop.open { opacity:1; pointer-events:auto; }
 .newsletter-pop__head {
   display:flex; align-items:center; justify-content:space-between;
-  padding:22px 28px; background:#f2dac2;
+  padding:22px 28px; background:#fdf6fa;
   flex-shrink:0;
 }
 .newsletter-pop__head .label { margin-bottom:0; }
@@ -979,7 +979,7 @@ body.popup-open { overflow:hidden; }
 .price-modal__head {
   position:relative;
   padding:36px 36px 28px;
-  background:#f2dac2;
+  background:#fdf6fa;
 }
 .price-modal__head .label { color:#b20e3b; margin-bottom:10px; }
 .price-modal__head h2 {
@@ -1050,7 +1050,7 @@ body.popup-open { overflow:hidden; }
 
 .subpage { padding-top:72px; min-height:100vh; }
 .subpage__hero {
-  background:#f2dac2; color:#0d0d0d;
+  background:#fdf6fa; color:#0d0d0d;
   padding:96px 0 56px;
 }
 .subpage__hero .label {
@@ -1501,7 +1501,7 @@ body.popup-open { overflow:hidden; }
   opacity:0; visibility:hidden; pointer-events:none;
   transition:opacity 320ms ease-out, visibility 0s linear 320ms;
 }
-.video-tile__bio .label { color:#f2dac2; margin-bottom:4px; }
+.video-tile__bio .label { color:#fdf6fa; margin-bottom:4px; }
 .video-tile__bio h3 {
   font-family:'Stacion',Georgia,serif; font-weight:300; font-style:italic;
   font-size:clamp(20px, 2.2vw, 26px); line-height:1.05;
@@ -1570,7 +1570,7 @@ body.popup-open { overflow:hidden; }
 .usp-grid p { font-size:14px; line-height:1.6; color:#2a2a2a; }
 
 /* Inhalte — 2-Spalten Text + Liste, Hintergrund creme */
-.ausbildung-inhalte { background:#f2dac2; padding:96px 0; }
+.ausbildung-inhalte { background:#fdf6fa; padding:96px 0; }
 .ausbildung-inhalte__inner {
   display:grid; grid-template-columns:1fr 1.1fr; gap:64px;
   align-items:start;
@@ -1755,7 +1755,7 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
 .team-credentials__item span { color:#8c8c8c; font-size:12px; }
 
 /* Investition — 1 Hauptkarte + 2 Add-Ons */
-.ausbildung-investition { background:#f2dac2; padding:96px 0; }
+.ausbildung-investition { background:#fdf6fa; padding:96px 0; }
 .investition-grid {
   display:grid; grid-template-columns:1.2fr 1fr; gap:32px;
   align-items:stretch;
@@ -1770,7 +1770,7 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   letter-spacing:.15em; text-transform:uppercase;
   color:#b20e3b; margin-bottom:18px;
 }
-.investition-card--main .investition-card__tag { color:#f2dac2; }
+.investition-card--main .investition-card__tag { color:#fdf6fa; }
 .investition-card__price {
   display:flex; align-items:baseline; gap:10px;
   margin-bottom:28px;
@@ -1851,7 +1851,7 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
 .ausbildung-testimonials { background:#095873; color:#fff; padding:96px 0; }
 .ausbildung-testimonials .label { color:rgba(255,255,255,.65); }
 .ausbildung-testimonials .section-head h2 { color:#fff; }
-.ausbildung-testimonials .section-head h2 em { font-style:italic; color:#f2dac2; }
+.ausbildung-testimonials .section-head h2 em { font-style:italic; color:#fdf6fa; }
 .testimonial-carousel {
   display:flex; gap:24px;
   overflow-x:auto; overflow-y:hidden;
@@ -1893,10 +1893,10 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
 }
 .testimonial-card__head span {
   font-size:11px; font-weight:600; letter-spacing:.15em;
-  text-transform:uppercase; color:#095873;
+  text-transform:uppercase; color:#b20e3b;
 }
 .testimonial-card__quote {
-  width:32px; height:32px; fill:#095873;
+  width:32px; height:32px; fill:#b20e3b;
   flex-shrink:0; opacity:.85;
 }
 .testimonial-card p {
@@ -1905,10 +1905,10 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   overflow-y:auto;
   padding-right:6px;
 }
-.testimonial-card p { scrollbar-width:thin; scrollbar-color:rgba(0,0,0,.25) transparent; }
+.testimonial-card p { scrollbar-width:thin; scrollbar-color:#b20e3b transparent; }
 .testimonial-card p::-webkit-scrollbar { width:4px; }
-.testimonial-card p::-webkit-scrollbar-thumb { background:rgba(0,0,0,.25); }
-.testimonial-card p::-webkit-scrollbar-track { background:rgba(0,0,0,.06); }
+.testimonial-card p::-webkit-scrollbar-thumb { background:#b20e3b; }
+.testimonial-card p::-webkit-scrollbar-track { background:rgba(178,14,59,.12); }
 
 /* Final CTA — heller Abschluss */
 .ausbildung-final-cta {
@@ -2051,7 +2051,7 @@ a.team-credentials__item:focus-visible { outline:2px solid #b20e3b; outline-offs
   .newsletter-pop.open { transform:none; }
   .newsletter-pop__backdrop { display:none; }
   .newsletter-pop__head {
-    background:#f2dac2;
+    background:#fdf6fa;
     padding:22px 28px;
   }
   .newsletter-pop__body {
