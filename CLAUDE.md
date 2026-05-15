@@ -78,7 +78,7 @@ Vollständige Spezifikation: `claude design/README.md` und `claude design/colors
 | Token | Hex | Verwendung |
 |---|---|---|
 | Himbeere | `#b20e3b` | CTAs, Links, Akzente, Labels, Hamburger-Icon, Hover-Underline in Nav |
-| Brombeere | `#59071d` | Hover auf Primary, Featured-Card-BG, Text auf Creme (semantic `--fg-on-creme`) |
+| Brombeere | `#3a0412` | Hover auf Primary, Featured-Card-BG, Text auf Creme (semantic `--fg-on-creme`) |
 | Creme | `#f2dac2` | Warme Sektionshintergründe, Subpage-Hero |
 | Pistazie | `#aed9b3` | Heller Grün-Akzent (Logofarbe Moltke hell) |
 | Salbei | `#91baa3` | Gedecktes Salbeigrün — tatsächliche core:form-Markenfarbe (Moltke/Südviertel); dunkler und stumpfer als Pistazie |
@@ -88,7 +88,7 @@ Vollständige Spezifikation: `claude design/README.md` und `claude design/colors
 | Grau-dunkel | `#2a2a2a` | sekundärer Body-Text (Prosa, Karten-Beschreibungen) |
 | Grau-mittel | `#8c8c8c` | gedämpfte Captions / Labels |
 | Off-White | `#f6f9f7` | dezente Sektions-Alternative · **Studio-Süd-Tint** (Booking-Widget-BG Süd, Format-Cards) |
-| Rosa-Tint | `#fdf6fa` | **Studio-Rü-Tint** (Booking-Widget-BG Rü) — leicht himbeerig getönt |
+| Rosa-Tint | `#fcf0f6` | **Studio-Rü-Tint** (Booking-Widget-BG Rü) — leicht himbeerig getönt |
 | Weiß | `#ffffff` | Default-BG |
 
 **Sektions-Rhythmus:** weiß → creme → dunkel/teal → weiß → creme. Hero-Bild ankert die Seite oben.
@@ -135,7 +135,7 @@ Vollständige Spezifikation: `claude design/README.md` und `claude design/colors
 - **Niemals „zertifiziert" über die Reformer-Ausbildung oder die Trainer:innen** schreiben. Die Ausbildung ist ein **studiointernes Qualifizierungsformat**, keine verbandlich zertifizierte Ausbildung. Eva ist **Mitglied** im Deutschen Pilates Verband (DPV) — das ist eine Mitgliedschaft, keine Verbandszertifizierung der Lehrtätigkeit.
 - Statt „zertifizierte Programme" → **„durchdachte Programme"**, „strukturierte Programme", „fundierte Programme".
 - Statt „zertifizierte Trainer:innen" / „zertifizierte Ausbilder:innen" → **„erfahrene Trainer:innen"**, „gut ausgebildete Trainer:innen", „aktive Mitgliedschaft" (für DPV-Bezug).
-- Bei DPV-Badges (`DPV_PremiumSiegel2026.png`, `Zertifikat2026.png`): Beschriftung **„Premium-Mitglied"** oder **„Aktive Mitgliedschaft"** in Kombination mit „Deutscher Pilates Verband". Niemals als Lehr-Zertifikat ausgeben.
+- Bei DPV-Badges (`DPV_PremiumSiegel2026.png`, `DPV_Zertifikat2026.png`): Beschriftung **„Premium-Mitglied"** oder **„Aktive Mitgliedschaft"** in Kombination mit „Deutscher Pilates Verband". Niemals als Lehr-Zertifikat ausgeben.
 - Korrekt formulierter Hinweis (in `ausbildung.html` bereits enthalten): „Die Ausbildung ist ein studiointernes Qualifizierungsformat und keine verbandlich zertifizierte Ausbildung."
 
 ---
@@ -148,8 +148,8 @@ Die Vorlage in `claude design/` nutzt Pfade wie `../../assets/` und `../../fonts
 |---|---|
 | `../../fonts/stacion-*.otf` | `font/stacion-*.otf` |
 | `../../assets/logo-gudula.png` | `media/RZ_Logo_CoreForm_Gudula.png` |
-| `../../assets/logo-gudula-white.png` | `media/RZ_Logo_CoreForm_Gudula_weiss.png` |
-| `../../assets/logo-gudula-white-pink.png` | `media/RZ_Logo_CoreForm_Gudula_weiss_pink.png` |
+| `../../assets/logo-gudula-white.png` | `media/RZ_Logo_CoreForm_weiss.png` |
+| `../../assets/logo-gudula-white-pink.png` | `media/RZ_Logo_CoreForm_weiss_pink.png` |
 | `../../assets/logo-moltke.png` | `media/RZ_Logo_CoreForm_Moltke.png` |
 | `../../assets/logo-moltke-white-pink.png` | `media/RZ_Logo_CoreForm_Moltke_weiss_pink.png` |
 | `../../assets/web-0XX.jpg` | `media/COREFORM_web_0XX.jpg` |
@@ -160,10 +160,10 @@ Die Vorlage in `claude design/` nutzt Pfade wie `../../assets/` und `../../fonts
 
 | Kontext | Logo |
 |---|---|
-| Nav (transparent / Hero) | `RZ_Logo_CoreForm_Gudula_weiss_pink.png` (weiß-pink) |
+| Nav (transparent / Hero) | `RZ_Logo_CoreForm_weiss_pink.png` (weiß-pink) |
 | Nav (scrolled / `.nav.solid`) | `RZ_Logo_CoreForm_Gudula.png` (Farbe) |
-| Nav bei offenem Mobile-Menü | `RZ_Logo_CoreForm_Gudula_weiss_pink.png` |
-| **Footer (alle Seiten)** | `RZ_Logo_CoreForm_Gudula_weiss.png` |
+| Nav bei offenem Mobile-Menü | `RZ_Logo_CoreForm_weiss_pink.png` |
+| **Footer (alle Seiten)** | `RZ_Logo_CoreForm_weiss.png` |
 | Studio-Panel Rüttenscheid | `RZ_Logo_CoreForm_Gudula.png` |
 | Studio-Panel Südviertel | `RZ_Logo_CoreForm_Moltke.png` |
 
@@ -231,7 +231,7 @@ Die Datei `media/COREFORM_Favicon.jpg` ist die kanonische Favicon-Quelle — bei
 - Hamburger: 3 Balken, Himbeere `#b20e3b` auf hellem Hintergrund, Weiß auf dunklem Hintergrund. Das `<button>`-Element ist 44×44 px; im Mobile-Override gilt `align-items:center` (zentriert die Spans horizontal im Button-Box) — **nicht** `flex-end`, das die Spans nach rechts verschiebt und den Fokusrahmen asymmetrisch macht.
 - **Versteckte Panels (Mobile-Menü + Newsletter-Popup) müssen `inert=""` tragen**, solange sie geschlossen sind — `aria-hidden` allein verhindert keine Tastaturfokus. `chrome.js` setzt `inert` beim Initialisieren und togglet es in `setMobileOpen()` / `openNewsletter()` / `closeNewsletter()`. In `index.html` (React) wird `inert` via `{...(!open ? {inert:''} : {})}` auf das jeweilige Element gespreadet.
 - **Wichtig:** Das Mobile-Menü-`<nav id="mobile-menu">` ist ein **Geschwister außerhalb des `<header>`** — nicht darin verschachtelt. Grund: `backdrop-filter` auf `.nav.scrolled`/`.nav.solid` erzeugt einen Stacking-Context, der `position:fixed` von Kindelementen bricht.
-- Menü-Overlay: `rgba(13,13,13,.67)` + `blur(20px)` (Frosted Glass).
+- Menü-Overlay: `rgba(0,0,0,.75)` + `backdrop-filter:blur(20px)` (Frosted Glass).
 - Bei offenem Menü: Nav bekommt `.menu-open` Klasse + Logo wechselt auf weiß-pink + CTA-Group wird visuell verborgen.
 
 ### Phone-spezifische Verfeinerungen (≤ 768 px)
@@ -329,7 +329,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
       <img
         src="media/RZ_Logo_CoreForm_Gudula.png"
         data-logo-dark="media/RZ_Logo_CoreForm_Gudula.png"
-        data-logo-light="media/RZ_Logo_CoreForm_Gudula_weiss_pink.png"
+        data-logo-light="media/RZ_Logo_CoreForm_weiss_pink.png"
         alt="core:form" />
     </a>
     <nav class="nav__links" aria-label="Hauptnavigation">
@@ -393,14 +393,14 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 
 </main>
 
-<!-- FOOTER — identisch auf jeder Seite, Logo IMMER Gudula weiß -->
+<!-- FOOTER — identisch auf jeder Seite, Logo IMMER RZ_Logo_CoreForm_weiss.png -->
 <footer class="footer">
   <div class="container">
     <div class="footer__inner">
       <div class="footer__logo">
-        <img src="media/RZ_Logo_CoreForm_Gudula_weiss.png" alt="core:form" loading="lazy" decoding="async" />
+        <img src="media/RZ_Logo_CoreForm_weiss.png" alt="core:form" loading="lazy" decoding="async" />
       </div>
-      <span class="footer__copy">© <span data-current-year>2026</span> core:form Pilates Studio GbR, Essen</span>
+      <span class="footer__copy">© <span data-current-year>2026</span> core:form — Pilates und Reformer Studio, Essen</span>
       <div class="footer__links">
         <a href="impressum.html">Impressum</a>
         <a href="datenschutz.html">Datenschutz</a>
@@ -459,7 +459,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 - Nav bekommt `class="nav solid"` — niemals nur `nav`.
 - Mobile-Menu-`<nav id="mobile-menu">` **außerhalb** des Headers platzieren.
 - Newsletter-Popup-Markup (`backdrop` + `aside.newsletter-pop`) auf jeder Seite einfügen — `chrome.js` lädt den Inhalt aus `data/newsletter.html` per `fetch`.
-- Footer-Logo **immer** `RZ_Logo_CoreForm_Gudula_weiss.png`.
+- Footer-Logo **immer** `RZ_Logo_CoreForm_weiss.png`.
 - Footer-Links genau in der Reihenfolge: Impressum · Datenschutz · AGB · FAQ · **Privacy** (Privacy-Link triggert via `data-privacy-trigger` den Cookie-Banner — siehe Cookie-/Consent-Sektion).
 - **Script-Reihenfolge am Ende von `<body>`:** zuerst `<script src="js/consent.js">`, dann `<script src="js/chrome.js">`. consent.js muss zuerst laufen, damit `window.cfConsent` steht, bevor chrome.js die Eversports-Widgets initialisiert.
 - **Robots-Meta:** Standardmäßig `noindex, follow` für jede neue Subpage. Nur `index.html`, `ausbildung.html` und `buchung.html` bekommen `index, follow` plus den vollen SEO-Header (siehe SEO-Sektion).
@@ -557,7 +557,7 @@ Wenn eine neue Seite mehr ist als nur Fließtext oder ein Buchungswidget — etw
 | 7 | Investition | `.ausbildung-investition > .container > .investition-grid` | creme | 1 dunkle Hauptkarte (`.investition-card--main`) + 2 Add-Ons (`--add`) |
 | 8 | Bewerbung / Kontaktfunnel | `.ausbildung-bewerbung > .container > .bewerbung-inner` | weiß | Text + `.bewerbung-list` + `.bewerbung-cta` mit Mail+Tel-Button |
 | 9 | **Testimonial-Karussell** | `.ausbildung-testimonials` | dunkel `#0d0d0d` | siehe Block unten |
-| 10 | Final-CTA | `.ausbildung-final-cta` | brombeere `#59071d` | zentrierter Abschluss-Banner mit 2 CTAs (`.btn--accent` + `.btn--ghost`) |
+| 10 | Final-CTA | `.ausbildung-final-cta` | brombeere `#3a0412` | zentrierter Abschluss-Banner mit 2 CTAs (`.btn--accent` + `.btn--ghost`) |
 
 **Testimonial-Karussell — Pflicht-Markup pro Karte:**
 
@@ -925,6 +925,7 @@ und fügt das Ergebnis als `integrity="sha384-…"` an die `<script>`-Tags.
 
 ## Bekannte Inkonsistenzen / offene Punkte
 
-- **Bilddateinamen mit Leerzeichen** (`Eva-Pilates_01.jpg`, `Ausbildung_Eva_Jelena.jpg`) — funktional, aber nicht ideal. Bei Gelegenheit umbenennen.
 - **Aktive-Seite-Indikator im Nav** auf Subpages fehlt: keine optische Markierung, dass man z. B. gerade auf `buchung.html` ist. Falls ergänzt → `aria-current="page"` + Himbeere-Unterstrich (Konsistenz zur Start-Seiten-Logik via `IntersectionObserver`).
 - **Buchungs-Studio-Seiten** haben kein Format-Karussell (nur die übergeordnete `buchung.html`). Bewusste Entscheidung — pro Studio nur ein Buchungstool, kein Marketing-Loop.
+- **Katja's Bio** in `index.html` steht noch auf `'Beschreibung folgt bald.'` — Inhalt ausstehend.
+- **Steuernummer vs. USt-IdNr.** im Impressum klären — `112/5457/1985` ist vermutlich eine Steuernummer, nicht eine USt-IdNr. (kein `DE`-Prefix). Steuerberater fragen und Beschriftung ggf. korrigieren.
