@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, follow">
 <title>Videos — core:form</title>
-<link rel="icon" type="image/jpeg" href="media/IMG-20251021-WA0011.jpg">
-<link rel="apple-touch-icon" href="media/IMG-20251021-WA0011.jpg">
+<link rel="icon" type="image/jpeg" href="media/COREFORM_Favicon.jpg">
+<link rel="apple-touch-icon" href="media/COREFORM_Favicon.jpg">
 <link rel="stylesheet" href="css/site.css?v=2">
 </head>
 <body>
@@ -20,7 +20,7 @@
       <img
         src="media/RZ_Logo_CoreForm_Gudula.png"
         data-logo-dark="media/RZ_Logo_CoreForm_Gudula.png"
-        data-logo-light="media/RZ_Logo_CoreForm_Gudula_weiss_pink.png"
+        data-logo-light="media/RZ_Logo_CoreForm_weiss_pink.png"
         alt="core:form" />
     </a>
     <nav class="nav__links" aria-label="Hauptnavigation">
@@ -101,7 +101,7 @@
       <div class="video-grid">
 
         <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Matte">
-          <video src="media/Matte Video.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          <video src="media/Video_Pilates_Matte.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Pilates<br />Matte</span>
           <div class="video-tile__bio">
@@ -115,7 +115,7 @@
         </div>
 
         <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Reformertraining">
-          <video src="media/Reformer Boom Bang.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          <video src="media/Video_Reformer_Training.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Reformer<br />Training</span>
           <div class="video-tile__bio">
@@ -130,7 +130,7 @@
         </div>
 
         <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Reformer Gruppe">
-          <video src="media/Reformer Harder.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          <video src="media/Video_Reformer_Gruppe.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Reformer<br />Gruppe</span>
           <div class="video-tile__bio">
@@ -144,7 +144,7 @@
         </div>
 
         <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Barre Harmonisch">
-          <video src="media/Barre Harmony.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          <video src="media/Video_Barre_Harmonisch.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Barre<br />Harmonisch</span>
           <div class="video-tile__bio">
@@ -159,7 +159,7 @@
         </div>
 
         <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Barre Intensiv">
-          <video src="media/Barre Burn.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          <video src="media/Video_Barre_Intensiv.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Barre<br />Intensiv</span>
           <div class="video-tile__bio">
@@ -173,7 +173,7 @@
         </div>
 
         <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Cihangir, Istanbul">
-          <video src="media/Cihangir Pilates.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          <video src="media/Video_Pilates_Cihangir.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Cihangir<br />Istanbul</span>
           <div class="video-tile__bio">
@@ -187,7 +187,7 @@
         </div>
 
         <div class="video-tile" role="button" tabindex="0" aria-expanded="false" aria-label="Reformer, Istanbul">
-          <video src="media/Pilates Istanbul.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          <video src="media/Video_Pilates_Istanbul.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video>
           <span class="video-tile__overlay" aria-hidden="true"></span>
           <span class="video-tile__title">Reformer<br />Istanbul</span>
           <div class="video-tile__bio">
@@ -211,7 +211,7 @@
   <div class="container">
     <div class="footer__inner">
       <div class="footer__logo">
-        <img src="media/RZ_Logo_CoreForm_Gudula_weiss.png" alt="core:form" loading="lazy" decoding="async" />
+        <img src="media/RZ_Logo_CoreForm_weiss.png" alt="core:form" loading="lazy" decoding="async" />
       </div>
       <span class="footer__copy">© <span data-current-year>2026</span> core:form — Pilates und Reformer Studio, Essen</span>
       <div class="footer__links">
@@ -228,6 +228,10 @@
 <script>
   document.querySelectorAll('[data-current-year]').forEach(function (el) {
     el.textContent = new Date().getFullYear();
+  });
+
+  document.querySelectorAll('video').forEach(function (v) {
+    v.addEventListener('contextmenu', function (e) { e.preventDefault(); });
   });
 
   // Video-Tile State-Machine.

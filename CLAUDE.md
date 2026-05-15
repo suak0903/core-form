@@ -153,8 +153,8 @@ Die Vorlage in `claude design/` nutzt Pfade wie `../../assets/` und `../../fonts
 | `../../assets/logo-moltke.png` | `media/RZ_Logo_CoreForm_Moltke.png` |
 | `../../assets/logo-moltke-white-pink.png` | `media/RZ_Logo_CoreForm_Moltke_weiss_pink.png` |
 | `../../assets/web-0XX.jpg` | `media/COREFORM_web_0XX.jpg` |
-| `../../assets/eva-01.jpg` | `media/Eva-Pilates 01.jpg` |
-| `../../assets/eva-jelena.jpg` | `media/Eva & Jelena.jpg` |
+| `../../assets/eva-01.jpg` | `media/Eva-Pilates_01.jpg` |
+| `../../assets/eva-jelena.jpg` | `media/Ausbildung_Eva_Jelena.jpg` |
 
 ### Logo-Verwendung (zwingend)
 
@@ -191,11 +191,11 @@ Die generische `.booking-widget`-Klasse bleibt für die übergeordnete `buchung.
 Auf jeder Seite im `<head>` direkt nach `<title>` einbinden:
 
 ```html
-<link rel="icon" type="image/jpeg" href="media/IMG-20251021-WA0011.jpg">
-<link rel="apple-touch-icon" href="media/IMG-20251021-WA0011.jpg">
+<link rel="icon" type="image/jpeg" href="media/COREFORM_Favicon.jpg">
+<link rel="apple-touch-icon" href="media/COREFORM_Favicon.jpg">
 ```
 
-Die Datei `media/IMG-20251021-WA0011.jpg` ist die kanonische Favicon-Quelle — bei Logo-Wechsel an dieser Stelle ersetzen, dann zieht es automatisch auf alle Seiten durch.
+Die Datei `media/COREFORM_Favicon.jpg` ist die kanonische Favicon-Quelle — bei Logo-Wechsel an dieser Stelle ersetzen, dann zieht es automatisch auf alle Seiten durch.
 
 ### Bilder pro Sektion (Startseite, aktueller Stand)
 
@@ -203,14 +203,14 @@ Die Datei `media/IMG-20251021-WA0011.jpg` ist die kanonische Favicon-Quelle — 
 |---|---|
 | Hero | `COREFORM_web_015.jpg` |
 | Reformer Pilates | `COREFORM_web_005.jpg` |
-| Pilates Matte | `Eva-Pilates 01.jpg` |
-| Barre Workout | `Eva-Pilates 06.jpg` |
+| Pilates Matte | `Eva-Pilates_01.jpg` |
+| Barre Workout | `Eva-Pilates_06.jpg` |
 | Personal Training | `COREFORM_web_009.jpg` |
-| Raumvermietung | `Eva-Pilates 07.jpg` |
+| Raumvermietung | `Eva-Pilates_07.jpg` |
 | Feature Banner | `COREFORM_web_010.jpg` |
-| Studio Rüttenscheid | `Eva-Pilates 02.jpg` |
+| Studio Rüttenscheid | `Eva-Pilates_02.jpg` |
 | Studio Südviertel | `COREFORM_web_002.jpg` |
-| Über uns | `Eva & Jelena.jpg` |
+| Über uns | `Ausbildung_Eva_Jelena.jpg` |
 
 ---
 
@@ -314,8 +314,8 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 <!-- Standard: noindex für alle Subpages. Nur Startseite, ausbildung.html und buchung.html bekommen "index, follow". -->
 <meta name="robots" content="noindex, follow">
 <title>SEITEN-TITEL — core:form</title>
-<link rel="icon" type="image/jpeg" href="media/IMG-20251021-WA0011.jpg">
-<link rel="apple-touch-icon" href="media/IMG-20251021-WA0011.jpg">
+<link rel="icon" type="image/jpeg" href="media/COREFORM_Favicon.jpg">
+<link rel="apple-touch-icon" href="media/COREFORM_Favicon.jpg">
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
@@ -633,7 +633,7 @@ Tile-Markup (pro Kachel identisch, nur Quelle, Titel und Bio-Inhalt ändern):
 ```html
 <div class="video-tile" role="button" tabindex="0" aria-expanded="false"
      aria-label="Matte – Beschreibung einblenden">
-  <video src="media/Matte Video.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+  <video src="media/Video_Pilates_Matte.mp4" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
   <span class="video-tile__overlay" aria-hidden="true"></span>
   <span class="video-tile__title">Matte</span>
   <div class="video-tile__bio">
@@ -649,7 +649,7 @@ Tile-Markup (pro Kachel identisch, nur Quelle, Titel und Bio-Inhalt ändern):
 
 Beschreibungstexte stehen direkt im HTML — keine JS-Datenstruktur mehr nötig (im Gegensatz zu früheren Modal-Versionen). Inline-Script unten in `videos.html` ist nur Toggle-Logik (~30 Zeilen).
 
-**Nicht-Format-Kacheln** (z. B. Reise-/Inspirations-Videos) verwenden dasselbe Markup. Label und h3 beschreiben Kontext statt Format (Beispiel: `label="Pilates & Lebensgefühl"`, `h3="Cihangir, Istanbul"`). Aktuelle Nicht-Format-Kacheln in `videos.html`: „Cihangir, Istanbul" (`Cihangir Pilates.mp4`) und „Reformer, Istanbul" (`Pilates Istanbul.mp4`).
+**Nicht-Format-Kacheln** (z. B. Reise-/Inspirations-Videos) verwenden dasselbe Markup. Label und h3 beschreiben Kontext statt Format (Beispiel: `label="Pilates & Lebensgefühl"`, `h3="Cihangir, Istanbul"`). Aktuelle Nicht-Format-Kacheln in `videos.html`: „Cihangir, Istanbul" (`Video_Pilates_Cihangir.mp4`) und „Reformer, Istanbul" (`Video_Pilates_Istanbul.mp4`).
 
 ---
 
@@ -925,6 +925,6 @@ und fügt das Ergebnis als `integrity="sha384-…"` an die `<script>`-Tags.
 
 ## Bekannte Inkonsistenzen / offene Punkte
 
-- **Bilddateinamen mit Leerzeichen** (`Eva-Pilates 01.jpg`, `Eva & Jelena.jpg`) — funktional, aber nicht ideal. Bei Gelegenheit umbenennen.
+- **Bilddateinamen mit Leerzeichen** (`Eva-Pilates_01.jpg`, `Ausbildung_Eva_Jelena.jpg`) — funktional, aber nicht ideal. Bei Gelegenheit umbenennen.
 - **Aktive-Seite-Indikator im Nav** auf Subpages fehlt: keine optische Markierung, dass man z. B. gerade auf `buchung.html` ist. Falls ergänzt → `aria-current="page"` + Himbeere-Unterstrich (Konsistenz zur Start-Seiten-Logik via `IntersectionObserver`).
 - **Buchungs-Studio-Seiten** haben kein Format-Karussell (nur die übergeordnete `buchung.html`). Bewusste Entscheidung — pro Studio nur ein Buchungstool, kein Marketing-Loop.
