@@ -119,6 +119,20 @@ Vollständige Spezifikation: `claude design/README.md` und `claude design/colors
 - Ease-out (`cubic-bezier(.22,1,.36,1)`), Dauer 250–450 ms.
 - Hover: Farbübergang, **kein** Scale, **kein** neuer Box-Shadow.
 
+### Scrollbalken-System
+
+Alle Custom-Scrollbars folgen denselben Regeln: `scrollbar-width:thin`, kein `border-radius`, keine Pfeil-Buttons (`display:none`).
+
+| Kontext | Farbe | Warum |
+|---|---|---|
+| Heller Hintergrund (Newsletter-Body, Format-Karussell, Preis-Modal) | `var(--himbeere)` | Akzentfarbe auf hellem Grund |
+| Testimonial-Kacheln | `var(--himbeere)` — **nur bei Hover** sichtbar (default: transparent) | Karten haben dunklen BG; Hover zeigt Scrollbarkeit an |
+| Overlays über Bild/Video (`.video-tile__bio-text`) | `rgba(244,231,231,.75)` — Rosa-Tint | Sanftes Rosa auf abgedunkeltem Bild/Video-BG |
+
+**Schließen via Header-Klick:** Newsletter-Popup und Preis-Modal haben `click` + `touchend` auf dem Header-Div (`chrome.js` bzw. React `onClick`/`onTouchEnd`) — Klick auf den gesamten Header-Bereich schließt das Panel. Close-Pfeil (`→`) ist in `var(--himbeere)`, kein Hover-Hintergrund, Hover bewegt den Pfeil `translateX(4px)`.
+
+**Touch/Hover-Fix (Android Chrome):** `@media (hover: none), (pointer: coarse)` — das Komma ist ein OR. `hover: none` greift für iOS, `pointer: coarse` für Android/Samsung (die fälschlicherweise `hover: hover` melden). `:hover`-Styles werden zurückgesetzt, `:active`-Styles geben Tap-Feedback.
+
 ### Sprachkonventionen
 
 - **Nur Deutsch**, informelles „du".
@@ -223,6 +237,11 @@ Die Datei `media/COREFORM_Favicon.jpg` ist die kanonische Favicon-Quelle — bei
 - Logo-Image-Tausch wird auf der Startseite via React-State gesteuert, auf Subpages via `chrome.js` (anhand `data-logo-dark` / `data-logo-light` Attributen).
 - **Logo-Ausgleich:** Das Logo-PNG hat ~9 % transparente Fläche links. Der Ausgleich (`margin-left:-10px`) sitzt auf `.nav__logo` (dem `<a>`-Element), **nicht** auf `.nav__logo img`. Grund: der Fokusrahmen des Browsers zeichnet sich um das `<a>`-Element — liegt der Versatz auf dem `img`, ist der Rahmen links asymmetrisch.
 - Aktive Sektion auf der Startseite per `IntersectionObserver` → Himbeere-Unterstrich (`::after`).
+
+### Tablet-Hero-Breakpoint (769–1023 px)
+
+- `font-size: clamp(68px,9vw,92px)` — größer als Desktop-Minimum, damit der Hero-Text auf Tablets präsent wirkt.
+- `padding-bottom: 240px` auf `.hero__content` — hebt den Text weit genug über die Stats-Leiste, sodass er nicht am unteren Bildschirmrand klebt.
 
 ### Mobile-Nav (≤ 1023 px — Tablet & Phone)
 
@@ -359,11 +378,12 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 <!-- Newsletter-Popup -->
 <div class="newsletter-pop__backdrop" aria-hidden="true"></div>
 <aside class="newsletter-pop" role="dialog" aria-modal="true" aria-label="Newsletter" aria-hidden="true">
+  <!-- .newsletter-pop__head ist klickbar (schließt Popup) — chrome.js bindet click + touchend -->
   <div class="newsletter-pop__head">
     <span class="label">Newsletter</span>
     <button type="button" class="newsletter-pop__close" aria-label="Newsletter schließen">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false">
-        <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
       </svg>
     </button>
   </div>
@@ -400,7 +420,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
       <div class="footer__logo">
         <img src="media/RZ_Logo_CoreForm_weiss.png" alt="core:form" loading="lazy" decoding="async" />
       </div>
-      <span class="footer__copy">© <span data-current-year>2026</span> core:form — Pilates und Reformer Studio, Essen</span>
+      <span class="footer__copy">© <span data-current-year>2026</span> core:form - Pilates &amp; Reformer Studio</span>
       <div class="footer__links">
         <a href="impressum.html">Impressum</a>
         <a href="datenschutz.html">Datenschutz</a>
@@ -626,7 +646,7 @@ Für kurze, vertikale Video-Loops (Studio-Eindrücke, Trainingsformate). Beschre
 - **Hover (Desktop):** Video wird abgedunkelt + leicht weichgezeichnet (`filter:brightness(.55) blur(1.5px)`), Titel im Stacion-Italic faded am unteren Rand ein.
 - **Klick / Enter / Space (alle Geräte):** Toggle der Klasse `.is-expanded` auf der Kachel. Das Video wird stark abgedunkelt + verschwommen, ein Bio-Overlay (`.video-tile__bio`) erscheint mit Eyebrow + Stacion-italic-Titel + scrollbarem Beschreibungs-Container. **Maximal eine Kachel gleichzeitig expandiert** — Klick auf eine andere collapsed die aktuelle.
 - **Schließen:** erneuter Klick auf dieselbe Kachel · Klick außerhalb der Kacheln · Esc-Taste.
-- **Scroll innerhalb der Kachel:** `.video-tile__bio-text` hat `overflow-y:auto` mit `flex:1; min-height:0`, damit lange Texte sauber innerhalb des fixen Tile-Frames scrollen — kein Bottom-Cutoff. Custom-Scrollbar in dezentem Weiß-Transparent.
+- **Scroll innerhalb der Kachel:** `.video-tile__bio-text` hat `overflow-y:auto` mit `flex:1; min-height:0`, damit lange Texte sauber innerhalb des fixen Tile-Frames scrollen — kein Bottom-Cutoff. Custom-Scrollbar in `rgba(244,231,231,.75)` (Rosa-Tint) — sanftes Rosa auf dem abgedunkelten Video-Hintergrund (kein Himbeere, da Overlay über Bild/Video).
 
 Tile-Markup (pro Kachel identisch, nur Quelle, Titel und Bio-Inhalt ändern):
 

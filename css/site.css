@@ -116,23 +116,9 @@ a { color:inherit; text-decoration:none; }
 .btn--ghost:hover { background:var(--weiss); color:var(--schwarz); border-color:var(--weiss); }
 .btn--full { width:100%; text-align:center; }
 
-/* Touch: kein Sticky-Hover nach Tap, aber :active-Feedback beim Antippen.
-   (hover:none) = iOS/iPadOS · (pointer:coarse) = Android Chrome (meldet fälschl. hover:hover) */
-@media (hover: none), (pointer: coarse) {
-  .btn--accent:hover { background:var(--himbeere); border-color:var(--himbeere); }
-  .btn--outline:hover { background:transparent; color:var(--schwarz); }
-  .btn--ghost:hover { background:transparent; color:var(--weiss); border-color:rgba(255,255,255,.6); }
-  .btn--accent:active { background:var(--brombeere); border-color:var(--brombeere); }
-  .btn--outline:active { background:var(--schwarz); color:var(--weiss); }
-  .btn--ghost:active { background:var(--weiss); color:var(--schwarz); border-color:var(--weiss); }
-  /* Höher-spezifische Regeln ebenfalls zurücksetzen (sonst sticky auf Mobile) */
-  .nav:not(.scrolled):not(.solid) .btn--accent:hover { background:transparent; color:var(--weiss); }
-  .nav:not(.scrolled):not(.solid) .btn--accent:active { background:var(--weiss); color:var(--schwarz); }
-  .nav__mobile .nav__mobile-actions .btn:hover { color:inherit; }
-  .nav__mobile .nav__mobile-actions .btn:active { color:var(--rosa-tint); }
-  .cookie-banner .btn--outline:hover { background:transparent; border-color:rgba(255,255,255,.6); }
-  .cookie-banner .btn--outline:active { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.6); }
-}
+/* Touch-Hover-Reset — MUSS nach allen Komponenten-Hover-Regeln stehen,
+   damit gleiche Spezifizität durch Kaskadenreihenfolge gewinnt.
+   Block steht deshalb am Ende der Datei (vor prefers-reduced-motion). */
 
 /* ── NAV ── */
 .nav {
@@ -2205,6 +2191,25 @@ a.team-credentials__item:focus-visible { outline:2px solid var(--himbeere); outl
   .hero__actions .btn { width:100%; text-align:center; }
   .hero__stat strong { font-size:22px; }
   .galerie-grid { grid-template-columns:1fr; }
+}
+
+/* ── TOUCH HOVER RESET ──
+   Muss NACH allen Komponenten-Hover-Regeln stehen — gleiche Spezifizität,
+   Kaskadenreihenfolge entscheidet. Comma = OR: (hover:none) fängt iOS,
+   (pointer:coarse) fängt Android Chrome das fälschlich hover:hover meldet. */
+@media (hover: none), (pointer: coarse) {
+  .btn--accent:hover { background:var(--himbeere); border-color:var(--himbeere); }
+  .btn--outline:hover { background:transparent; color:var(--schwarz); }
+  .btn--ghost:hover { background:transparent; color:var(--weiss); border-color:rgba(255,255,255,.6); }
+  .btn--accent:active { background:var(--brombeere); border-color:var(--brombeere); }
+  .btn--outline:active { background:var(--schwarz); color:var(--weiss); }
+  .btn--ghost:active { background:var(--weiss); color:var(--schwarz); border-color:var(--weiss); }
+  .nav:not(.scrolled):not(.solid) .btn--accent:hover { background:transparent; color:var(--weiss); }
+  .nav:not(.scrolled):not(.solid) .btn--accent:active { background:var(--weiss); color:var(--schwarz); }
+  .nav__mobile .nav__mobile-actions .btn:hover { color:inherit; }
+  .nav__mobile .nav__mobile-actions .btn:active { color:var(--rosa-tint); }
+  .cookie-banner .btn--outline:hover { background:transparent; border-color:rgba(255,255,255,.6); }
+  .cookie-banner .btn--outline:active { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.6); }
 }
 
 /* ── REDUCED MOTION ── */
