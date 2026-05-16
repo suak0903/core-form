@@ -807,11 +807,11 @@ const App = () => {
         aria-hidden="true"
       />
       <div
-        className={`price-modal${priceModalKey ? ' open' : ''}`}
+        className={`price-modal${priceModalKey && displayedPriceKey ? ' open' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="price-modal-title"
-        aria-hidden={!priceModalKey}
+        aria-hidden={!(priceModalKey && displayedPriceKey)}
       >
         {displayedPriceKey && (() => {
           const data = PRICES[displayedPriceKey];
