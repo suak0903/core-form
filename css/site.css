@@ -109,6 +109,7 @@ a { color:inherit; text-decoration:none; }
   border:1.5px solid transparent;
 }
 .btn--accent { background:var(--himbeere); color:var(--weiss); border-color:var(--himbeere); }
+.btn--accent:visited { color:var(--weiss); }
 .btn--accent:hover { background:var(--brombeere); border-color:var(--brombeere); }
 .btn--outline { background:transparent; color:var(--schwarz); border:1.5px solid var(--schwarz); }
 .btn--outline:hover { background:var(--schwarz); color:var(--weiss); }
@@ -701,10 +702,11 @@ a.ausbildung__credential:focus-visible { outline:2px solid var(--himbeere); outl
 .form-error { font-size:13px; color:var(--himbeere); text-align:center; margin-top:10px; }
 
 /* reCAPTCHA-Badge: nur im Kontaktbereich einblenden, 30% kleiner */
-.grecaptcha-badge { opacity:0 !important; pointer-events:none; zoom:.7; transition:opacity 1.2s ease !important; }
+.grecaptcha-badge { opacity:0 !important; pointer-events:none; zoom:.7; transition:opacity 1.2s ease !important; bottom:28px !important; }
 .rcv .grecaptcha-badge { opacity:.5 !important; pointer-events:auto; }
 .rcv .grecaptcha-badge:hover { opacity:1 !important; }
-@media (max-width:1023px) { .grecaptcha-badge { bottom:72px !important; } }
+@media (max-width:1023px) { .grecaptcha-badge { bottom:57px !important; } }
+@media (max-width:767px)  { .grecaptcha-badge { bottom:67px !important; } }
 .form-success { font-size:13px; color:var(--salbei); text-align:center; margin-top:10px; }
 .form-consent-note { font-size:12px; color:#6b6b6b; text-align:center; margin-top:10px; line-height:1.55; }
 .form-consent-btn {
@@ -765,7 +767,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid var(--himbeere); outl
   margin-left:-10px;
 }
 .footer__copy { font-size:11px; color:var(--rosa-tint); }
-.footer__links { display:flex; gap:20px; }
+.footer__links { display:flex; gap:0; }
 .footer__links a { font-size:11px; color:var(--rosa-tint); transition:color .15s; }
 .footer__links a:hover { color:var(--weiss); }
 .footer__links button {
@@ -775,6 +777,12 @@ a.ausbildung__credential:focus-visible { outline:2px solid var(--himbeere); outl
   transition:color .15s;
 }
 .footer__links button:hover { color:var(--weiss); }
+.footer__links a + a::before,
+.footer__links a + button::before,
+.footer__links button + a::before,
+.footer__links button + button::before {
+  content:'\00a0·\00a0'; padding:0; color:var(--rosa-tint);
+}
 
 /* ── HAMBURGER ── */
 .nav__hamburger {
@@ -854,6 +862,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid var(--himbeere); outl
   color:rgba(var(--rosa-tint-rgb),.7);
   /* Hintergrund/Border kommen aus .btn--accent — kein Override, damit Hover korrekt greift */
 }
+.nav__mobile .nav__mobile-actions .btn:visited { color:rgba(var(--rosa-tint-rgb),.7); }
 .nav__mobile .nav__mobile-actions .btn:hover { color:var(--rosa-tint); }
 
 /* Social icons inside mobile menu */
@@ -2080,10 +2089,11 @@ a.team-credentials__item:focus-visible { outline:2px solid var(--himbeere); outl
   .form-row { grid-template-columns:1fr; }
 
   /* Footer */
-  .footer { padding:40px 0; }
-  .footer__inner { flex-direction:column; align-items:flex-start; gap:24px; }
+  .footer { padding:22px 0 32px; }
+  .footer__inner { flex-direction:column; align-items:flex-start; gap:16px; }
+  .footer__logo { margin-bottom:-6px; }
   .footer__logo img { height:30px; width:90px; margin-left:-9px; }
-  .footer__links { gap:16px; flex-wrap:wrap; }
+  .footer__links { gap:0; flex-wrap:wrap; }
 
   /* Preis-Modal — auf Mobile fullscreen ohne Schatten */
   .price-modal {

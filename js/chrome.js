@@ -84,7 +84,18 @@
 
   if (mobileMenu) {
     mobileMenu.querySelectorAll('a').forEach((a) => {
-      a.addEventListener('click', () => setMobileOpen(false));
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href');
+        // Neue-Tab-Links und Privacy-Trigger (#) sofort durchlassen
+        if (a.target === '_blank' || !href || href === '#') {
+          setMobileOpen(false);
+          return;
+        }
+        // Echte Navigation: Menü erst schließen, dann nach Animation weiterleiten
+        e.preventDefault();
+        setMobileOpen(false);
+        setTimeout(() => { window.location.href = href; }, 150);
+      });
     });
   }
 

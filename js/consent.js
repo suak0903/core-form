@@ -14,10 +14,14 @@
     s.src = RECAPTCHA_SRC;
     s.async = true;
     document.head.appendChild(s);
-    // Badge is injected asynchronously — make it inert as soon as it appears
+    // Badge is injected asynchronously — remove from tab order but keep pointer-interactive
     var mo = new MutationObserver(function () {
       var badge = document.querySelector('.grecaptcha-badge');
-      if (badge) { badge.setAttribute('inert', ''); mo.disconnect(); }
+      if (badge) {
+        badge.setAttribute('tabindex', '-1');
+        badge.querySelectorAll('a, button').forEach(function(el) { el.setAttribute('tabindex', '-1'); });
+        mo.disconnect();
+      }
     });
     mo.observe(document.body, { childList: true, subtree: true });
   }

@@ -131,7 +131,9 @@ Alle Custom-Scrollbars folgen denselben Regeln: `scrollbar-width:thin`, kein `bo
 
 **Schließen via Header-Klick:** Newsletter-Popup und Preis-Modal haben `click` + `touchend` auf dem Header-Div (`chrome.js` bzw. React `onClick`/`onTouchEnd`) — Klick auf den gesamten Header-Bereich schließt das Panel. Close-Pfeil (`→`) ist in `var(--himbeere)`, kein Hover-Hintergrund, Hover bewegt den Pfeil `translateX(4px)`.
 
-**Touch/Hover-Fix (Android Chrome):** `@media (hover: none), (pointer: coarse)` — das Komma ist ein OR. `hover: none` greift für iOS, `pointer: coarse` für Android/Samsung (die fälschlicherweise `hover: hover` melden). `:hover`-Styles werden zurückgesetzt, `:active`-Styles geben Tap-Feedback.
+**Touch-Event-Regel (Popup-Close):** Für Header-Divs und Backdrop immer `touchend` + `e.preventDefault()` verwenden — **niemals `pointerup`**. `pointerup` verhindert nicht den nachfolgenden synthetischen `click`-Event, der dann auf das darunter liegende Element „durchschlägt" (z.B. öffnet der News-Trigger-Button das Popup sofort wieder). `preventDefault()` auf `touchend` unterbricht die gesamte Touch-Sequenz. Listener dürfen **nicht** `{ passive: true }` sein, sonst greift `preventDefault` nicht. `cursor:pointer` im CSS ist Pflicht, damit iOS Safari `click` auf Divs feuert (für Maus-Fallback).
+
+**Touch/Hover-Fix (Android Chrome):** `@media (hover: none), (pointer: coarse)` — das Komma ist ein OR. `hover: none` greift für iOS, `pointer: coarse` für Android/Samsung (die fälschlicherweise `hover: hover` melden). `:hover`-Styles werden zurückgesetzt, `:active`-Styles geben Tap-Feedback. **Dieser Block muss am Ende von `css/site.css` stehen** (nach allen Komponenten-Hover-Regeln) — gleiche Spezifizität, Kaskadenreihenfolge entscheidet.
 
 ### Sprachkonventionen
 
@@ -420,7 +422,7 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
       <div class="footer__logo">
         <img src="media/RZ_Logo_CoreForm_weiss.png" alt="core:form" loading="lazy" decoding="async" />
       </div>
-      <span class="footer__copy">© <span data-current-year>2026</span> core:form - Pilates &amp; Reformer Studio</span>
+      <span class="footer__copy">© core:form · Pilates &amp; Reformer Studio</span>
       <div class="footer__links">
         <a href="impressum.html">Impressum</a>
         <a href="datenschutz.html">Datenschutz</a>
@@ -433,9 +435,6 @@ Jede neue Subpage **muss** dieses Skelett 1:1 enthalten — Reihenfolge, Klassen
 </footer>
 
 <script>
-  document.querySelectorAll('[data-current-year]').forEach(function (el) {
-    el.textContent = new Date().getFullYear();
-  });
 </script>
 <script src="js/consent.js"></script>
 <script src="js/chrome.js"></script>
