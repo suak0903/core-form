@@ -88,7 +88,7 @@ Vollständige Spezifikation: `claude design/README.md` und `claude design/colors
 | Grau-dunkel | `#2a2a2a` | sekundärer Body-Text (Prosa, Karten-Beschreibungen) |
 | Grau-mittel | `#8c8c8c` | gedämpfte Captions / Labels |
 | Off-White | `#f6f9f7` | dezente Sektions-Alternative · **Studio-Süd-Tint** (Booking-Widget-BG Süd, Format-Cards) |
-| Rosa-Tint | `#fcf0f6` | **Studio-Rü-Tint** (Booking-Widget-BG Rü) — leicht himbeerig getönt |
+| Rosa-Tint | `#f4e7e7` | **Studio-Rü-Tint** (Booking-Widget-BG Rü) — leicht himbeerig getönt |
 | Weiß | `#ffffff` | Default-BG |
 
 **Sektions-Rhythmus:** weiß → creme → dunkel/teal → weiß → creme. Hero-Bild ankert die Seite oben.

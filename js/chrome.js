@@ -26,8 +26,17 @@
   const backdrop = document.querySelector('.newsletter-pop__backdrop');
   const popBody = popup && popup.querySelector('.newsletter-pop__body');
   const popClose = popup && popup.querySelector('.newsletter-pop__close');
+  const popHead  = popup && popup.querySelector('.newsletter-pop__head');
 
   if (!nav) return;
+
+  // iOS Safari treats tap as :focus-visible, so tapped buttons/links stay
+  // highlighted after scroll. Blur after click (detail===0 = keyboard → skip).
+  document.addEventListener('click', function (e) {
+    if (e.detail === 0) return;
+    var el = e.target.closest('a, button');
+    if (el) setTimeout(function () { el.blur(); }, 0);
+  }, { passive: true });
 
   // Versteckte Panels sofort inert setzen, damit sie nicht per Tab erreichbar sind
   if (mobileMenu) mobileMenu.setAttribute('inert', '');
@@ -137,7 +146,14 @@
     b.addEventListener('click', (e) => { e.preventDefault(); openNewsletter(); });
   });
   if (popClose) popClose.addEventListener('click', closeNewsletter);
-  if (backdrop) backdrop.addEventListener('click', closeNewsletter);
+  if (popHead) {
+    popHead.addEventListener('click', closeNewsletter);
+    popHead.addEventListener('touchend', function(e) { e.preventDefault(); closeNewsletter(); });
+  }
+  if (backdrop) {
+    backdrop.addEventListener('click', closeNewsletter);
+    backdrop.addEventListener('touchend', function(e) { e.preventDefault(); closeNewsletter(); });
+  }
 
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;

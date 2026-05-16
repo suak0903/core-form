@@ -539,6 +539,7 @@ const App = () => {
   }, [teamStage]);
 
   const scroll = (id) => {
+    setTimeout(() => document.activeElement?.blur(), 0);
     setMobileOpen(false);
     document.body.style.overflow = '';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -722,7 +723,7 @@ const App = () => {
         aria-hidden={!popupOpen}
         {...(!popupOpen ? {inert:''} : {})}
       >
-        <div className="newsletter-pop__head">
+        <div className="newsletter-pop__head" onClick={closePopup} onTouchEnd={(e)=>{e.preventDefault();closePopup();}} style={{cursor:'pointer'}}>
           <span className="label">Newsletter</span>
           <button
             type="button"
@@ -732,7 +733,7 @@ const App = () => {
             onClick={closePopup}
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true" focusable="false">
-              <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
             </svg>
           </button>
         </div>
@@ -775,7 +776,7 @@ const App = () => {
           const data = PRICES[priceModalKey];
           return (
             <React.Fragment>
-              <div className="price-modal__head">
+              <div className="price-modal__head" onClick={()=>setPriceModalKey(null)} onTouchEnd={(e)=>{e.preventDefault();setPriceModalKey(null);}}>
                 <span className="label">{data.eyebrow}</span>
                 <h2 id="price-modal-title">{data.title}</h2>
                 <button
@@ -785,7 +786,7 @@ const App = () => {
                   onClick={() => setPriceModalKey(null)}
                 >
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true" focusable="false">
-                    <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/>
                   </svg>
                 </button>
               </div>
@@ -855,7 +856,7 @@ const App = () => {
           <div className="manifesto__inner">
             <p className="manifesto__quote">Training, das einfach&nbsp;<em>gut&nbsp;tut.</em></p>
             <p className="manifesto__body">
-              core:form steht für ganzheitliches Bewegen – präzise angeleitet, persönlich begleitet, in kleinen Gruppen. Für Kraft, Stabilität und ein tiefes Wohlbefinden.
+              core:form steht für ganzheitliches Bewegen: präzise angeleitet, persönlich begleitet, in kleinen Gruppen. Für Kraft, Stabilität und ein tiefes Wohlbefinden.
             </p>
           </div>
         </div>
@@ -1268,7 +1269,7 @@ const App = () => {
             <div className="footer__logo">
               <img src="media/RZ_Logo_CoreForm_weiss.png" alt="core:form" loading="lazy" decoding="async" />
             </div>
-            <span className="footer__copy">© {new Date().getFullYear()} core:form — Pilates und Reformer Studio, Essen</span>
+            <span className="footer__copy">© {new Date().getFullYear()} core:form - Pilates &amp; Reformer Studio</span>
             <div className="footer__links">
               <a href="impressum.html">Impressum</a>
               <a href="datenschutz.html">Datenschutz</a>
