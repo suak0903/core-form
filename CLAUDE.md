@@ -287,14 +287,43 @@ Die `teamStage`-Stufe zykelt **per Klick auf die aktive Karte** durch `0 → 1 �
 
 ### Performance — Pre-Render-Skelett & Preloads
 
-Im `<head>` von `index.html` steht ein `preconnect`-Hint auf `unpkg.com` (React + Babel-Standalone-CDN) und `preload`-Tags für das Hero-Bild (WebP, `media/COREFORM_Hero.webp`, mit `type="image/webp"` damit Browser ohne WebP-Support den Preload überspringen), das Nav-Logo (weiß-pink-Variante) und die **beiden Stacion-OTF-Dateien** (`stacion-light.otf`, `stacion-light-italic.otf`). **Keine Verbindungen mehr zu `fonts.googleapis.com` / `fonts.gstatic.com`** — alle Schriften lokal (DM Sans WOFF2, Stacion OTF in `font/`). Das `<div id="root">` enthält ein **statisches Hero-Skelett** mit einem minimalen Nav-Header (nur Logo) und dem Hero-Bild — dieses Skelett wird sichtbar, bevor React + Babel-Standalone das JSX transpiliert haben, und nahtlos durch die React-App ersetzt. **Beim Anpassen des Hero-Bildes oder Logos diese Stellen im Skelett mitziehen**, sonst zeigt der erste Frame veralteten Content. Mittelfristig wäre ein Build-Step oder Migration auf Vanilla-JS (wie Subpages) der nachhaltige Performance-Pfad — Babel-Standalone ist der eigentliche Bremsklotz.
+Im `<head>` von `index.html` steht ein `preconnect`-Hint auf `unpkg.com` (React + Babel-Standalone-CDN) und `preload`-Tags für das Hero-Bild (WebP, `media/COREFORM_Hero.webp`, mit `type="image/webp"` damit Browser ohne WebP-Support den Preload überspringen), das Nav-Logo (weiß-pink-Variante) und die **beiden Stacion-OTF-Dateien** (`stacion-light.otf`, `stacion-light-italic.otf`). **Keine Verbindungen mehr zu `fonts.googleapis.com` / `fonts.gstatic.com`** — alle Schriften lokal (DM Sans WOFF2, Stacion OTF in `font/`). Das `<div id="root">` enthält ein **statisches Hero-Skelett** mit einem minimalen Nav-Header (nur Logo) — wird sichtbar, bevor React + Babel-Standalone das JSX transpiliert haben, und nahtlos durch die React-App ersetzt. **Beim Anpassen des Logos diese Stelle im Skelett mitziehen**, sonst zeigt der erste Frame veralteten Content. Mittelfristig wäre ein Build-Step oder Migration auf Vanilla-JS (wie Subpages) der nachhaltige Performance-Pfad — Babel-Standalone ist der eigentliche Bremsklotz.
 
-**Hero-Bild — Format & Attribute (sowohl Skelett als auch React-Variante identisch halten):**
-- `<picture>`-Element mit `<source srcset="media/COREFORM_Hero.webp" type="image/webp">` und `<img src="media/COREFORM_web_015.jpg">` als Fallback. Moderne Browser laden die WebP (~117 KB), nur sehr alte Browser fallen aufs JPG (~320 KB) zurück.
-- Attribute auf dem `<img>`: `width="2000"`, `height="1333"` (Intrinsic-Dimensions für die Decoder-Pipeline), `loading="eager"` (Default für Above-the-Fold, explizit), `fetchpriority="high"` (React: camelCase `fetchPriority`), `decoding="sync"` (sofortige Anzeige bei Cache-Hit statt Async-Decode-Verzögerung).
-- Preload-Tag muss exakt dieselbe URL & MIME enthalten wie die WebP-`<source>`: `<link rel="preload" as="image" href="media/COREFORM_Hero.webp" type="image/webp" fetchpriority="high">`. Mismatch → Preload wird verworfen.
+**Hero-Bild — externer Layer außerhalb von `#root` (kein Flicker beim React-Mount):**
 
-**Bekannte Performance-Einschränkung:** Auf langsamem Mobile flackert das Hero-Bild manchmal beim React-Mount kurz weg, weil React das Skelett-`<img>` zerstört und neu rendert (sogar bei Cache-Hit braucht der neue Decoder-Slot kurz). Mit `decoding="sync"` minimiert, aber nicht eliminiert. Echter Fix wäre, das Hero-Bild als Geschwister von `#root` zu rendern (außerhalb des React-Trees) — siehe Memory `optimization-hero-out-of-react-root`. Wurde bewusst noch nicht gemacht.
+Das Hero-Bild liegt in einem eigenen Layer `<div class="hero-img-wrapper">` als **Geschwister vor `<div id="root">`**, nicht innerhalb des React-Trees. Grund: React würde das Bild beim Mount sonst aus `#root` entfernen und neu rendern, was auf Mobile einen sichtbaren Flicker erzeugt (selbst bei Cache-Hit braucht der neue Decoder-Slot kurz). Da der Wrapper außerhalb von `#root` liegt, fasst React ihn nie an — das Bild lädt einmal beim HTML-Parse und bleibt für immer stehen.
+
+Aufbau in `index.html`:
+```html
+<body>
+  <div class="hero-img-wrapper" aria-hidden="true">
+    <picture>
+      <source srcset="media/COREFORM_Hero.webp" type="image/webp" />
+      <img class="hero__img" src="media/COREFORM_web_015.jpg" alt=""
+           width="2000" height="1333" loading="eager"
+           fetchpriority="high" decoding="sync" />
+    </picture>
+  </div>
+  <div id="root">…</div>
+```
+
+CSS-Mechanik (in `css/site.css`):
+- `.hero-img-wrapper { position:absolute; top:0; left:0; width:100%; height:100vh; min-height:600px; overflow:hidden; background:var(--schwarz); pointer-events:none; }` — clipt die Parallax-Bewegung, schwarzer Fallback während das Bild lädt.
+- `.hero__img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.55; will-change:transform; }` — füllt den Wrapper, leicht abgedunkelt.
+- `.hero { background:transparent; }` (vorher schwarz) — damit das externe Bild durch die React-Hero-Sektion durchscheint.
+- Hero-Section selbst enthält weiterhin Overlay (`.hero__overlay` mit Verlaufs-Gradient) und Content (`.hero__content`) — beides liegt durch normale Document-Order **über** dem Wrapper.
+
+**Format & Attribute (gilt für das `<img>` im Wrapper):**
+- `<picture>`-Element mit WebP-Quelle und JPG-Fallback. Moderne Browser laden die WebP (~117 KB), nur sehr alte Browser fallen aufs JPG (~320 KB) zurück.
+- Attribute: `width="2000"`, `height="1333"` (Intrinsic-Dimensions für die Decoder-Pipeline), `loading="eager"`, `fetchpriority="high"`, `decoding="sync"` (sofortige Anzeige bei Cache-Hit statt Async-Decode-Verzögerung).
+- Preload-Tag im `<head>` muss exakt dieselbe URL & MIME enthalten wie die WebP-`<source>`: `<link rel="preload" as="image" href="media/COREFORM_Hero.webp" type="image/webp" fetchpriority="high">`. Mismatch → Preload wird verworfen.
+
+**Parallax:** Inline-Script am Ende von `<body>` macht `document.querySelector('.hero__img').style.transform = 'translateY(' + (scrollY * 0.5) + 'px)'`. Die Klasse `.hero__img` sitzt jetzt auf dem `<img>` im externen Wrapper — das Script funktioniert unverändert.
+
+**Wichtig beim Bearbeiten:** Wenn das Hero-Bild ausgetauscht wird, müssen drei Stellen synchron bleiben:
+1. Preload-Tag im `<head>` (WebP-URL)
+2. `<source srcset>` und `<img src>` im externen `.hero-img-wrapper`
+3. Open-Graph `og:image` und `twitter:image` Meta-Tags (zeigen weiter aufs JPG, da Social-Crawler oft kein WebP wollen)
 
 Das Skelett-HTML versteckt Headline und Sub via `#root .hero[aria-hidden="true"] .hero__headline, ... { opacity:0 }` in einem `<style>`-Tag im `<head>`, damit kein FOUT sichtbar ist bevor React die Animationsklassen setzt.
 
