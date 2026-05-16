@@ -1198,6 +1198,31 @@ body.popup-open { overflow:hidden; }
   max-width:680px; margin-bottom:14px;
 }
 .booking-intro p:last-child { margin-bottom:0; }
+.booking-intro .section-head { margin-bottom:36px; }
+.booking-intro .section-head + p,
+.booking-intro .format-grid + p { margin-top:0; }
+
+/* Format-Grid — analog zu .usp-grid, aber auto-fit für 2 oder 3 Karten */
+.format-grid {
+  list-style:none; padding:0; margin:32px 0;
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:1px; background:rgba(0,0,0,.08);
+}
+.format-grid li {
+  background:var(--weiss); padding:32px 28px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.format-grid__nr {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:28px; color:var(--himbeere); line-height:1;
+  margin-bottom:4px;
+}
+.format-grid h3 {
+  font-family:'Stacion',Georgia,serif; font-weight:300;
+  font-size:22px; line-height:1.2; color:var(--schwarz);
+  letter-spacing:-.01em;
+}
+.format-grid p { font-size:14px; line-height:1.6; color:var(--grau-dunkel); margin:0; max-width:none; }
 
 .studio-cta-grid {
   display:grid; grid-template-columns:1fr 1fr; gap:2px;
@@ -2200,6 +2225,8 @@ a.team-credentials__item:focus-visible { outline:2px solid var(--himbeere); outl
   .ausbildung-hero__actions .btn { width:100%; text-align:center; }
   .ausbildung-besondere { padding:48px 0; }
   .usp-grid { grid-template-columns:1fr; }
+  .format-grid { grid-template-columns:1fr; margin:24px 0; }
+  .format-grid li { padding:26px 22px; }
   .usp-grid li { padding:28px 24px; }
   .ausbildung-inhalte { padding:48px 0; }
   .ausbildung-inhalte__inner { grid-template-columns:1fr; gap:36px; }
