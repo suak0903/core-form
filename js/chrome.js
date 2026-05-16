@@ -166,6 +166,27 @@
     backdrop.addEventListener('touchend', function(e) { e.preventDefault(); closeNewsletter(); });
   }
 
+  // Swipe nach rechts auf dem Popup schließt es (mobil) — touchmove-basiert,
+  // damit Schließen sofort bei Schwellenüberschreitung feuert und nicht auf touchend wartet
+  if (popup) {
+    var swipeStart = null;
+    popup.addEventListener('touchstart', function(e) {
+      swipeStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }, { passive: true });
+    popup.addEventListener('touchmove', function(e) {
+      if (!swipeStart) return;
+      var t = e.touches[0];
+      var dx = t.clientX - swipeStart.x;
+      var dy = Math.abs(t.clientY - swipeStart.y);
+      if (dx > 60 && dy < 40) {
+        swipeStart = null;
+        closeNewsletter();
+      }
+    }, { passive: true });
+    popup.addEventListener('touchend',    function() { swipeStart = null; }, { passive: true });
+    popup.addEventListener('touchcancel', function() { swipeStart = null; }, { passive: true });
+  }
+
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (popup && popup.classList.contains('open')) closeNewsletter();

@@ -128,7 +128,7 @@ a { color:inherit; text-decoration:none; }
   transition:background .3s ease, box-shadow .3s ease;
 }
 .nav.scrolled, .nav.solid {
-  background:rgba(255,255,255,.97);
+  background:rgba(255,255,255,.9);
   backdrop-filter:blur(8px);
   box-shadow:0 1px 16px rgba(0,0,0,.07);
   border-bottom:1px solid rgba(0,0,0,.07);
@@ -232,7 +232,7 @@ a { color:inherit; text-decoration:none; }
 }
 .hero__headline {
   font-family:'Stacion',Georgia,serif; font-weight:300;
-  font-size:clamp(48px,7vw,84px); line-height:1.02;
+  font-size:clamp(34px,4.9vw,59px); line-height:1.02;
   letter-spacing:-.025em; color:var(--weiss); margin-bottom:24px;
   display:flex; flex-direction:column; align-items:flex-start;
 }
@@ -888,7 +888,9 @@ a.ausbildung__credential:focus-visible { outline:2px solid var(--himbeere); outl
 .newsletter-pop {
   position:fixed; top:0; right:0; bottom:0;
   width:100%; max-width:480px;
-  background:var(--weiss);
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
   z-index:120;
   transform:translateX(100%);
   transition:transform .42s cubic-bezier(.22,1,.36,1);
@@ -1004,24 +1006,32 @@ body.popup-open { overflow:hidden; }
   transition:opacity .25s ease-out, visibility 0s linear .25s;
 }
 .price-modal__backdrop.open {
-  opacity:1; visibility:visible;
+  opacity:1; visibility:visible; pointer-events:auto;
   transition:opacity .25s ease-out, visibility 0s linear 0s;
 }
 .price-modal {
   position:fixed; z-index:150;
-  top:50%; left:50%; transform:translate(-50%, -48%) scale(.98);
+  top:50%; left:50%;
   width:min(560px, calc(100vw - 32px));
   max-height:calc(100vh - 64px);
   background:var(--weiss); color:var(--schwarz);
   display:flex; flex-direction:column;
   opacity:0; visibility:hidden;
-  transition:opacity .3s ease-out, transform .35s cubic-bezier(.22,1,.36,1), visibility 0s linear .35s;
+  transform-origin:50% 0%;
+  transform:translate(-50%, -130%) perspective(1400px) rotateX(-95deg);
+  transition:
+    opacity .22s ease-in,
+    transform .3s cubic-bezier(.55,.06,.68,.19),
+    visibility 0s linear .3s;
   box-shadow:0 30px 80px rgba(0,0,0,.35);
 }
 .price-modal.open {
   opacity:1; visibility:visible;
-  transform:translate(-50%, -50%) scale(1);
-  transition:opacity .3s ease-out, transform .35s cubic-bezier(.22,1,.36,1), visibility 0s linear 0s;
+  transform:translate(-50%, -50%) perspective(1400px) rotateX(0deg);
+  transition:
+    opacity .35s ease-out,
+    transform .55s cubic-bezier(.22,1.1,.32,1),
+    visibility 0s linear 0s;
 }
 .price-modal__head {
   position:relative;
@@ -2095,13 +2105,25 @@ a.team-credentials__item:focus-visible { outline:2px solid var(--himbeere); outl
   .footer__logo img { height:30px; width:90px; margin-left:-9px; }
   .footer__links { gap:0; flex-wrap:wrap; }
 
-  /* Preis-Modal — auf Mobile fullscreen ohne Schatten */
+  /* Preis-Modal — auf Mobile fullscreen ohne Schatten, Slide-Down + Fade */
   .price-modal {
-    top:0; left:0; transform:none;
+    top:0; left:0;
     width:100vw; max-height:100vh;
     box-shadow:none;
+    transform-origin:50% 0%;
+    transform:translateY(-40px);
+    transition:
+      opacity .32s ease-out,
+      transform .4s cubic-bezier(.22,1,.36,1),
+      visibility 0s linear .4s;
   }
-  .price-modal.open { transform:none; }
+  .price-modal.open {
+    transform:translateY(0);
+    transition:
+      opacity .32s ease-out,
+      transform .42s cubic-bezier(.22,1.05,.32,1),
+      visibility 0s linear 0s;
+  }
   .price-modal__head { padding:24px 24px 20px; }
   .price-modal__body { padding:24px; }
 
@@ -2109,7 +2131,9 @@ a.team-credentials__item:focus-visible { outline:2px solid var(--himbeere); outl
   .newsletter-pop {
     top:0; max-width:none; width:100%;
     box-shadow:none;
-    background:var(--weiss);
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
     transform:translateX(100%);
     z-index:130;
   }
@@ -2120,7 +2144,7 @@ a.team-credentials__item:focus-visible { outline:2px solid var(--himbeere); outl
     padding:0 28px;
   }
   .newsletter-pop__body {
-    background:var(--weiss);
+    background:transparent;
     padding:28px;
   }
 

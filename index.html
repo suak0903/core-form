@@ -307,6 +307,7 @@ const App = () => {
   const [activeId, setActiveId] = React.useState('');
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [popupOpen, setPopupOpen] = React.useState(false);
+  const popupSwipeRef = React.useRef({ x: 0, y: 0 });
   const [newsletterHtml, setNewsletterHtml] = React.useState('');
   const [newsletterError, setNewsletterError] = React.useState(false);
   const [newsletterSent, setNewsletterSent] = React.useState(false);
@@ -328,6 +329,21 @@ const App = () => {
   // Klick zykelt 0 → 1 → 2 → 0.
   const [teamStage, setTeamStage] = React.useState(0);
   const [priceModalKey, setPriceModalKey] = React.useState(null);
+  // Inhalt bleibt nach Close noch für die Dauer der CSS-Exit-Animation bestehen,
+  // sonst springt der Modal-Inner sofort weg und die Schließ-Animation ist unsichtbar.
+  const [displayedPriceKey, setDisplayedPriceKey] = React.useState(null);
+  React.useEffect(() => {
+    if (priceModalKey) {
+      // Laufenden Smooth-Scroll (z.B. von Menü-Klick "Preise") abbrechen,
+      // sonst läuft er hinter dem Modal weiter und die Seite landet beim Schließen
+      // an einer falschen Sektion. behavior:'auto' interrupt = freeze an aktueller Pos.
+      window.scrollTo({ top: window.scrollY, behavior: 'auto' });
+      setDisplayedPriceKey(priceModalKey);
+      return;
+    }
+    const t = setTimeout(() => setDisplayedPriceKey(null), 450);
+    return () => clearTimeout(t);
+  }, [priceModalKey]);
   const isInternalNav = React.useMemo(() => {
     try {
       const navType = window.performance?.getEntriesByType?.('navigation')?.[0]?.type;
@@ -353,7 +369,7 @@ const App = () => {
 
   React.useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 40);
+      setScrolled(window.scrollY > (window.innerWidth >= 1024 ? 100 : 160));
       if (window.scrollY < 80) setActiveId('');
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -421,6 +437,12 @@ const App = () => {
   // The sentinel is pushed lazily (on first scroll) so a back press while still
   // at the top leaves immediately.
   React.useEffect(() => {
+    // Browser-eigene Scroll-Restoration abschalten, sonst springt der Browser bei
+    // Back erst zur gespeicherten Position dieses History-Eintrags und unser Handler
+    // scrollt erst danach hoch — sichtbar als Zwischen-Sprung.
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
     const THRESHOLD = 50;
     let sentinelActive = false;
 
@@ -722,6 +744,17 @@ const App = () => {
         aria-label="Newsletter"
         aria-hidden={!popupOpen}
         {...(!popupOpen ? {inert:''} : {})}
+        onTouchStart={(e) => {
+          const t = e.touches[0];
+          popupSwipeRef.current = { x: t.clientX, y: t.clientY };
+        }}
+        onTouchEnd={(e) => {
+          const t = e.changedTouches[0];
+          const dx = t.clientX - popupSwipeRef.current.x;
+          const dy = Math.abs(t.clientY - popupSwipeRef.current.y);
+          // Swipe nach rechts (>60px), nicht primär vertikal (<40px Y-Drift)
+          if (dx > 60 && dy < 40) closePopup();
+        }}
       >
         <div className="newsletter-pop__head" onClick={closePopup} onTouchEnd={(e)=>{e.preventDefault();closePopup();}} style={{cursor:'pointer'}}>
           <span className="label">Newsletter</span>
@@ -772,8 +805,8 @@ const App = () => {
         aria-labelledby="price-modal-title"
         aria-hidden={!priceModalKey}
       >
-        {priceModalKey && (() => {
-          const data = PRICES[priceModalKey];
+        {displayedPriceKey && (() => {
+          const data = PRICES[displayedPriceKey];
           return (
             <React.Fragment>
               <div className="price-modal__head" onClick={()=>setPriceModalKey(null)} onTouchEnd={(e)=>{e.preventDefault();setPriceModalKey(null);}}>
@@ -1291,7 +1324,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
   function parallax(){
     var img = document.querySelector('.hero__img');
-    if (img) img.style.transform = 'translateY(' + (window.scrollY * 0.3) + 'px)';
+    if (img) img.style.transform = 'translateY(' + (window.scrollY * 0.5) + 'px)';
   }
   window.addEventListener('scroll', parallax, {passive:true});
   parallax();
