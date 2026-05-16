@@ -31,7 +31,7 @@
 <link rel="icon" type="image/jpeg" href="media/COREFORM_Favicon.jpg">
 <link rel="apple-touch-icon" href="media/COREFORM_Favicon.jpg">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
-<link rel="preload" as="image" href="media/COREFORM_web_015.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="media/COREFORM_Hero.webp" type="image/webp" fetchpriority="high">
 <link rel="preload" as="image" href="media/RZ_Logo_CoreForm_weiss_pink.png" fetchpriority="high">
 <link rel="preload" href="font/stacion-light.otf" as="font" type="font/otf" crossorigin>
 <link rel="preload" href="font/stacion-light-italic.otf" as="font" type="font/otf" crossorigin>
@@ -128,7 +128,10 @@
     </div>
   </header>
   <section class="hero" aria-hidden="true">
-    <img class="hero__img" src="media/COREFORM_web_015.jpg" alt="" fetchpriority="high" decoding="async" />
+    <picture>
+      <source srcset="media/COREFORM_Hero.webp" type="image/webp" />
+      <img class="hero__img" src="media/COREFORM_web_015.jpg" alt="" width="2000" height="1333" loading="eager" fetchpriority="high" decoding="sync" />
+    </picture>
     <div class="hero__overlay"></div>
     <div class="hero__content container">
       <h1 class="hero__headline">Kraft.<br />Kontrolle.<br /><em>Bewegung.</em></h1>
@@ -853,14 +856,20 @@ const App = () => {
 
       {/* HERO */}
       <section className="hero hero--ready" id="hero" aria-labelledby="hero-headline" ref={heroRef}>
-        <img
-          className="hero__img"
-          src="media/COREFORM_web_015.jpg"
-          alt=""
-          aria-hidden="true"
-          fetchpriority="high"
-          decoding="async"
-        />
+        <picture>
+          <source srcSet="media/COREFORM_Hero.webp" type="image/webp" />
+          <img
+            className="hero__img"
+            src="media/COREFORM_web_015.jpg"
+            alt=""
+            aria-hidden="true"
+            width="2000"
+            height="1333"
+            loading="eager"
+            fetchPriority="high"
+            decoding="sync"
+          />
+        </picture>
         <div className="hero__overlay" aria-hidden="true" />
         <div className="hero__content container">
           <h1 className="hero__headline" id="hero-headline">
