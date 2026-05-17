@@ -671,8 +671,8 @@ const App = () => {
             {NAV_IDS.map((id, i) => (
               <a
                 key={id}
-                href={`#${id}`}
-                onClick={(e) => { e.preventDefault(); scroll(id); }}
+                href={id === 'ausbildung' ? 'ausbildung.html' : `#${id}`}
+                onClick={id === 'ausbildung' ? undefined : (e) => { e.preventDefault(); scroll(id); }}
                 className={activeId === id ? 'active' : ''}
                 aria-current={activeId === id ? 'page' : undefined}
               >
@@ -709,8 +709,10 @@ const App = () => {
         {NAV_IDS.map((id, i) => (
           <a
             key={id}
-            href={`#${id}`}
-            onClick={(e) => { e.preventDefault(); scroll(id); }}
+            href={id === 'ausbildung' ? 'ausbildung.html' : `#${id}`}
+            onClick={id === 'ausbildung'
+              ? (e) => { e.preventDefault(); setMobileOpen(false); setTimeout(() => { window.location.href = 'ausbildung.html'; }, 150); }
+              : (e) => { e.preventDefault(); scroll(id); }}
             tabIndex={mobileOpen ? 0 : -1}
             className={activeId === id ? 'active' : ''}
             aria-current={activeId === id ? 'page' : undefined}
@@ -900,7 +902,7 @@ const App = () => {
         <div className="container">
           <div className="section-head">
             <span className="label">Was wir anbieten</span>
-            <h2>Kursangebote</h2>
+            <h2>Kurse &amp; Räume</h2>
           </div>
           <div className="angebote__grid">
             {[
@@ -1123,7 +1125,7 @@ const App = () => {
                 <img src="media/DPV_PremiumSiegel2026.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
                 <span>Premium-Mitglied im<br /><strong>Deutschen Pilates Verband</strong></span>
               </a>
-              <a href="ausbildung.html" className="btn btn--accent">Zur Ausbildung</a>
+              <a href="ausbildung.html" className="text-link ausbildung__cta">Mehr erfahren →</a>
             </div>
             <div className="ausbildung__features-col">
               <a
