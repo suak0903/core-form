@@ -790,7 +790,7 @@ a.ausbildung__credential:focus-visible { outline:2px solid var(--himbeere); outl
 .footer__links a + button::before,
 .footer__links button + a::before,
 .footer__links button + button::before {
-  content:'\00a0·\00a0'; padding:0; color:var(--rosa-tint);
+  content:'\00a0\00a0\00a0\00a0·\00a0\00a0\00a0\00a0'; padding:0; color:var(--rosa-tint);
 }
 
 /* ── HAMBURGER ── */
