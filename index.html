@@ -232,15 +232,15 @@ const TEAM = [
   },
   {
     name: 'Eva',
-    role: 'Inhaberin & Gründerin',
+    role: 'Inhaberin · Gründerin · Ausbilderin',
     img: 'media/Trainerin_Eva.jpg',
-    bio: 'Pilates begleitet mich seit über 25 Jahren – seit meinem Tanzstudium, über viele Jahre Unterrichtserfahrung bis hin zur Eröffnung meines ersten Studios 2014. Heute leite ich core:form mit zwei Studios in Essen und bilde Trainer:innen für Matte und Reformer aus. Ich unterrichte vor allem Reformerkurse und fortgeschrittene Mattenstunden.'
+    bio: 'Pilates begleitet mich seit über 25 Jahren – seit meinem Tanzstudium, über viele Jahre Unterrichtserfahrung bis hin zur Eröffnung meines ersten Studios 2014. Heute führe ich core:form mit zwei Standorten in Essen und bilde Trainer:innen für Matte und Reformer aus. Ich unterrichte vor allem Reformer-Kurse und fortgeschrittene Mattenstunden.'
   },
   {
     name: 'Charlotta',
-    role: 'Pilates & Barre',
+    role: 'Pilates · Barre · Reformer · Medical Stretching',
     img: 'media/Trainerin_Charlotta.jpg',
-    bio: 'Charlotta gehört fast von Anfang an zum core:form-Team. Ihre Pilates-Ausbildung absolvierte sie bei Pilates bodymotion und unterrichtet heute Pilates und Barre Workout. „Mit den Füßen sicher geerdet, mit dem Kopf hoch erhoben und in einer starken Mitte ruhend – das ist mein Pilates-Gefühl."'
+    bio: 'Charlotta gehört seit den Anfängen zu core:form und ist ein fester Bestandteil unseres Teams. Ihre Pilates-Mattenausbildung absolvierte sie bei Pilates Bodymotion, ihre Geräteausbildung bei Pilates Powers in Tönisvorst. Heute unterrichtet sie Pilates, Barre Workout, Reformer und Medical Stretching und begleitet ihre Teilnehmer:innen mit viel Ruhe, Klarheit und Erfahrung. Neben ihrer Arbeit bei core:form ist sie außerdem als Ausbilderin für Pilates Matte und Reformer an der Bewegungsakademie Dortmund tätig.'
   },
   {
     name: 'Jelena',
@@ -542,10 +542,14 @@ const App = () => {
     };
   }, []);
 
-  // Team-Karussell: alle 4.5 s rotieren. Pausiert bei Hover (Desktop) und
-  // sobald eine Klick-Stufe aktiv ist. Bei prefers-reduced-motion komplett aus.
+  // Team-Karussell: alle 4.5 s rotieren. Pausiert bei Hover (NUR Desktop) und
+  // sobald die Bio aufgeklappt ist (Stage 2). Stage 1 (nur Name) pausiert
+  // NICHT — der Bildwechsel läuft weiter. Bei prefers-reduced-motion komplett aus.
+  // teamHovered wird auf Touch ignoriert, da onMouseEnter dort beim Tap fälsch-
+  // licherweise feuert und sonst die Rotation einfrieren würde.
   React.useEffect(() => {
-    if (teamHovered || teamStage > 0) return;
+    const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+    if ((!isTouch && teamHovered) || teamStage >= 2) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const id = setInterval(() => {
       setTeamIndex(i => (i + 1) % TEAM.length);
@@ -1026,12 +1030,27 @@ const App = () => {
                     tabIndex={isActive ? 0 : -1}
                     aria-expanded={isActive ? teamStage === 2 : undefined}
                     aria-label={`${m.name} – ${m.role}.`}
-                    onClick={() => { if (isActive) setTeamStage(s => (s + 1) % 3); }}
+                    onClick={(e) => {
+                      if (!isActive) return;
+                      const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+                      // Auf Touch: linke 22% = vorheriges Bild, rechte 22% = nächstes Bild,
+                      // Mitte = Stage durchschalten. Auf Desktop: nur Stage durchschalten.
+                      if (isTouch) {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        if (x < rect.width * 0.22) { goTeam(-1); return; }
+                        if (x > rect.width * 0.78) { goTeam(1);  return; }
+                      }
+                      // Touch-Cycle: 0 → 1 → 2 → 1 → 2 → ... (Stage 0 nur via Outside-Tap/Esc).
+                      // Desktop: Toggle 0 ↔ 2 (Hover liefert Stage 1 gratis).
+                      setTeamStage(s => isTouch ? (s === 2 ? 1 : s + 1) : (s === 2 ? 0 : 2));
+                    }}
                     onKeyDown={(e) => {
                       if (!isActive) return;
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        setTeamStage(s => (s + 1) % 3);
+                        const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+                        setTeamStage(s => isTouch ? (s === 2 ? 1 : s + 1) : (s === 2 ? 0 : 2));
                       } else if (e.key === 'ArrowLeft') {
                         e.preventDefault();
                         goTeam(-1);
@@ -1257,15 +1276,15 @@ const App = () => {
                 <div className="form-group">
                   <label htmlFor="interesse">Interesse</label>
                   <select id="interesse" name="interesse" defaultValue="" required>
-                    <option value="" disabled>Worum geht&apos;s? …</option>
+                    <option value="" disabled>Worum geht&apos;s?</option>
                     <option>Reformer Pilates</option>
                     <option>Pilates Matte</option>
                     <option>Barre Workout</option>
                     <option>Personal Training</option>
                     <option>Raumvermietung</option>
                     <option>Ausbildung</option>
-                    <option>Telefonischer Rückruf</option>
-                    <option>Allgemeine Anfrage</option>
+                    <option>Sonstiges</option>
+                    <option>Feedback zur Webseite</option>
                   </select>
                 </div>
               </div>

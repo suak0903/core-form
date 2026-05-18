@@ -719,7 +719,7 @@ Das Kontaktformular auf der Startseite postet als `multipart/form-data` an `mail
 | `index.html` (React) | Formular + clientseitige Validierung + reCAPTCHA-Token holen + POST an mail.php |
 | `mail.php` | Empfängt POST, validiert reCAPTCHA, sendet Mail per PHP `mail()` |
 | `config.php` (Server) | Hält die Secrets — **nicht** im Repo |
-| `config.sample.php` | Template ohne echte Werte (gehört ins Repo) |
+| `config.sample.php` | Template ohne echte Werte (gehört ins Repo); enthält alle Empfänger-Konstanten inkl. CC/BCC |
 | `.htaccess` | Schützt `config.php` vor HTTP-Zugriff |
 
 ### Spam-/Abuse-Schutz (gestaffelt in mail.php)
@@ -750,11 +750,29 @@ Aus der ersten Inbetriebnahme — diese Punkte **nicht erneut anfassen**, sie si
 
 ```php
 <?php
-define('RECAPTCHA_SECRET', '...');     // Geheimer Server-Key aus Google reCAPTCHA Admin
-define('MAIL_TO',          'info@core-form.de');  // Produktiv-Empfänger
+define('RECAPTCHA_SECRET',    '...');              // Geheimer Server-Key aus Google reCAPTCHA Admin
+define('MAIL_TO',             'info@core-form.de'); // To:  Hauptempfänger (Pflicht — darf nicht leer sein)
+define('MAIL_TO_CC',          '');                  // Cc:  Kopie (sichtbar für alle Empfänger) — leer = deaktiviert
+define('MAIL_TO_BCC',         '');                  // Bcc: Blindkopie (unsichtbar) — leer = deaktiviert
+define('MAIL_TO_FEEDBACK',    'contact@akyol.de');  // To:  Empfänger für Option „Feedback zur Webseite"
+define('MAIL_TO_FEEDBACK_CC', '');                  // Cc:  Kopie für Feedback-Mails — leer = deaktiviert
+define('MAIL_TO_FEEDBACK_BCC','');                  // Bcc: Blindkopie für Feedback-Mails — leer = deaktiviert
 ```
 
+**Routing-Logik in `mail.php`:** Wählt der Absender „Feedback zur Webseite", geht die Mail an `MAIL_TO_FEEDBACK` (Fallback auf `MAIL_TO` falls nicht definiert oder leer). Alle anderen Optionen → `MAIL_TO`. CC/BCC-Header werden nur eingefügt wenn die jeweilige Konstante definiert und nicht leer ist.
+
+**Wichtig:** `MAIL_TO` (und `MAIL_TO_FEEDBACK`) dürfen **nicht leer** sein — PHP's `mail()` braucht zwingend einen `To:`-Empfänger, sonst wird die Mail still verworfen. Wer den echten Empfänger per BCC verstecken will, trägt `noreply@core-form.de` als `MAIL_TO` ein.
+
+**Mehrere Adressen** pro Konstante: kommagetrennt, z. B. `'eva@core-form.de, backup@example.com'`. Bei `To:`/`Cc:` sehen alle Empfänger die gesamte Liste; bei `Bcc:` nicht.
+
 In `.gitignore` eingetragen. `.htaccess` blockt HTTP-Zugriff zusätzlich (`<Files "config.php"> Deny from all`).
+
+### Dropdown-Optionen „Interesse"
+
+Aktuelle Optionen (in `index.html`, Select `#interesse`):
+Reformer Pilates · Pilates Matte · Barre Workout · Personal Training · Raumvermietung · Ausbildung · Sonstiges · **Feedback zur Webseite**
+
+„Feedback zur Webseite" ist die Routing-Trigger-Option → Mail geht an `MAIL_TO_FEEDBACK`.
 
 ### Betreff-Format
 
@@ -983,4 +1001,4 @@ und fügt das Ergebnis als `integrity="sha384-…"` an die `<script>`-Tags.
 - **Aktive-Seite-Indikator im Nav** auf Subpages fehlt: keine optische Markierung, dass man z. B. gerade auf `buchung.html` ist. Falls ergänzt → `aria-current="page"` + Himbeere-Unterstrich (Konsistenz zur Start-Seiten-Logik via `IntersectionObserver`).
 - **Buchungs-Studio-Seiten** haben kein Format-Karussell (nur die übergeordnete `buchung.html`). Bewusste Entscheidung — pro Studio nur ein Buchungstool, kein Marketing-Loop.
 - **Katja's Bio** in `index.html` steht noch auf `'Beschreibung folgt bald.'` — Inhalt ausstehend.
-- **Steuernummer vs. USt-IdNr.** im Impressum klären — `112/5457/1985` ist vermutlich eine Steuernummer, nicht eine USt-IdNr. (kein `DE`-Prefix). Steuerberater fragen und Beschriftung ggf. korrigieren.
+- **Steuernummer im Impressum** — Eva hat keine USt-IdNr. Der Eintrag `112/5457/1985` ist korrekt als „Steuernummer" beschriftet (kein § 27a UStG-Verweis). Geklärt mit Steuerberater.

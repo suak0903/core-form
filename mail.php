@@ -117,6 +117,13 @@ $email = filter_var($email, FILTER_SANITIZE_EMAIL);
 $emailClean = str_replace(["\r", "\n"], '', $email);
 
 // E-Mail
+$isFeedback  = $interesse === 'Feedback zur Webseite';
+$recipient   = $isFeedback && defined('MAIL_TO_FEEDBACK') && MAIL_TO_FEEDBACK !== ''
+               ? MAIL_TO_FEEDBACK : MAIL_TO;
+$ccConst     = $isFeedback ? 'MAIL_TO_FEEDBACK_CC'  : 'MAIL_TO_CC';
+$bccConst    = $isFeedback ? 'MAIL_TO_FEEDBACK_BCC' : 'MAIL_TO_BCC';
+$cc          = defined($ccConst)  && constant($ccConst)  !== '' ? constant($ccConst)  : '';
+$bcc         = defined($bccConst) && constant($bccConst) !== '' ? constant($bccConst) : '';
 $subjectText = $interesse !== '' ? "Kontakt: {$interesse} – {$name}" : "Kontakt: {$name}";
 $subject     = '=?UTF-8?B?' . base64_encode($subjectText) . '?=';
 $body     = "Name:      {$name}\n";
@@ -129,8 +136,10 @@ $headers  = "MIME-Version: 1.0\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 $headers .= "From: \"core:form\" <noreply@core-form.de>\r\n";
 $headers .= "Reply-To: {$emailClean}\r\n";
+if ($cc  !== '') $headers .= "Cc: {$cc}\r\n";
+if ($bcc !== '') $headers .= "Bcc: {$bcc}\r\n";
 
-$sent = mail(MAIL_TO, $subject, $body, $headers);
+$sent = mail($recipient, $subject, $body, $headers);
 
 if ($sent) {
     echo json_encode(['ok' => true]);
