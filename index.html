@@ -555,7 +555,10 @@ const App = () => {
       setTeamIndex(i => (i + 1) % TEAM.length);
     }, 4500);
     return () => clearInterval(id);
-  }, [teamHovered, teamStage]);
+    // teamIndex in den Deps: bei jedem Bildwechsel (manuell oder automatisch)
+    // startet der 4.5-s-Timer frisch — verhindert dass kurz nach einem Swipe
+    // schon der nächste Auto-Wechsel feuert.
+  }, [teamHovered, teamStage, teamIndex]);
 
   // Klick außerhalb der Team-Stage / Esc schließt die Klick-Stufe.
   React.useEffect(() => {
